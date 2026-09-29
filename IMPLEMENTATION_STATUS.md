@@ -61,6 +61,11 @@
   Follow-up stopped after 32 actions under the fixed two-uncertain-chunk rule;
   that rule was removed as an unjustified early cutoff, not a validator change.
   Revised-rule live test remains next. See `docs/PINCH_VISIBILITY_20260930.md`.
+- Revised-rule live test completed: 76 FLUX actions, seven calls, $0.76792875.
+  Reviewer detected premature closure/transport with fingers above/beside card
+  and stopped. No correction or grasp. Stop prompt-only approach repetitions;
+  next test a legal RGB-D-grounded correction stage. See
+  `docs/HYBRID_MISALIGNMENT_20260930.md`.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and
