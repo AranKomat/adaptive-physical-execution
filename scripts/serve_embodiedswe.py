@@ -7,6 +7,7 @@ from pathlib import Path
 import argparse
 import os
 import sys
+import traceback
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"src"))
 
 
@@ -40,6 +41,11 @@ def main():
         print(f"READY simulator http://127.0.0.1:{server.server_port}; preset={task['preset']}; one episode only",flush=True)
         server.serve_forever(poll_interval=.2)
     except KeyboardInterrupt: pass
+    except Exception:
+        # Isaac cleanup may block; preserve the original failure before entering it.
+        traceback.print_exc()
+        sys.stderr.flush()
+        raise
     finally:
         if server: server.server_close()
         if env: env.close()

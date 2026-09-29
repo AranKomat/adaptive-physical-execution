@@ -47,3 +47,23 @@ def test_urdf_rejects_entities_and_missing_chain(tmp_path,urdf_file):
     p=tmp_path/'bad.urdf';p.write_text('<!DOCTYPE robot><robot/>')
     with pytest.raises(ValueError): URDFKinematics.from_urdf(p)
     with pytest.raises(ValueError): URDFKinematics.from_urdf(urdf_file,'wrong','tool')
+
+@pytest.mark.parametrize('kind', ['fixed', 'revolute', 'prismatic', 'continuous'])
+def test_zero_axis_only_allowed_for_fixed_joint(tmp_path, kind):
+    p = tmp_path / 'axis.urdf'
+    p.write_text(f'''<robot name="axis">
+      <joint name="active" type="revolute">
+        <parent link="base"/><child link="arm"/><axis xyz="0 0 1"/>
+      </joint>
+      <joint name="tool_joint" type="{kind}">
+        <parent link="arm"/><child link="tool"/>
+        <origin xyz="0 0 0.107"/><axis xyz="0 0 0"/>
+      </joint>
+    </robot>''')
+    if kind != 'fixed':
+        with pytest.raises(ValueError, match='zero joint axis'):
+            URDFKinematics.from_urdf(p, 'base', 'tool')
+        return
+    k = URDFKinematics.from_urdf(p, 'base', 'tool')
+    assert k.joint_names == ('active',)
+    np.testing.assert_allclose(k.fk([0]), [0, 0, .107, 1, 0, 0, 0])

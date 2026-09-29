@@ -72,9 +72,11 @@ class URDFKinematics:
                 origin[:3, :3] = rpy_matrix([float(x) for x in o.get("rpy", "0 0 0").split()])
             a = e.find("axis")
             axis = finite_vector([float(x) for x in (a.get("xyz", "1 0 0") if a is not None else "1 0 0").split()], 3)
-            if np.linalg.norm(axis) < 1e-10:
-                raise ValueError("zero joint axis")
-            axis /= np.linalg.norm(axis)
+            # Fixed joints contribute only their origin transform, not an axis.
+            if kind != "fixed":
+                if np.linalg.norm(axis) < 1e-10:
+                    raise ValueError("zero joint axis")
+                axis /= np.linalg.norm(axis)
             lim = e.find("limit")
             lo, hi = (-np.pi, np.pi)
             if kind == "fixed":
