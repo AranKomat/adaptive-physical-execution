@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT1893: reviewed guarded75.867mm contact-plane approach reached strict
+arrival (90actions,2.493mm/0.018101rad), no guard stop, extra push or release.
+Fresh1803 connector endpoint agreed with retained prediction within0.9mm.
+Seating/assembly NOT verified; inspect current evidence before release. See
+`docs/GUARDED_CARRY_CURRENT.md`.
+
 CURRENT1739: reviewed guarded6cm nearer standoff passed strict arrival
 (2.696mm/0.001402rad),64actions, no guard stop or retry. Image suggests retained
 card closer to socket, not seating. No insertion/release. See

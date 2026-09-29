@@ -1,5 +1,32 @@
 # Guarded lift and carry: current continuation
 
+## Latest1893: guarded contact-plane approach arrived, no release
+
+Camera returned to the known PCB-side view after the6cm standoff, ending1803
+with0.762mm hold error. Fresh bracket-side connector pixel[373,217] measured
+[0.520867,0.023768,0.113493]m, spread2.452mm. Difference from1547 propagated
+endpoint was[-0.671,+0.079,+0.570]mm: local retention consistency, not full-pose
+or no-slip proof. Other endpoints were occluded; historical socket1675 retained.
+
+One explicitly exploratory contact hypothesis proposed75.867mm straight down
+to the historical corresponding socket-rim height, no lateral/attitude/grip
+change. Astra reviewed current three images plus historical connector/socket
+images and approved only this two-segment test, acknowledging unknown keyed
+geometry, housing-versus-centerline ambiguity, and prior failed contact trials.
+
+Execution: first segment26actions (pass-through,2.909mm tracking error), final
+segment64actions (strict arrival,2.493mm/0.018101rad).90actions total,
+6.000sim seconds,42.926execution wall seconds; native10mm/0.10rad tracking
+guard active throughout, no trigger. Card is visually lower in the socket
+region. **This is endpoint arrival, not seating or assembly success.** No extra
+push, release or retry. Current episode held at1893 with gripper closed.
+
+Next inspect seating/contact evidence before deciding any release. Do not use
+evaluator/object truth to choose control. Depth/RGB at1893 and receipts saved
+locally. Artifacts under `runs/guarded_full_lift_20261001`: `_capture1803_flat`,
+`_correspondence1803_measured.json`, `_retention1803_comparison.json`,
+`_contact1803`, `_contact1803_review`, `_contact1803_execution`, `_capture1893`.
+
 ## Latest1739: reviewed6cm nearer standoff arrived
 
 Used connector1547 endpoints propagated under explicit no-slip assumption and
