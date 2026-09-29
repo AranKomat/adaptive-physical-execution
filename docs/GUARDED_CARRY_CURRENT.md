@@ -1,5 +1,34 @@
 # Guarded lift and carry: current continuation
 
+## Latest: partial closer standoff at 1355
+
+One lower oblique camera move (eye [0.65,0.40,0.40], gaze
+[0.47224265,0.02802998,0.25]) completed64 hold actions to1291, with
+0.872mm/0.002116rad arm error. The cooler still obscured the connector;
+no further camera sweep was launched.
+
+Astra reviewed an8cm closer standoff using observation835 held-feature depth
+propagated with current robot pose, explicitly assuming no slip. Predicted
+remaining feature-to-socket gap was148.745mm, not measured clearance.
+Review approved only this exploratory closer look ($0.01927125).
+
+The executed local stage used64 actions, retaining the exact previous gripper
+command and native contact tracking guard. At1355 it ended4.306mm short with
+0.001432rad rotation error: **budget ended without strict arrival**, not a guard
+stop. No retry, insertion or release. The planning candidate allowed more time
+than the local64-action executor; this execution-budget mismatch must be fixed
+before reusing that path. Do not infer a physical obstruction from timeout alone.
+One earlier pre-dispatch assertion rejected float32 grip readback; no motion
+was issued then. The actual command preserved readback0.30000001192092896.
+
+Current image suggests retention but still hides the mating edge. Preserve the
+held episode at1355, inspect existing wrist/history evidence before another
+action, and do not count this as successful standoff arrival. Local artifacts:
+`runs/guarded_full_lift_20261001_connector_view`, `_closer_standoff`,
+`_standoff_review`, `_standoff_execution`, and `_capture1355`.
+
+The1227 state described below is historical.
+
 Artifacts retain the `guarded_full_lift_20261001` prefix; this is a run name,
 not an independently verified calendar timestamp.
 

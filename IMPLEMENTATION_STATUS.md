@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+NEWEST: same held episode now1355 after reviewed8cm closer-standoff attempt.
+64-action budget ended4.306mm short; no guard stop, retry, insertion or release.
+Candidate/executor duration mismatch remains to fix. See
+[latest continuation](docs/GUARDED_CARRY_CURRENT.md).
+
 LATEST: guarded explicit 23 cm lift (707 actions) and elevated carry (328
 actions) completed; same episode held at1227, no descent/release. History-aware
 review recovered the socket with two valid depth samples, but connector remains
