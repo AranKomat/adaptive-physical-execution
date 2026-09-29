@@ -16,6 +16,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--expected-observation", required=True)
     p.add_argument("--output", type=Path, required=True)
+    p.add_argument("--deeper-recovery", action="store_true", help="explicit reopen and deeper placement after inspected miss")
     args = p.parse_args(); args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient("http://127.0.0.1:8765", os.environ["PHYSICAL_EXEC_SIM_TOKEN"])
     started = time.monotonic(); count = 0
@@ -25,8 +26,10 @@ def main():
         obs = decode_observation(client.call("/observe"))
         if obs.key != args.expected_observation: raise ValueError("unexpected live observation")
         initial = obs.eef_pose.copy()
-        phases = [("descend", initial[:3]+[0,0,-.035], 1., 30),
-                  ("close", initial[:3]+[0,0,-.035], 0., 12),
+        descent = .08 if args.deeper_recovery else .035
+        phases = ([("reopen", initial[:3], 1., 12)] if args.deeper_recovery else []) + [
+                  ("descend", initial[:3]+[0,0,-descent], 1., 60 if args.deeper_recovery else 30),
+                  ("close", initial[:3]+[0,0,-descent], 0., 12),
                   ("lift", initial[:3]+[0,0,.025], 0., 40)]
         write_json(args.output/"plan.json", {"initial_id":obs.key,
                    "phases":[dict(name=n,hand_xyz=t.tolist(),open_fraction=g,max_actions=m) for n,t,g,m in phases],
@@ -36,7 +39,7 @@ def main():
                 for i in range(budget):
                     if time.monotonic()-started > 120: raise RuntimeError("wall budget")
                     delta = target-obs.eef_pose[:3]; distance = np.linalg.norm(delta)
-                    if name != "close" and distance <= .003: break
+                    if name not in ("close", "reopen") and distance <= .003: break
                     pose = obs.eef_pose.copy()
                     pose[:3] += delta*min(1.,.007/max(distance,1e-9))
                     action = ActionChunk("eef_absolute_world", np.array([np.r_[pose,grip]]),
@@ -45,7 +48,7 @@ def main():
                     log.write(json.dumps(dict(phase=name,action=action.to_dict(),result=reply))+"\n"); log.flush()
                     step = decode_result(reply); obs = step.observation; count += step.receipt.executed_steps
                     if step.receipt.status != "executed": raise RuntimeError("non-executed receipt")
-                if name != "close" and np.linalg.norm(target-obs.eef_pose[:3]) > .003:
+                if name not in ("close", "reopen") and np.linalg.norm(target-obs.eef_pose[:3]) > .003:
                     raise RuntimeError(name+" failed arrival; no next phase")
                 summary[name+"_final_open_fraction"] = obs.gripper_open
                 summary[name+"_observation_id"] = obs.key

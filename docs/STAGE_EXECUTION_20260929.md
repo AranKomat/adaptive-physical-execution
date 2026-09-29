@@ -127,3 +127,28 @@ the baseline. The kinematics-only URDF does not include finger collision geometr
 an attempted standalone USD inspection lacked the pxr runtime, so exact fingertip
 contact geometry is still unverified. Next correction should address observed
 contact placement, not reasoning level or more per-step GPT calls.
+
+## Deeper recovery probe
+
+Robot-only USD inspection succeeded by loading the bundled USD Python runtime
+with its library paths (no new package/system changes). The left-finger mesh
+local z extent is 0.000133..0.053900 m. Together with the 0.0584 m finger-joint
+origin, its extreme tip is approximately 0.1123 m from the hand frame. This is
+a visual mesh extent, NOT a qualified friction/contact-pad center or collision
+model. Previous closure hand z=0.242679 m put that tip around z=0.1304 m,
+only approximately 14 mm below the selected top surface at z=0.144153 m.
+
+`local_deeper_grasp_20260929` continued at step 176 with explicit reopen,
+80 mm descent relative to that post-lift hand pose, 12 close actions and a bounded
+lift. It executed 104 actions in 67.69 s with zero GPT calls. Descend completed
+at step 228, closure at step 240 (open fraction 0.15838), and lift exhausted its
+40-action budget at step 280. The hand remained 77.09 mm from the lift target;
+final open fraction was 0.11983. No automatic retry or further lift was issued.
+
+Final left RGB shows the card tilted relative to its original supported pose:
+this is visible object displacement, but NOT a verified secure grasp or lift.
+The hand also shifted laterally under attempted lifting. Whether this represents
+snagging, constrained contact, slip or grasp-assist behavior is not resolved by
+the frame. Do not extend upward motion blindly or claim a successful recovery.
+The next decision needs current multi-view/contact evidence, not another depth
+increment. Baseline grasp assistance remains enabled; no physics gains changed.
