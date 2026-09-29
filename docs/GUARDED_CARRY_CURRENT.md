@@ -1,5 +1,22 @@
 # Guarded lift and carry: current continuation
 
+## Current2813: GraspGen-X proposal-only batch, no admitted grasp
+
+One released-model batch returned8 proposals in0.688s on the retained partial
+PCB cloud. All hand origins61--71mm are below the unchanged120mm pilot floor;
+3/8 single-seed IK solves converged. No motion or new paid call. This reinforces
+the workspace/access issue; high ranking scores do not establish unseen
+opposing contact or collision-free entry. Canonical-to-Panda90deg frame offset
+was explicitly applied and tested. Do not generate more batches to work around
+the floor. Next assess a separately qualified lower-hand workspace, not a live
+bypass or another replay of the failed inclined target.
+
+FLUX was temporarily unloaded for the batch and restored (PID75277, metadata
+ready). All simulators remained untouched; live2813 verified afterward.
+See [specialist test and evidence](GRASPGENX_RECOVERY_PROPOSALS.md).243tests;
+calls4399 unchanged. No task phase completed. The pending transit-context note
+from the retreat remains applicable because no robot command occurred.
+
 ## Current2813: controlled retreat after nonconverging approach
 
 Retrospective robot-motion reconstruction from recorded rigid wrist calibration

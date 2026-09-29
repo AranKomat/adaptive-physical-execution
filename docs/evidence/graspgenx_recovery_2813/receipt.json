@@ -1,0 +1,276 @@
+{
+  "complete": true,
+  "inference_attempts": 1,
+  "robot_actions": 0,
+  "paid_calls": 0,
+  "source_revision": "b9429097728cb1c430dd78b92edf17ba318aad03",
+  "input_manifest": {
+    "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+    "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+    "coordinate_frame": "world",
+    "points": 4096,
+    "seed": 0,
+    "cloud_sha256": "05c52fcdfc9d42f92a6d61b2ea0f497c2de55b49ab82d24cffc995bcc7c25096",
+    "source_depth_sha256": "b773de8540d48cbf0a127ba372493f3b3bfc6e3fe983bd0ea2d1c7603b75eb52",
+    "selection": {
+      "anchor_uv": [
+        345,
+        165
+      ],
+      "roi": "250<u<480,v<225",
+      "world_z_band_m": [
+        0.06155,
+        0.06555
+      ],
+      "connectivity": "scipy.ndimage.label default4-connected",
+      "terminal_strip_world_x_gt_m": 0.563
+    },
+    "current_projection_checks": [
+      {
+        "camera": "right",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            272.3354833140338,
+            131.8687417879818
+          ],
+          "predicted_optical_depth_m": 0.3243510864727487,
+          "status": "depth_inconsistent",
+          "sampled_pixel_uv": [
+            272,
+            132
+          ],
+          "current_optical_depth_m": 0.1450420618057251,
+          "depth_residual_m": -0.1793090246670236,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "right",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            369.0650272388352,
+            210.4832275007586
+          ],
+          "predicted_optical_depth_m": 0.3047777221167654,
+          "status": "depth_inconsistent",
+          "sampled_pixel_uv": [
+            369,
+            210
+          ],
+          "current_optical_depth_m": 0.1427256464958191,
+          "depth_residual_m": -0.1620520756209463,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "right",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            330.3809919646191,
+            140.97131800701575
+          ],
+          "predicted_optical_depth_m": 0.3220736181218778,
+          "status": "depth_consistent",
+          "sampled_pixel_uv": [
+            330,
+            141
+          ],
+          "current_optical_depth_m": 0.32169806957244873,
+          "depth_residual_m": -0.00037554854942906113,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "right",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            368.63352889604676,
+            109.69534299846173
+          ],
+          "predicted_optical_depth_m": 0.33065898751127876,
+          "status": "depth_consistent",
+          "sampled_pixel_uv": [
+            369,
+            110
+          ],
+          "current_optical_depth_m": 0.3302123546600342,
+          "depth_residual_m": -0.0004466328512445772,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "right",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            321.78199379946693,
+            177.32085499473013
+          ],
+          "predicted_optical_depth_m": 0.31272363612526344,
+          "status": "depth_inconsistent",
+          "sampled_pixel_uv": [
+            322,
+            177
+          ],
+          "current_optical_depth_m": 0.14644378423690796,
+          "depth_residual_m": -0.16627985188835548,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "wrist",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            259.33478318433566,
+            51.30117388958251
+          ],
+          "predicted_optical_depth_m": 0.14290365954578463,
+          "status": "depth_consistent",
+          "sampled_pixel_uv": [
+            259,
+            51
+          ],
+          "current_optical_depth_m": 0.1427743136882782,
+          "depth_residual_m": -0.0001293458575064299,
+          "depth_comparison_tolerance_m": 0.01
+        }
+      },
+      {
+        "camera": "wrist",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            317.49743384239133,
+            -177.72225278135994
+          ],
+          "predicted_optical_depth_m": 0.10077422966287454,
+          "status": "outside_image"
+        }
+      },
+      {
+        "camera": "wrist",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            232.38337830181527,
+            -37.439026269634184
+          ],
+          "predicted_optical_depth_m": 0.11572027063928092,
+          "status": "outside_image"
+        }
+      },
+      {
+        "camera": "wrist",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            132.60598547261114,
+            -84.98291875810982
+          ],
+          "predicted_optical_depth_m": 0.09613403711125491,
+          "status": "outside_image"
+        }
+      },
+      {
+        "camera": "wrist",
+        "measurement": {
+          "source_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+          "current_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+          "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+          "projected_pixel_uv": [
+            292.36465596355276,
+            -53.704258303775866
+          ],
+          "predicted_optical_depth_m": 0.12086914038144948,
+          "status": "outside_image"
+        }
+      }
+    ],
+    "limitations": [
+      "Historical partial visible planar PCB cloud, not complete GPU mesh or full thickness.",
+      "Three visible sample projections match current depth within0.45mm; other checks are occluded or outside image. This does not prove entire object static.",
+      "Model proposals only; learned confidence does not certify contact, support, accessibility or clearance.",
+      "No simulator object state, hidden collision mesh or evaluator used."
+    ]
+  },
+  "gripper_asset_revision": "19a03c00d19aeaf052d0f6801f0041982d676e8a",
+  "inference_seconds": 0.6881143690043245,
+  "proposals": 8,
+  "canonical_from_hand": [
+    [
+      -3.673205103346574e-06,
+      -0.9999999999932537,
+      0.0,
+      0.0
+    ],
+    [
+      0.9999999999932537,
+      -3.673205103346574e-06,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "peak_allocated_MiB": 593.2998046875,
+  "peak_reserved_MiB": 656.0,
+  "conditioning": {
+    "extents": [
+      0.08,
+      0.018,
+      0.018
+    ],
+    "offset": [
+      0.0,
+      0.0,
+      0.1034
+    ],
+    "extents2": [
+      0.04,
+      0.018,
+      0.018
+    ],
+    "offset2": [
+      0.0,
+      0.0,
+      0.1034
+    ]
+  },
+  "seed": 0,
+  "collision_checked": false,
+  "motion_authorized": false,
+  "limitation": "Partial historical planar cloud; scores are not contact/clearance certification."
+}

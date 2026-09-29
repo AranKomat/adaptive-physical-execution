@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+NEW2813 GraspGen-X:8 proposals/0.688s, zero actions or paid calls. All violate
+120mm hand-height floor;3/8 endpoint IK converged. Canonical/Panda frame offset
+handled. No candidate admitted. FLUX restored PID75277; all simulator episodes
+preserved and2813 rechecked. Next qualify workspace/access, not more batches.
+See `docs/GRASPGENX_RECOVERY_PROPOSALS.md`.243tests; no phase completed.
+
 CURRENT2813: failed-approach trace shows persistent x error and increasing
 rotation error, not continued convergence. One reviewed retreat completed20
 single-latch updates with image review and stricter orientation/progress stops:
