@@ -20,11 +20,14 @@ def main():
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--execute", action="store_true")
     p.add_argument("--continue-run", type=Path, help="explicit bounded extension of a completed approach")
+    p.add_argument("--standoff", type=float, default=.30, help="declared world-z surface-to-hand offset in meters")
     args = p.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     calibration = json.loads(args.depth.with_suffix(".json").read_text())
     point = surface_point(np.load(args.depth, allow_pickle=False), calibration, args.pixel)
-    target = np.array(point["surface_point_world_m"]) + [0, 0, .30]
+    if not np.isfinite(args.standoff) or not .12 <= args.standoff <= .30:
+        raise ValueError("approach standoff must be 0.12..0.30 m; not a contact command")
+    target = np.array(point["surface_point_world_m"]) + [0, 0, args.standoff]
     expected_id = calibration["observation_id"]
     if args.continue_run:
         previous = json.loads((args.continue_run / "result.json").read_text())
@@ -35,7 +38,7 @@ def main():
             raise ValueError("extension target differs")
         expected_id = previous["final_observation_id"]
     write_json(args.output / "plan.json", dict(measurement=point, target_hand_xyz=target.tolist(),
-               standoff_world_z_m=.30, max_actions=60, max_seconds=120,
+               standoff_world_z_m=args.standoff, max_actions=60, max_seconds=120,
                gpt_calls=0, selection="operator-selected visual pixel", expected_observation_id=expected_id,
                continuation_of=str(args.continue_run) if args.continue_run else None,
                scope="SIMULATOR ONLY; unknown swept-volume clearance; approach not grasp"))

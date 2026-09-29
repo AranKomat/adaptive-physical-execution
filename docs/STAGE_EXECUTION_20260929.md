@@ -98,3 +98,32 @@ approach selection or manipulation. The conservative 0.30 m surface-to-hand
 offset is not a grasp-ready pose. Grasp placement/orientation, physical capture,
 task success, and stage-level model selection remain unverified. The continuation
 trace (including RGB replies) is backed up locally. 112 CPU tests still pass.
+
+## Closer approach and first local grasp attempt
+
+Fresh wrist depth at step 70 and visually selected pixel (253,130) gave surface
+point (0.247853,-0.331487,0.144153) m, with 0.135 mm local depth range. Two
+additional surface samples along the visible edge differed by approximately
+(-0.096655,-0.000013,-0.000056) m: the long edge runs along world X. The hand
+orientation closes the fingers along world Y. This supports the closing-axis
+choice, not the contact-center placement or a guaranteed grasp.
+
+`local_pregrasp_20260929` used that fresh surface point with a declared 0.13 m
+world-z hand standoff. It arrived within 2.423 mm after 47 actions / 29.70 s wall,
+without GPT calls or reset. The left view showed open fingers near the card top.
+
+`local_grasp_lift_20260929` then tested an operator-designed sequence: descend
+35 mm while open, close for 12 actions, and lift to 25 mm above the starting hand
+height. Each transit used measured-state corrections capped at 7 mm and required
+3 mm arrival before proceeding. Existing simulator limits remained unchanged.
+It executed 59 actions in 39.18 s wall, with no errors or GPT calls. Closure ended
+at open fraction 0.1492; after lift it was 0.0030. Final left RGB at step 176 shows
+the card still on its support. Thus **grasp/lift failed**, despite successful robot
+pose execution. No native task success or successful recovery is claimed.
+
+This is a manual sensor-grounded local-control diagnostic, not FLUX performance
+or an autonomous GPT stage selection. Grasp-weld assistance remains enabled as in
+the baseline. The kinematics-only URDF does not include finger collision geometry;
+an attempted standalone USD inspection lacked the pxr runtime, so exact fingertip
+contact geometry is still unverified. Next correction should address observed
+contact placement, not reasoning level or more per-step GPT calls.
