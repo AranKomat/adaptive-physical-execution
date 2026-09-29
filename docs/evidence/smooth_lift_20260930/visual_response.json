@@ -1,0 +1,7 @@
+{
+  "decision": "clear_lift",
+  "card_motion_evidence": "The card itself rises between closure and the attempted lift: its exposed circuit-board face and metal bracket move upward relative to the stationary case and support. This is visible independently of hand motion.",
+  "support_clearance_evidence": "After the lift, the cradle is visibly empty, with a substantial gap beneath the card's visible lower edge and bracket. The images support clearance rather than one end merely tilting while remaining in the cradle.",
+  "grasp_stability_evidence": "The wrist views show approximately maintained card alignment relative to the closed fingers from closure through lift, without obvious slipping or rotation. Closure alone is not the basis for judging capture.",
+  "uncertainty": "Some portions of the card and finger contacts are occluded. These snapshots support a clear lift from the visible support, but cannot establish sustained grasp stability or exclude all hidden contact."
+}

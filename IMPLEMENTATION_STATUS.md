@@ -4,6 +4,13 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Continuous transit live-qualified in a fixed-fixture assisted lift: 693 versus
+  896 actions, 46.200 versus 59.733 sim seconds, 310.724 versus 400.042 execution
+  seconds. Final 2.351 mm, clear_lift review, one call $0.0194525. Subsequent
+  camera move held the arm within 1.021 mm and reached its eye target, but the
+  view is gray/occluded (median depth 10.45 cm). No carry or insertion. Current
+  episode 13b72700c14b45ecaca1f7e32103ae78:757. See `docs/SMOOTH_LIFT_20260930.md`.
+
 - Added opt-in continuous transit to remove artificial holds at intermediate
   same-phase waypoints while retaining closure/final settling. Controller state
   persists across joins, actual action counts are recorded, guards remain.

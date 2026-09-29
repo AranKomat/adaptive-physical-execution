@@ -1,0 +1,8 @@
+{
+  "source": "/Users/macbookpro/Developer/random/gpu/adaptive_physical_execution/runs/smooth_lift_20260930_recordings/13b72700c14b45ecaca1f7e32103ae78",
+  "frames": 694,
+  "view": "left",
+  "speed": 1.0,
+  "label": "SIMULATION | 1x simulated-time playback\nmodel waits excluded | grasp assist ON",
+  "time_model": "physics_paused_during_inference"
+}

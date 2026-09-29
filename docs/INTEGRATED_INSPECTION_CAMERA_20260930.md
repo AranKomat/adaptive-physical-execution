@@ -1,5 +1,10 @@
 # Integrated inspection camera: implementation, not yet live-qualified
 
+Update: one held-state integrated trial has now executed. Camera translation
+readback and robot hold passed, but the chosen view was gray/occluded and did
+not reveal the socket. Useful sensing is not qualified by that pose arrival.
+See `SMOOTH_LIFT_20260930.md`; the text below preserves the original protocol.
+
 The successful suspension episode is still paused. Its running worker has no
 camera command. Editing source does not hot-reload that process.
 

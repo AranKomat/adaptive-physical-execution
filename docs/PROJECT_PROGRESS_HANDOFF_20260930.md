@@ -5,6 +5,24 @@ ten-hour work period as requested by the user, not the older BEHAVIOR project
 or the entirety of the earlier EmbodiedSWE coding-agent experiments. Durations
 below are measured per experiment; the ten-hour description is approximate.
 
+## Latest continuation (supersedes the older live-state section below)
+
+Continuous-transit fixed-fixture lift completed: 693 vs 896 actions, 46.200 vs
+59.733 sim seconds, 310.724 vs 400.042 execution seconds. Same measured targets;
+cached pixel templates declared. Strict final error 2.351 mm; separate review
+confirmed clear_lift, costing $0.0194525. Grasp assistance remains on. Video:
+`docs/evidence/smooth_lift_20260930/lift_1x.mp4`.
+
+The integrated camera then moved while holding the arm: eye readback passed,
+arm error 1.021 mm, but the view is gray/occluded (finite median depth 10.45 cm).
+Useful socket observation remains unresolved; no carry/insertion followed.
+Current live worker session 5966, loopback port 18767 -> remote 8767; current
+episode/observation `13b72700c14b45ecaca1f7e32103ae78:757`. The prior episode was
+ended explicitly to load the new worker; do not attempt to resume its IDs.
+New protocol/evidence: `docs/SMOOTH_LIFT_20260930.md`. Next improve the camera
+view in this held episode using legal geometry, without repeating the lift.
+Latest shared reserved-call count: 4,357; recheck ledger before any new call.
+
 Repository: https://github.com/AranKomat/adaptive-physical-execution
 
 Local checkout: `/Users/macbookpro/Developer/random/gpu/adaptive_physical_execution`.

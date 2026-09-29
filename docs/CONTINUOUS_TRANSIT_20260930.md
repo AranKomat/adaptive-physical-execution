@@ -44,3 +44,10 @@ Next live motion qualification must use a fresh worker with this source and the
 explicit runner flag. Preserve assistance/clearance disclosures and verify lift
 retention before claiming a successful faster physical execution. Keep camera
 movement separate from the first smoother-lift assessment.
+
+Live follow-up now completed: same measured target points, 693 versus 896 total
+actions; clear assisted suspension confirmed by separate review. Four lift
+segments used 40/39/39/64 actions (first segment includes actual initial-pose
+offset). Final strict arrival passed at 2.351 mm. See `SMOOTH_LIFT_20260930.md`
+for timing, evidence and limitations. This is one fixed-fixture result, not a
+hardware-speed or robustness guarantee.
