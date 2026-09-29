@@ -40,3 +40,15 @@ limitation explicitly rather than substituting hidden fixture/seat coordinates.
 
 Compact evidence: `docs/evidence/socket_detail_20260930`. Full initial RGB-D and
 calibration are retained locally under `runs/socket_detail_20260930`.
+
+## Stop condition reached for this view
+
+One explicit paired-rail review returned `inspect` with no samples: the model
+could not distinguish opposite rails from edges of one housing rail, and could
+not establish 3x3 interior depth support. See `gap_review.json`. No inferred
+gap centerline was compiled and no motion was authorized. Stop this view/prompt
+branch rather than repeat it. The higher-detail housing-axis result remains valid
+as a surface measurement, not a precision insertion target.
+
+The next broader-sequence test is bounded FLUX Hybrid execution on its original
+camera condition; this does not resolve or bypass the insertion-geometry issue.

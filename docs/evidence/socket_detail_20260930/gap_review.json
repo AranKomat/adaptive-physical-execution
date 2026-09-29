@@ -1,0 +1,9 @@
+{
+  "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+  "decision": "inspect",
+  "camera": "right",
+  "samples": [],
+  "evidence": "The upper long socket below the CPU is visible in the right image, but two distinct solid rails bordering the same insertion gap cannot be reliably distinguished. The visible parallel edges could belong to one housing rail rather than opposite sides of the gap.",
+  "uncertainty": "Candidate rail features are only a few pixels wide; interior solid-surface support for independent 3x3 depth neighborhoods cannot be established. No paired rail samples or centerline are justified.",
+  "key_visible": false
+}

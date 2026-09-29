@@ -10,7 +10,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'held_feature', 'correspondence'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     args = p.parse_args()
@@ -119,6 +119,25 @@ def main():
             'and whether the hand/card itself blocks it. Do not invent a calibrated camera position, '
             'world coordinates, seating depth, or clearance. One feature pixel alone does not '
             'establish center alignment or insertion success. '
+            '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'socket_gap':
+        prompt = (
+            'Inspect the upper long PCIe socket below the CPU area in these CURRENT images. '
+            'We previously localized a housing rail, but a single rail is not the insertion centerline. '
+            'Determine whether TWO distinct solid rails on opposite sides of the SAME insertion gap '
+            'can actually be identified. Do not select two lines on one rail, decorations, a heatsink, '
+            'or two different sockets. Do not infer hidden geometry from generic PCIe expectations. '
+            'Return only JSON: observation_id, decision (rails_visible/inspect), camera '
+            '(left/right/wrist or null), samples, evidence, uncertainty, key_visible. '
+            'samples is either [] or three entries spaced along the visible gap, each with '
+            'rail_a_uv and rail_b_uv: ORIGINAL 640x360 integer [u,v], upper-left origin. '
+            'Within each pair use the same longitudinal station. Select interior SOLID surface '
+            'pixels, not the dark gap itself. Keep rail_a on the same physical side in all pairs. '
+            'Depth will be sampled independently with a 3x3 neighborhood; report if the rails '
+            'are too narrow to support that. Choose inspect if you cannot distinguish the two '
+            'rails reliably. This observation-only test does NOT authorize movement, provide '
+            'seating depth, or certify clearance. A midpoint between measured rail surfaces would '
+            'only be an inferred centerline, not a directly observed gap surface. '
             '\nRobot-only state: ' + json.dumps(state))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):

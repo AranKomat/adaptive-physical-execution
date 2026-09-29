@@ -3,7 +3,9 @@
 ## Current experiment status (September 30 JST)
 
 - Native GPU simulation, robot FK, live Astra Flex calls and FLUX prediction/FK
-  qualification have run. Actual FLUX Hybrid manipulation remains untested.
+  qualification have run. First bounded FLUX Hybrid execution now ran: three
+  accepted chunks, 24 joint actions, zero rejections, no grasp/task success.
+  See `docs/HYBRID_FIRST_20260930.md`; manipulation competence remains unproven.
 - Frozen privileged OSC reference replay succeeded through seating/release/retract
   in 1,859 actions, zero calls. This is not nonprivileged success.
 - Sensor-target OSC captured/lifted with assistance but lost orientation (2.591 rad).
@@ -41,9 +43,10 @@
   improved to about 0.80 mm/px. Internal key/gap still unresolved. Camera position
   AND focal length changed; old right-camera pixel templates are invalid. See
   `docs/SOCKET_DETAIL_20260930.md`. This is sensing progress, not insertion success.
-- Next: obtain corresponding connector/slot endpoints or axes from legal images
-  and depth, then attempt one bounded alignment/recovery. Do not compensate for
-  uncertain correspondence by pressing farther down.
+- Paired-rail review of the detailed socket view still returned inspect. Stop
+  this camera/prompt branch; do not compensate by pressing farther down.
+- Next: bounded longer Hybrid interval with target-relative progress assessment.
+  Precision insertion correspondence remains unresolved and is not bypassed.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and
