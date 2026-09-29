@@ -22,6 +22,17 @@ def test_ports_make_valid_actions(observation,mode):
     assert a.kind==('joint_absolute' if mode=='hybrid' else 'eef_absolute_world')
 
 
+def test_hybrid_prompt_distinguishes_command_domains_and_progress(observation):
+    class Inspect(FixtureProvider):
+        def act(self, instructions, *args, **kwargs):
+            assert 'For EEF commands' in instructions
+            assert 'per-joint target-step limit' in instructions
+            assert 'FK previews are not EEF commands' in instructions
+            assert 'Robot motion alone is not task progress' in instructions
+            return super().act(instructions, *args, **kwargs)
+    build('hybrid', Inspect()).decide(observation)
+
+
 def gate_raw(obs,p,mode='eef',status='uncertain',intent='uncertain'):
     return {'observation_id':obs.key,'proposal_id':p.action.proposal_id,'mode':mode,'execute_steps':1,
             'assessment':{'execution_status':status,'intent_status':intent,'evidence':'visual report'},

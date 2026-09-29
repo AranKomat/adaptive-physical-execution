@@ -95,6 +95,12 @@ Keep the original task as the student's input. 'accept' executes a prefix of the
 'edit' shifts/rotates its EEF targets and optionally changes the gripper; 'eef' supplies short bounded
 absolute EEF targets. 'stop' ends incomplete, never claims success. Review EVERY proposal in this
 initial implementation; sparse/event-triggered invocation is NOT enabled.
+Robot motion alone is not task progress. For an approach, cite visible reduction in
+hand-to-target separation or improved grasp alignment across views; a downward move
+by itself is insufficient. If that cannot be established, use execution_status='uncertain'.
+For repeated proposals that move away from the visible target, mark intent misaligned
+and stop or correct within the existing rules. If two completed chunks leave progress
+unassessable, stop for inspection rather than repeatedly labeling motion as progress.
 """
 
 
@@ -146,7 +152,11 @@ class ControllerPort:
         self.last_reply = None; self.last_proposal = None
         messages = self.memory.render(observation)
         prompt = BASE_PROMPT + ("\n" + HYBRID_GATE if self.mode == "hybrid" else "")
-        prompt += f"\nPer-step Euclidean translation limit {self.limits.max_translation_m} m; rotation limit {self.limits.max_rotation_rad} rad."
+        prompt += f"\nFor EEF commands: per-step Euclidean translation limit {self.limits.max_translation_m} m; rotation limit {self.limits.max_rotation_rad} rad."
+        if self.mode == "hybrid":
+            prompt += (f" Joint proposals instead have a per-joint target-step limit of {self.limits.max_joint_step_rad} rad."
+                       " Their FK previews are not EEF commands: do not call an FK displacement a violation of the EEF command limit."
+                       " You may still stop for concerning motion, poor alignment, or inadequate evidence; explain that as a review judgment.")
         if self.mode == "hybrid":
             proposal = self.proposer.propose(observation)
             self.last_proposal = proposal

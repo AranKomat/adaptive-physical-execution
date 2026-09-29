@@ -37,7 +37,7 @@
   paired endpoints. Earlier socket end_a had failed depth continuity; pre-grasp
   axis qualification was incomplete. Acquire higher-detail socket geometry before
   occlusion in the next trial. No additional motion was run in this review.
-- 145 CPU tests pass. They do not establish manipulation robustness.
+- 146 CPU tests pass. They do not establish manipulation robustness.
 - Higher-detail pre-grasp capture completed with zero control actions. Three
   housing-rail samples passed depth continuity (about 0.626 mm spread); sampling
   improved to about 0.80 mm/px. Internal key/gap still unresolved. Camera position
@@ -47,6 +47,10 @@
   this camera/prompt branch; do not compensate by pressing farther down.
 - Next: bounded longer Hybrid interval with target-relative progress assessment.
   Precision insertion correspondence remains unresolved and is not bypassed.
+- Longer-prefix attempt stopped after 24 actions on its second review: no task
+  success. Found and corrected a prompt ambiguity between EEF-command limits and
+  joint-proposal FK displacement, without changing validation. Clarified-prompt
+  live trial is next; see `docs/HYBRID_LONGER_20260930.md`.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and
