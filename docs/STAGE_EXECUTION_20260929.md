@@ -13,12 +13,19 @@ them with a smaller motion-only goal.
   Cross-view capture audit now passes a coarse consistency check after correcting
   stale wrist-camera pose metadata; see `SPATIAL_GROUNDING_20260929.md`.
 - [ ] Establish robot-only finger geometry; do not mistake the hand origin for contact.
-- [ ] One sensor-grounded approach with local feedback, action/time bounds, progress
-  checks and termination on rejection or unexpected changes. Keep execution receipts.
+- [x] Bounded manual sensor-target approach with local measured feedback and
+  receipts reached 2.356 mm. Autonomous selection and general scene-change
+  monitoring remain open; this is not a general qualified approach skill.
 - [ ] Inspect arrival once, then attempt grasp/lift and independently verify effect.
 - [ ] Qualify FLUX before using it as an alternative local executor. Reviewing every
   short FLUX chunk with GPT is not sufficient to meet the call-efficiency objective.
 - [ ] Continue alignment/insertion, recovery and successful-trace reuse after capture.
+
+The unchanged earlier successful program passed a separate privileged replay:
+all stages through seating, release and clearance, 1,859 actions, no model calls.
+Next replace privileged grasp geometry with sensor estimates while preserving
+that motor route. See `REFERENCE_TRANSFER_20260929.md`; keep privileged reads out
+of the nonprivileged condition. This replay does not complete its grasp/lift item.
 
 Target: one to a few GPT calls per uncomplicated stage (approach, grasp/lift,
 alignment/insertion). Report actual calls, executed actions, simulated/wall time,

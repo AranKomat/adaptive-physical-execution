@@ -1,0 +1,27 @@
+{
+  "condition": "privileged frozen solution on current pc_gpu OSC substrate",
+  "nonprivileged_success": false,
+  "seed": 0,
+  "actions": 1859,
+  "stages": [
+    {
+      "stage": "stages.stage_1",
+      "passed": true,
+      "actions": 620
+    },
+    {
+      "stage": "stages.stage_2",
+      "passed": true,
+      "actions": 1291
+    },
+    {
+      "stage": "stages.stage_3",
+      "passed": true,
+      "actions": 1859
+    }
+  ],
+  "success": true,
+  "seated": true,
+  "grasp_held": false,
+  "wall_seconds": 570.8339724119996
+}

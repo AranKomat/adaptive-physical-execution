@@ -1,0 +1,10 @@
+{
+  "_diagnostic_adapter.py": "619585da9e8e1db42b408d0295c0bd148cf9f189a7e8c9108f8ea2a18b668ec1",
+  "motion.py": "671262685e98b4343d39f7bff99c4706feeab232f482b57262143a2d18b22f12",
+  "payload.py": "5fd02599efade2b663133d8f4724d78d37a62c32ebe54a460f21e2af25c2ac8f",
+  "precision.py": "28e1a18709872e96ddd42230b7a9af3504745cf958135e15183bfea3dc36ea3b",
+  "solve.py": "a24f8fec0373fa5a4af2ac2a64f34e12ac295a2f6068ac0e25c214b1672d1e7e",
+  "stages/stage_1.py": "d6935e91489d6af42f9fd7a086cdb899c2f42a1d2ab79cad6a88d3bee8bbaa27",
+  "stages/stage_2.py": "6d0bbafa7bf130330e808fd63f77def795b5c05d06bb4eca3cdd119df61fa9f8",
+  "stages/stage_3.py": "ad7da9848777350b2939ae7b5f16ebc36b28a4a9c0939e5fdf3e46362f55611c"
+}
