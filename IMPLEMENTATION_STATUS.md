@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT1987: release + open-hand withdrawal revealed FAILED seating. Card
+tipped onto motherboard region. Posthoc native success=false, score0.33333334;
+not supplied to control. Hand tracking passed, placement did not. Preserve
+displaced state for new visual recovery; do not repeat straight-down recipe.
+See `docs/GUARDED_CARRY_CURRENT.md` and its public image/receipt evidence.
+
 CURRENT1893: reviewed guarded75.867mm contact-plane approach reached strict
 arrival (90actions,2.493mm/0.018101rad), no guard stop, extra push or release.
 Fresh1803 connector endpoint agreed with retained prediction within0.9mm.

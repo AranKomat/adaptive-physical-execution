@@ -1,5 +1,33 @@
 # Guarded lift and carry: current continuation
 
+## Latest1987: release and withdrawal revealed failed seating
+
+Astra reviewed current1893 images without evaluator truth and chose a bounded
+release support test.30 fixed-pose open-gripper actions completed to1923:
+0.864mm/0.002072rad hand error, aperture effectively1.0. Card remained in the
+case but visibly repositioned/tilted; independent socket support was unproven.
+
+A separate image-only review selected one5cm upward open-gripper withdrawal,
+no lateral/attitude change, push, closure or retry.64 guarded actions reached
+1987 with2.052mm/0.000352rad error. **Card tipped over onto the motherboard
+region instead of remaining upright in the socket.** This is a failed placement,
+not an insertion success hidden by a conservative evaluator.
+
+Posthoc native evaluation after this trial: success=false, score0.33333334.
+Evaluation was saved separately and was not included in either model decision.
+The earlier contact-plane arrival did not establish seating; successful robot
+tracking was insufficient. Do not repeat the same straight-down/release recipe
+or report this as autonomous recovery. Current displaced scene is preserved at
+1987, gripper open, available for a new image-grounded recovery decision.
+
+Local receipts/RGB and selected1987 RGB-D are backed up. Public evidence:
+[final image](evidence/guarded_release_20261001/after_right.png),
+[withdrawal receipt](evidence/guarded_release_20261001/receipt.json),
+[posthoc evaluation](evidence/guarded_release_20261001/evaluator_only.json).
+Artifacts: `runs/guarded_full_lift_20261001_release1893_review`,
+`_release1893_execution`, `_withdraw1923_review`, `_withdraw1923_execution`,
+`_capture1987`. Grasp assistance and operator-defined stages remain disclosed.
+
 ## Latest1893: guarded contact-plane approach arrived, no release
 
 Camera returned to the known PCB-side view after the6cm standoff, ending1803

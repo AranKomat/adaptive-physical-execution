@@ -1,0 +1,9 @@
+{
+  "evaluation": {
+    "native": true,
+    "note": "upstream native grader",
+    "score": 0.3333333432674408,
+    "success": false
+  },
+  "restriction": "Posthoc scoring only; excluded from all control/model requests"
+}
