@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST1547: depth feedback corrected the bad connector association at1483;
+rough axes1.095deg apart, sampled gap140.373mm. Endpoint correspondence still
+unresolved. Closer PCB-side camera capture1547 is local for the next check;
+no alignment correction/descent/insertion. See `docs/GUARDED_CARRY_CURRENT.md`.
+
 NEWEST: held1483, elevated PCB-side view exposes contact strip. Fresh inventory
 has one depth-inconsistent connector association (smooth background patch), so
 its raw axis is unusable. Two socket rim samples remain consistent. No new

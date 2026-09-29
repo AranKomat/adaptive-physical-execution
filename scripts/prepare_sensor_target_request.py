@@ -23,6 +23,8 @@ def main():
     p.add_argument('--prior-carry-response', type=Path)
     p.add_argument('--project-carry-anchor',action='store_true')
     p.add_argument('--contact-receipt',type=Path)
+    p.add_argument('--feature-measurements',type=Path,
+                   help='Current raw depth results to reconsider a prior visual association')
     args = p.parse_args()
     if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
         raise ValueError('Projected carry anchor requires historical capture and response')
@@ -242,6 +244,20 @@ def main():
             'the view needed for missing features. Never call an empty gap a solid surface. '
             'Unseen clearance and insertion alignment remain unknown regardless of localization. '
             '\nRobot-only state: '+json.dumps(state))}]
+    if args.feature_measurements:
+        if args.stage not in ('feature_inventory','correspondence'):
+            raise ValueError('Measurement feedback requires feature localization')
+        measurements = json.loads(args.feature_measurements.read_text())
+        if measurements['observation_id'] != state['observation_id']:
+            raise ValueError('Feature measurement feedback is stale')
+        content.append({'type':'text','text':(
+            'Previous visual selections were independently deprojected with CURRENT legal depth. '
+            'A smooth local depth patch can still be the WRONG semantic surface. Reconsider '
+            'feature identity using RGB plus these raw measurements: do not interpret a spurious '
+            'background sample as card tilt. Select new interior pixels only where visual identity '
+            'supports them, or report insufficient evidence. Do not choose pixels merely to match '
+            'an expected depth or edit the measurements. These are not object poses or clearance. '
+            + json.dumps(measurements))})
     for role in ('left', 'right', 'wrist'):
         encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},

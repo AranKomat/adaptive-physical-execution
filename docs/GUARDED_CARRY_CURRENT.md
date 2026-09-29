@@ -1,5 +1,33 @@
 # Guarded lift and carry: current continuation
 
+## Latest: corrected association, closer capture1547
+
+Current-observation depth feedback led Astra to replace the bad1483 connector
+pixel with [301,181] and select [330,194] on the same strip. Fresh raw depth:
+[0.455797,0.026793,0.178241] and [0.490622,0.026769,0.178887]m; spreads
+3.223/3.052mm. Sampled connector/socket axes differ1.095degrees and minimum
+sampled vertical separation is140.373mm. These are not corresponding endpoints
+or whole-object clearance. The old invalid pair is preserved separately.
+
+A separate endpoint-correspondence review returned inspect with all endpoints
+null: full terminations/key association remain unresolved at1483. No alignment
+correction or descent was commanded. Feedback and correspondence reviews cost
+$0.046315 and$0.04048375 respectively; reserved-call count4384.
+
+A closer camera-only view along the exposed PCB side reached1547: eye
+[0.60,-0.15,0.40], gaze[0.478,0.028,0.178],64actions, arm error
+0.825mm/0.001943rad. Image now shows a substantially larger contact strip.
+No current endpoint labels have yet been measured from1547. Next use that
+capture for correspondence, retaining socket identity; do not repeat1483's
+pixel coordinates on the new camera image. No insertion/release.
+
+New `--feature-measurements` prompt option accepts only current-observation
+feedback for inventory/correspondence, explicitly distinguishing semantic
+identity from smooth depth.229 CPU tests pass. Local artifacts:
+`_feature1483_feedback_review`, `_feature1483_corrected.json`,
+`_correspondence1483_review`, `_pcb_close_view`, `_capture1547_flat`, all under
+the `runs/guarded_full_lift_20261001` prefix.
+
 ## Latest state: PCB-side evidence at1483
 
 One diagnosis-driven elevated PCB-side camera move to eye[0.7,-0.3,0.55],

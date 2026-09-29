@@ -6,6 +6,25 @@ import sys
 import pytest
 
 
+@pytest.mark.parametrize('measurement_id,accepted',[('e:12',True),('e:11',False)])
+def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
+    for role in ('left','right','wrist'):
+        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+    measurements=tmp_path/'measurements.json'
+    measurements.write_text(json.dumps({'observation_id':measurement_id,'connector':{'samples':[]}}))
+    output=tmp_path/'messages.json'
+    script=Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
+    result=subprocess.run([sys.executable,str(script),'--stage','feature_inventory',
+        '--capture',str(tmp_path),'--feature-measurements',str(measurements),'--output',str(output)],
+        capture_output=True,text=True)
+    assert (result.returncode==0)==accepted
+    if accepted:
+        assert 'WRONG semantic surface' in output.read_text()
+    else:
+        assert not output.exists()
+
+
 @pytest.mark.parametrize('result_id,accepted',[('e:12',True),('e:11',False)])
 def test_contact_recovery_uses_current_receipt_not_evaluator(tmp_path,result_id,accepted):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
