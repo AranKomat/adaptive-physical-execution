@@ -23,3 +23,18 @@ conversion, input preservation, unchanged joints, and invalid-input rejection.
 Live inference, FK/bounds qualification and Hybrid execution remain separate
 requirements. Results using this conversion must not be described as raw-policy
 results without the conversion disclosure.
+
+## Live post-High probe
+
+The restarted GPU-1 worker at `ff50bb4` loaded with tolerance 0.01. A proposal-only
+request against the final Direct-A High observation returned a gripper overshoot
+of 0.01310933, exceeding that tolerance. The request was rejected before an
+ActionChunk or FK preview was returned. No robot motion was requested by the
+probe, and full FK/bounds qualification remains incomplete. The full rejected raw
+array was not retained by this server path; only its reported maximum overshoot
+is available. Do not confuse it with the earlier saved raw proposal.
+
+This demonstrates that a one-percent conversion does not generally resolve the
+model's output-contract mismatch. Do not keep widening the tolerance based on
+successive failures. Before Hybrid execution, inspect upstream gripper-domain
+handling and preserve rejected raw predictions for a principled decision.

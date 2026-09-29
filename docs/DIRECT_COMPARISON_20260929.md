@@ -88,9 +88,33 @@ Controller code: integration commit `77dbaf4`. Simulator worker used `0b9c6a6`;
 the later integration changes affected the Mac-side API adapter and documentation,
 not simulator control. Upstream pins remain in `upstream.lock.json`.
 
+## High-reasoning follow-up
+
+`astra_direct_a_high_20_20260929` used Astra Flex with requested high reasoning,
+the same scene/seed and Direct-A horizon, and a 20-decision cap. It completed
+20 calls and 71 control steps (4.733 simulated seconds) in 406.45 wall seconds.
+Reported API cost was $0.66809500: 403,252 input tokens (362,140 cached),
+9,334 output tokens including 5,424 reasoning tokens. Summed model latency
+was 317.70 seconds. The run ended at the decision cap, without a runtime error.
+
+Native score remained 0 and success false. The model reported missed lift tests;
+the inspected final left-camera frame still shows the card on its support.
+There is no verified grasp/lift success. Two proposed chunks were rejected without
+execution: one IK nonconvergence (2.98 mm position error), and one large joint
+transition caught by the continuity guard. This single bounded run does not
+establish that high reasoning is generally ineffective, but it did not fix this
+episode's contact/alignment problem. No further reasoning escalation is justified
+by this result alone.
+
+The trace and image hashes verified:
+`f3dd0db5efc75034821b4bf38cd15893700ebd47bb5b8030a00a12f2794f4354`.
+API evidence, sensor frames and simulator recordings are retained locally.
+The Mac controller included the boundary metadata change committed as `ff50bb4`;
+the already-running simulator remained on its prior loaded implementation.
+
 ## Next / remaining
 
-- [ ] One bounded High-reasoning rescue trial on the same GPU task and sensor setup.
+- [x] One bounded High-reasoning rescue trial: negative task result, recorded above.
 - [ ] Resolve FLUX's small out-of-range gripper output explicitly; preserve raw
   predictions and any declared conversion. Default strict execution stays unchanged.
 - [ ] Actual Hybrid review/execution trial, then matched comparisons.
