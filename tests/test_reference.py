@@ -42,3 +42,35 @@ def test_success_at_reset_does_not_count_as_controller_success(tmp_path):
     r=json.loads((out/'result.json').read_text())
     assert r['terminal_reason']=='already_terminal_at_reset'
     assert r['environment_success_host_only'] and not r['native_success'] and not r['valid_robot_result']
+
+
+@pytest.mark.parametrize('stale', [False, True])
+def test_explicit_continuation_preserves_episode_and_excludes_grader(tmp_path, stale):
+    class Continuing(NativeInterfaceDouble):
+        resets = 0
+        def reset(self, seed):
+            self.resets += 1
+            return super().reset(seed)
+        def observe(self):
+            return self._observe()
+    def ctrl():
+        return ControllerPort('direct_roboicl',FixtureProvider(),ExecutionMemory(MemoryConfig(),60),Limits(),3)
+    env = Continuing()
+    prior = run_episode(env,ctrl(),tmp_path/'prior',0,RunBudget(1,60,60))
+    obs = env.observe()
+    task = json.loads((prior/'manifest.json').read_text())['task_instruction']
+    with pytest.raises(ValueError):
+        reference_from_run(prior,'fixture_arm',task)
+    c = ctrl()
+    out = run_episode(env,c,tmp_path/'continued',0,RunBudget(1,60,60),
+                      reference_run=prior,resume_observation_id='wrong:3' if stale else obs.key)
+    result = json.loads((out/'result.json').read_text())
+    assert env.resets == 1
+    assert env.seq == (3 if stale else 6)
+    if stale:
+        assert result['executed_control_steps'] == 0
+    else:
+        context = dumps(c.memory.references)
+        assert 'CONTINUATION_HISTORY' in context and 'NOT a successful demonstration' in context
+        assert 'NATIVE_INTERFACE_TEST_SENTINEL' not in context
+        assert result['executed_control_steps'] == 3

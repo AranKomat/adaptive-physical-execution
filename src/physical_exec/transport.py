@@ -181,6 +181,7 @@ class RemoteEnvironment:
         self.client = client; self._evaluation = Evaluation()
         self._metadata = client.call("/metadata")
     def reset(self, seed): return decode_observation(self.client.call("/reset", {"seed": seed}, mutating=True))
+    def observe(self): return decode_observation(self.client.call("/observe"))
     def step(self, action, command_id):
         result = decode_result(self.client.call("/step", {"command_id": command_id, "action": action.to_dict()}, mutating=True))
         self._evaluation = result.evaluation

@@ -25,7 +25,7 @@ class RunBudget:
 
 def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 budget: RunBudget, manifest_extra: dict | None = None, reference_run: str | Path | None = None,
-                allow_related_reference: bool = False) -> Path:
+                allow_related_reference: bool = False, resume_observation_id: str | None = None) -> Path:
     metadata = env.metadata()
     if metadata.get("backend") not in ("fixture", "embodiedswe") or metadata.get("real_hardware_supported") is not False:
         raise ValueError("this runner accepts only the audited simulation/fixture backends, never real hardware")
@@ -41,12 +41,35 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
     evaluation = Evaluation(); terminal = "not_started"; error = None; source_steps = {}
     provider = controller.provider; obs = None
     try:
-        obs = env.reset(seed)
+        if resume_observation_id is not None:
+            if reference_run is None:
+                raise ValueError('explicit continuation requires prior trace context')
+            import json
+            prior = Path(reference_run)
+            prior_result = json.loads((prior/'result.json').read_text())
+            if prior_result['terminal_reason'] not in ('decision_budget', 'control_budget', 'wall_budget'):
+                raise ValueError('only a clean budget-ended run may continue')
+            prior_events = [json.loads(line) for line in (prior/'events.jsonl').read_text().splitlines()]
+            last = [row['data'] for row in prior_events if row['kind'] == 'observation'][-1]
+            if last['observation_id'] != resume_observation_id:
+                raise ValueError('prior trace does not end at requested observation')
+            obs = env.observe()
+            if obs.key != resume_observation_id:
+                raise ValueError('continuation observation changed; no reset or execution')
+            trace.event('explicit_continuation', {'observation_id': obs.key,
+                        'prior_run': str(Path(reference_run).resolve()),
+                        'context_mode': 'prior trace as reference; new bounded review budget'})
+        else:
+            obs = env.reset(seed)
         controller.memory.reset(); controller.memory.observe(obs)
+        if resume_observation_id is not None:
+            controller.memory.initial_sequence = obs.seq
+            controller.memory.anchors.configure(obs.seq + budget.max_control_steps)
         if reference_run:
             from .memory import reference_from_run
             controller.memory.references = reference_from_run(reference_run, obs.robot, obs.task,
-                allow_related_task=allow_related_reference, expected_dt=obs.control_dt, expected_eef_frame=obs.eef_frame)
+                allow_related_task=allow_related_reference, expected_dt=obs.control_dt, expected_eef_frame=obs.eef_frame,
+                continuation_observation_id=resume_observation_id)
             trace.event("reference_loaded", {"source_run": str(Path(reference_run).resolve()),
                         "related_task_opt_in": allow_related_reference})
         trace.observation(obs)

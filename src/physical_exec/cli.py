@@ -60,6 +60,7 @@ def parser():
     r.add_argument("--max-wall-seconds",type=float,default=1800);r.add_argument("--max-total-tokens",type=int,default=20_000_000)
     r.add_argument("--request-timeout",type=float,default=180);r.add_argument("--max-output-tokens",type=int,default=8192)
     r.add_argument("--reference-run");r.add_argument("--allow-related-reference",action="store_true")
+    r.add_argument("--resume-observation-id", help="explicit continuation of a clean budget-ended trace; requires --reference-run")
     return p
 
 
@@ -160,7 +161,8 @@ def main(argv=None):
                              "motor_policy_metadata":proposer.metadata if proposer is not None else None,
                              "task_config_path":str(Path(args.task).resolve()),
                              "model_output_token_cap":args.max_output_tokens},
-                            reference_run=args.reference_run,allow_related_reference=args.allow_related_reference)
+                            reference_run=args.reference_run,allow_related_reference=args.allow_related_reference,
+                            resume_observation_id=args.resume_observation_id)
             render_html(out)
             result=json.loads((out/"result.json").read_text())
             print(json.dumps(result,indent=2))

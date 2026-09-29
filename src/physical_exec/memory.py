@@ -46,6 +46,7 @@ class ExecutionMemory:
 
     def reset(self):
         self.episode_id = None
+        self.initial_sequence = 0
         self.observations: dict[int, Observation] = {}
         self.messages: dict[int, dict] = {}
         self.records: list[tuple[int, int, list]] = []
@@ -123,16 +124,16 @@ class ExecutionMemory:
 
     def render(self, observation: Observation) -> list[dict]:
         self.observe(observation)
-        if min(self.observations) != 0:
+        if min(self.observations) != self.initial_sequence:
             raise ValueError("memory requires an explicit initial observation at sequence 0")
         if self.config.mode == "anchored":
-            live = self.anchors.render(self.observation_message(0), observation.seq,
+            live = self.anchors.render(self.observation_message(self.initial_sequence), observation.seq,
                                        self.observation_message, self.rejections)
         else:
-            live = [self.observation_message(0)]
+            live = [self.observation_message(self.initial_sequence)]
             for _, end, items in self.records:
                 live.extend(deepcopy(items)); live.append(self.observation_message(end))
-            if not self.records and observation.seq != 0:
+            if not self.records and observation.seq != self.initial_sequence:
                 live.append(self.observation_message(observation.seq))
             live += deepcopy(self.rejections)
         messages = deepcopy(self.references)
@@ -158,10 +159,12 @@ def enforce_context_budget(messages: list[dict], cfg: MemoryConfig) -> dict:
 
 def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
                        max_chunks: int = 12, allow_related_task: bool = False,
-                       expected_dt: float | None = None, expected_eef_frame: str | None = None) -> list[dict]:
-    """Export successful *real simulated* execution as TRAIN context, without scorer data.
+                       expected_dt: float | None = None, expected_eef_frame: str | None = None,
+                       continuation_observation_id: str | None = None) -> list[dict]:
+    """Export successful simulated execution, or explicit same-episode history.
 
     Same robot/control contract required. Pure fixtures cannot become demonstrations.
+    Budget-ended continuation history is explicitly NOT a successful demonstration.
     No exact-trajectory transfer promise. Images are checksum verified first.
     """
     if type(max_chunks) is not int or max_chunks < 1: raise ValueError("max_chunks must be positive")
@@ -172,8 +175,10 @@ def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
         raise ValueError("reference control period mismatch")
     if expected_eef_frame is not None and manifest.get("eef_frame") != expected_eef_frame:
         raise ValueError("reference EEF frame mismatch")
-    if (manifest.get("backend") == "fixture" or not result.get("native_success", False)
-            or result.get("terminal_reason") != "native_success" or not result.get("valid_robot_result", False)):
+    continuing = continuation_observation_id is not None
+    terminal_ok = (result.get('terminal_reason') in ('decision_budget', 'control_budget', 'wall_budget')
+                   if continuing else result.get('native_success', False) and result.get('terminal_reason') == 'native_success')
+    if manifest.get("backend") == "fixture" or not terminal_ok or not result.get("valid_robot_result", False):
         raise ValueError("only a natively verified simulator rollout can become a reference")
     if manifest.get("robot") != expected_robot:
         raise ValueError("reference robot mismatch; explicit retargeting is not implemented")
@@ -181,12 +186,18 @@ def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
         raise ValueError("reference task mismatch; opt in explicitly to related-task use")
     events = [json.loads(x) for x in (root / "events.jsonl").read_text().splitlines()]
     observations = {e["data"]["observation_id"]: e["data"] for e in events if e["kind"] == "observation"}
+    if continuing and list(observations)[-1] != continuation_observation_id:
+        raise ValueError('continuation history ends at a different observation')
     actions = {e["data"]["command_id"]: e["data"]["action"] for e in events if e["kind"] == "execution_requested"}
     receipts = [e["data"] for e in events if e["kind"] == "execution_receipt" and e["data"]["executed_steps"] > 0]
     if not receipts: raise ValueError("no executed reference chunks")
     import numpy as np
     ids = sorted(set(np.linspace(0, len(receipts)-1, min(max_chunks, len(receipts)), dtype=int).tolist()))
-    output = [user_text('<TRAIN_REFERENCE>Prior recorded procedure, not current geometry. Adapt all positions to current observations. No evaluator labels or reward supplied.</TRAIN_REFERENCE>')]
+    output = [user_text(
+        '<CONTINUATION_HISTORY>Earlier executed chunks in THIS paused episode, NOT a successful demonstration. '
+        'The prior budget ended; a new bounded budget continues at the exact final observation. '
+        'TRAIN source tags below denote historical context only, not success. No evaluator labels supplied.</CONTINUATION_HISTORY>'
+        if continuing else '<TRAIN_REFERENCE>Prior recorded procedure, not current geometry. Adapt all positions to current observations. No evaluator labels or reward supplied.</TRAIN_REFERENCE>')]
     prev_end = 0
     for i in ids:
         r = receipts[i]; a = actions[r["command_id"]]
