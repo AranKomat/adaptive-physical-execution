@@ -4,6 +4,11 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Isolated native guard-enabled hold and1cm upward move passed (30+60actions,
+  final0.247mm). Temporary worker closed; held-card episode unchanged. This is
+  normal-path qualification only; native contact-stop branch remains untested.
+  No new phase complete. See `docs/CONTACT_GUARD_QUALIFICATION_20260930.md`.
+
 - Contact source audit found visual/collision geometry separation AND an
   instruction mismatch: upstream describes bracket-through-cutout assembly;
   our configured task only says align/seat. Exact failed contact is unproven.

@@ -7,6 +7,12 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+Contact guard now loaded and normal-path qualified on a separate native worker:
+30-action hold +60-action1cm upward move, final0.247mm. Worker closed after test;
+no change to held episode1800. Threshold-crossing stop remains fake-stall tested
+only, not native-contact qualified. No phase completion. See
+`CONTACT_GUARD_QUALIFICATION_20260930.md`.
+
 Static contact audit: upstream collision is an invisible fixture distinct from
 the visual PC. Its task description also supplies a bracket-through-cutout
 sequence omitted by our configured instruction. This is a plausible contact

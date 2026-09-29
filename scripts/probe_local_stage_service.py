@@ -16,6 +16,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--url', required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--contact-tracking-guard', action='store_true',
+                        help='qualify guard-enabled free-space execution; does not test a contact stall')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
@@ -23,6 +25,8 @@ def main():
         metadata = client.call('/metadata')
         if not metadata.get('local_stages_enabled') or metadata.get('real_hardware_supported') is not False:
             raise ValueError('requires explicitly enabled simulation worker')
+        if args.contact_tracking_guard and not metadata.get('contact_tracking_guard_enabled'):
+            raise ValueError('worker does not advertise contact tracking guard')
         write_json(args.output/'metadata.json', metadata)
         obs = decode_observation(client.call('/reset', {'seed': 0}, mutating=True))
         write_json(args.output/'initial.json', obs.public_state())
@@ -31,6 +35,8 @@ def main():
             target[2] += dz
             request = dict(observation_id=obs.key, hand_pose_world=target.tolist(),
                            gripper_open=1., max_steps=steps, target_source='robot-only '+name+' qualification; unknown clearance')
+            if args.contact_tracking_guard:
+                request['contact_tracking_guard'] = True
             envelope = dict(command_id=uuid4().hex, action=request)
             write_json(args.output/f'{index}_request.json', envelope)
             result = decode_result(client.call('/local-stage', envelope, mutating=True))
