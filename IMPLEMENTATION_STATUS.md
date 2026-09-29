@@ -17,6 +17,12 @@ Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRE
   Full-target error84.947mm; cause unknown, no retry. Evaluator stayed0.3333.
   See `docs/GUARDED_VERTICAL_RETENTION_20260930.md`.
 
+- Matched open-gripper baseline (fresh seed0, same controller/ramp/guard) ran
+  9cm for64actions without a guard stop, ending3.793mm short. Held-card
+  continuation stopped after6 actions at84.947mm full-target error. This
+  points toward payload/grasp/collision interaction, not generic DiffIK failure;
+  no guard relaxation or retry. See `docs/GUARDED_FREE_BASELINE_20260930.md`.
+
 - Recovered1800 review with unchanged minimal instruction produced four valid
   sensor anchors: sampled connector/rim axes differ7.947deg, mostly yaw. Full
   pose and swept clearance remain unknown. No motion. First API output was

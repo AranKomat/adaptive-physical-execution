@@ -19,6 +19,12 @@ continuation was stopped after6 actions by the native tracking guard; full
 target error84.947mm, cause unknown, no retry. Evaluator remains0.3333. See
 `GUARDED_VERTICAL_RETENTION_20260930.md`.
 
+Matched open-gripper baseline on a fresh worker tracked the same9cm move for64
+actions without a guard stop (3.793mm short), unlike the held-card+84mm stop
+after6 actions (84.947mm full-target error). This shifts diagnosis toward
+payload/grasp/collision interaction, not generic DiffIK failure. No guard
+relaxation. See `GUARDED_FREE_BASELINE_20260930.md`.
+
 Recovered1800 scene-level review (minimal instruction, no source audit/evaluator
 input) recommends alignment and whole-envelope inspection before correction.
 Four selected pixels pass depth tests; sampled axes differ7.947deg, mostly yaw.
