@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 
 import numpy as np
+import pytest
 
 
 def load_script(name):
@@ -42,6 +43,7 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
 
     plan = tmp_path/'plan.json'
     plan.write_text(json.dumps({'observation_id':initial.key,
+                    'target_source':'cached pixel on fresh depth',
                     'measured_surface':{'surface_point_world_m':[.18,-.34,.13]}}))
     output = tmp_path/'output'
     monkeypatch.setattr(module, 'LocalClient', Client)
@@ -52,7 +54,38 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
                                            '--output',str(output),'--pause-before-close'])
     module.main()
     assert calls and all(action['gripper_open'] == 1 for action in calls)
+    assert all(action['target_source'].startswith('cached pixel on fresh depth') for action in calls)
     result = json.loads((output/'result.json').read_text())
     assert result['terminal_reason'] == 'awaiting_preclosure_review'
     assert result['actions'] == 64*len(calls)
     assert result['grasp_verified'] is False
+
+
+def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, observation):
+    module = load_script('probe_contact_stage')
+    calls = []
+    class Client:
+        def __init__(self, *args, **kwargs):
+            pass
+        def close(self):
+            pass
+        def call(self, route, envelope=None, **kwargs):
+            if route == '/metadata':
+                return {'local_stages_enabled':True, 'real_hardware_supported':False}
+            if route == '/observe':
+                return observation
+            calls.append(envelope)
+            receipt = SimpleNamespace(reason='local stage budget ended without arrival',
+                                      to_dict=lambda: {'test_double':True})
+            return SimpleNamespace(receipt=receipt, observation=observation)
+    monkeypatch.setattr(module,'LocalClient',Client)
+    monkeypatch.setattr(module,'decode_observation',lambda value:value)
+    monkeypatch.setattr(module,'decode_result',lambda value:value)
+    monkeypatch.setenv('PHYSICAL_EXEC_SIM_TOKEN','test-only')
+    monkeypatch.setattr(module.sys,'argv',['test','--url','http://unused','--observation-id',observation.key,
+                         '--mode','close','--output',str(tmp_path/'contact')])
+    with pytest.raises(RuntimeError,match='no retry'):
+        module.main()
+    assert len(calls) == 1
+    assert calls[0]['action']['max_steps'] == 64
+    assert calls[0]['action']['hand_pose_world'] == observation.eef_pose.tolist()

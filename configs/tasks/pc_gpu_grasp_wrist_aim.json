@@ -1,0 +1,68 @@
+{
+  "schema": "physical-exec-task/v1",
+  "id": "pc_gpu",
+  "preset": "assembly.pc_gpu.franka.joint",
+  "instruction": "Install the loose graphics card into the computer case's PCIe slot. Use visual feedback to align and seat it.",
+  "control_hz": 15,
+  "image_size": [
+    640,
+    360
+  ],
+  "camera_map": {
+    "wrist": "wrist",
+    "left": "external_left",
+    "right": "external_right"
+  },
+  "extra_cameras": {
+    "external_left": {
+      "eye": [
+        1.2,
+        -0.95,
+        0.8
+      ],
+      "target": [
+        0.45,
+        0.0,
+        0.1
+      ],
+      "focal": 18.0
+    },
+    "external_right": {
+      "eye": [
+        0.55,
+        -0.65,
+        0.4
+      ],
+      "target": [
+        0.22,
+        -0.34,
+        0.2
+      ],
+      "focal": 18.0
+    }
+  },
+  "limits": {
+    "max_translation_m": 0.03,
+    "max_rotation_rad": 0.15,
+    "max_joint_step_rad": 0.15,
+    "max_chunk": 32
+  },
+  "default_horizons": {
+    "direct_roboicl": 5,
+    "direct_reference": 3,
+    "hybrid": 8
+  },
+  "notes": [
+    "Augmented static oblique inspection condition, not the original baseline or a physical camera rig.",
+    "Right-camera target chosen around retained legal RGB-D grasp points and robot hand geometry, not hidden object state.",
+    "Preserves overview and wrist, control rate, focal length and scene physics including grasp assistance.",
+    "No camera body, reachability or collision clearance is certified. This does not qualify movable-camera hardware.",
+    "Wrist orientation aimed at nominal robot pinch center; eye/focal unchanged. Not baseline DROID camera conditioning."
+  ],
+  "source": "https://github.com/EmbodiedSWE/EmbodiedSWE/blob/d34837e99e5016525f0e9b6bb84791eb3d4b8162/robobench/suites/assembly/configs/envs.py",
+  "wrist_target_hand": [
+    0,
+    0,
+    0.1034
+  ]
+}

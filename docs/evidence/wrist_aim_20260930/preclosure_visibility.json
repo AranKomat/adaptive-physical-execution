@@ -1,0 +1,785 @@
+{
+  "observation_id": "80cbc5aa604749dc8c0b1b905e4e6903:640",
+  "samples": [
+    {
+      "hand_point_m": [
+        0.0,
+        -0.03999951839447022,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26103258956013914,
+        -0.36291347116240125,
+        0.11325437785578071
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            155.3900700846654,
+            211.98264876036686
+          ],
+          "point_optical_depth_m": 1.246361977313146,
+          "depth_spread_m": 0.006631970405578613,
+          "measured_optical_depth_m": 1.2353262901306152,
+          "behind_surface_m": 0.011035687182530785,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            332.82688030162456,
+            290.0719957334306
+          ],
+          "point_optical_depth_m": 0.4883182261252473,
+          "depth_spread_m": 0.00319671630859375,
+          "measured_optical_depth_m": 0.47411489486694336,
+          "behind_surface_m": 0.01420333125830392,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            162.46577854525916,
+            125.82114190933875
+          ],
+          "point_optical_depth_m": 0.07480043029281538,
+          "depth_spread_m": 0.000894010066986084,
+          "measured_optical_depth_m": 0.07690076529979706,
+          "behind_surface_m": -0.002100335006981674,
+          "status": "surface_consistent"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.03499957859516144,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610317164114259,
+        -0.35791353143971466,
+        0.11325443969179885
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            157.2001183453152,
+            211.03132172320144
+          ],
+          "point_optical_depth_m": 1.2497595668732555,
+          "depth_spread_m": 0.015480637550354004,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            336.8209627280464,
+            287.82283478790055
+          ],
+          "point_optical_depth_m": 0.49145021835644465,
+          "depth_spread_m": 0.0025482177734375,
+          "measured_optical_depth_m": 0.4774214029312134,
+          "behind_surface_m": 0.014028815425231267,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            184.30961435260133,
+            133.333623106148
+          ],
+          "point_optical_depth_m": 0.0759867811205262,
+          "depth_spread_m": 0.0029867738485336304,
+          "measured_optical_depth_m": 0.06005533039569855,
+          "behind_surface_m": 0.015931450724827656,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.029999638795852664,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610308432627127,
+        -0.352913591717028,
+        0.11325450152781699
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            159.00035171396658,
+            210.08515320712507
+          ],
+          "point_optical_depth_m": 1.253157156433365,
+          "depth_spread_m": 0.008680343627929688,
+          "measured_optical_depth_m": 1.2442171573638916,
+          "behind_surface_m": 0.008939999069473403,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            340.7644592867905,
+            285.60215992398565
+          ],
+          "point_optical_depth_m": 0.49458221058764196,
+          "depth_spread_m": 0.0026944875717163086,
+          "measured_optical_depth_m": 0.4875553846359253,
+          "behind_surface_m": 0.007026825951716664,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            205.48185754639522,
+            140.61513173359276
+          ],
+          "point_optical_depth_m": 0.07717313194823704,
+          "depth_spread_m": 0.000588536262512207,
+          "measured_optical_depth_m": 0.05045698583126068,
+          "behind_surface_m": 0.026716146116976355,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.024999698996543886,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610299701139995,
+        -0.34791365199434143,
+        0.11325456336383513
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            160.79084980587248,
+            209.14410136787097
+          ],
+          "point_optical_depth_m": 1.2565547459934745,
+          "depth_spread_m": 0.00858151912689209,
+          "measured_optical_depth_m": 1.2371400594711304,
+          "behind_surface_m": 0.019414686522344127,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            344.65832495087324,
+            283.4094333741129
+          ],
+          "point_optical_depth_m": 0.49771420281883927,
+          "depth_spread_m": 0.002639174461364746,
+          "measured_optical_depth_m": 0.48254144191741943,
+          "behind_surface_m": 0.015172760901419835,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            226.0130115612501,
+            147.67615846194545
+          ],
+          "point_optical_depth_m": 0.07835948277594786,
+          "depth_spread_m": 0.0014551132917404175,
+          "measured_optical_depth_m": 0.051201581954956055,
+          "behind_surface_m": 0.0271579008209918,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.01999975919723511,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102909696528626,
+        -0.3429137122716548,
+        0.1132546251998533
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            162.57169137752308,
+            208.20812481252133
+          ],
+          "point_optical_depth_m": 1.259952335553584,
+          "depth_spread_m": 0.008484840393066406,
+          "measured_optical_depth_m": 1.2301428318023682,
+          "behind_surface_m": 0.029809503751215827,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            348.5034908059937,
+            281.24413082221474
+          ],
+          "point_optical_depth_m": 0.5008461950500366,
+          "depth_spread_m": 0.0025892257690429688,
+          "measured_optical_depth_m": 0.4779397249221802,
+          "behind_surface_m": 0.022906470127856404,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            245.93176011233837,
+            154.52656812780307
+          ],
+          "point_optical_depth_m": 0.07954583360365866,
+          "depth_spread_m": 0.0006071627140045166,
+          "measured_optical_depth_m": 0.05047088861465454,
+          "behind_surface_m": 0.02907494498900412,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.014999819397926332,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102822381657304,
+        -0.3379137725489682,
+        0.11325468703587144
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            164.3429543381939,
+            207.27718259343877
+          ],
+          "point_optical_depth_m": 1.2633499251136933,
+          "depth_spread_m": 0.008426547050476074,
+          "measured_optical_depth_m": 1.2259148359298706,
+          "behind_surface_m": 0.037435089183822656,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            352.30086479277605,
+            279.10574098575506
+          ],
+          "point_optical_depth_m": 0.5039781872812339,
+          "depth_spread_m": 0.002550959587097168,
+          "measured_optical_depth_m": 0.47439277172088623,
+          "behind_surface_m": 0.02958541556034766,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            265.26510089830805,
+            161.17564571688123
+          ],
+          "point_optical_depth_m": 0.08073218443136948,
+          "depth_spread_m": 0.0006171464920043945,
+          "measured_optical_depth_m": 0.05045454204082489,
+          "behind_surface_m": 0.03027764239054459,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.009999879598617555,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610273506678598,
+        -0.33291383282628156,
+        0.11325474887188958
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            166.104715761307,
+            206.35123420229425
+          ],
+          "point_optical_depth_m": 1.266747514673803,
+          "depth_spread_m": 0.02193605899810791,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            356.0513324215083,
+            276.99376521324297
+          ],
+          "point_optical_depth_m": 0.5071101795124312,
+          "depth_spread_m": 0.0025032758712768555,
+          "measured_optical_depth_m": 0.46994447708129883,
+          "behind_surface_m": 0.037165702431132375,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            284.03846768641995,
+            167.63213835125126
+          ],
+          "point_optical_depth_m": 0.08191853525908031,
+          "depth_spread_m": 0.0004309415817260742,
+          "measured_optical_depth_m": 0.08949717879295349,
+          "behind_surface_m": -0.007578643533873178,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.004999939799308781,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610264775191466,
+        -0.327913893103595,
+        0.11325481070790772
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            167.85705189561082,
+            205.4302395641918
+          ],
+          "point_optical_depth_m": 1.2701451042339125,
+          "depth_spread_m": 0.019234061241149902,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            359.7557574605563,
+            274.90771709657076
+          ],
+          "point_optical_depth_m": 0.5102421717436285,
+          "depth_spread_m": 0.0024570226669311523,
+          "measured_optical_depth_m": 0.4655787944793701,
+          "behind_surface_m": 0.0446633772642584,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            302.2758419408378,
+            173.90429368028168
+          ],
+          "point_optical_depth_m": 0.08310488608679113,
+          "depth_spread_m": 0.0004450678825378418,
+          "measured_optical_depth_m": 0.09095261991024017,
+          "behind_surface_m": -0.00784773382344904,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.0,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610256043704334,
+        -0.32291395338090834,
+        0.11325487254392586
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            169.60003817618022,
+            204.51415903188652
+          ],
+          "point_optical_depth_m": 1.273542693794022,
+          "depth_spread_m": 0.013890743255615234,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            363.41498259958024,
+            272.84712209754184
+          ],
+          "point_optical_depth_m": 0.5133741639748259,
+          "depth_spread_m": 0.016062021255493164,
+          "status": "depth_edge"
+        },
+        "wrist": {
+          "pixel_uv": [
+            319.99985502429706,
+            179.99989502959843
+          ],
+          "point_optical_depth_m": 0.08429123691450197,
+          "depth_spread_m": 0.002140820026397705,
+          "measured_optical_depth_m": 0.07991772890090942,
+          "behind_surface_m": 0.004373508013592542,
+          "status": "surface_consistent"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.004999939799308781,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102473122172015,
+        -0.3179140136582217,
+        0.113254934379944
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            171.33374923524175,
+            203.6029533800959
+          ],
+          "point_optical_depth_m": 1.2769402833541315,
+          "depth_spread_m": 0.008883357048034668,
+          "measured_optical_depth_m": 1.224037528038025,
+          "behind_surface_m": 0.05290275531610655,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            367.02983008861906,
+            270.81151718798634
+          ],
+          "point_optical_depth_m": 0.5165061562060232,
+          "depth_spread_m": 0.002464890480041504,
+          "measured_optical_depth_m": 0.4748111963272095,
+          "behind_surface_m": 0.041694959878813775,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            337.2318818889749,
+            185.92629362303094
+          ],
+          "point_optical_depth_m": 0.0854775877422128,
+          "depth_spread_m": 0.0015359371900558472,
+          "measured_optical_depth_m": 0.06840093433856964,
+          "behind_surface_m": 0.017076653403643158,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.009999879598617555,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102385807300693,
+        -0.3129140739355351,
+        0.11325499621596213
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            173.05825891282547,
+            202.69658379990025
+          ],
+          "point_optical_depth_m": 1.280337872914241,
+          "depth_spread_m": 0.03718554973602295,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            370.6011023540654,
+            268.8004505028923
+          ],
+          "point_optical_depth_m": 0.5196381484372206,
+          "depth_spread_m": 0.00310361385345459,
+          "measured_optical_depth_m": 0.4712793827056885,
+          "behind_surface_m": 0.04835876573153208,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            353.99212707210467,
+            191.6904381580239
+          ],
+          "point_optical_depth_m": 0.08666393856992362,
+          "depth_spread_m": 0.0011382251977920532,
+          "measured_optical_depth_m": 0.05888549983501434,
+          "behind_surface_m": 0.027778438734909275,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.014999819397926328,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610229849242937,
+        -0.30791413421284847,
+        0.11325505805198027
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            174.77364026724905,
+            201.7950118932337
+          ],
+          "point_optical_depth_m": 1.2837354624743504,
+          "depth_spread_m": 0.02294313907623291,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            374.12958259249757,
+            266.8134810060044
+          ],
+          "point_optical_depth_m": 0.5227701406684179,
+          "depth_spread_m": 0.004012107849121094,
+          "measured_optical_depth_m": 0.4737813472747803,
+          "behind_surface_m": 0.0489887933936376,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            370.2997037237594,
+            197.2989019846886
+          ],
+          "point_optical_depth_m": 0.08785028939763444,
+          "depth_spread_m": 0.0008924752473831177,
+          "measured_optical_depth_m": 0.05213679373264313,
+          "behind_surface_m": 0.03571349566499131,
+          "status": "occluded"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.01999975919723511,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610221117755805,
+        -0.3029141944901619,
+        0.11325511988799841
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            176.47996558543414,
+            200.89819966746086
+          ],
+          "point_optical_depth_m": 1.28713305203446,
+          "depth_spread_m": 0.007971048355102539,
+          "measured_optical_depth_m": 1.2268879413604736,
+          "behind_surface_m": 0.0602451106739863,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            377.6160353432914,
+            264.8501781673731
+          ],
+          "point_optical_depth_m": 0.5259021328996152,
+          "depth_spread_m": 0.002507805824279785,
+          "measured_optical_depth_m": 0.49530768394470215,
+          "behind_surface_m": 0.030594448954913034,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            386.1727063166967,
+            202.75790811200363
+          ],
+          "point_optical_depth_m": 0.08903664022534526,
+          "depth_spread_m": 0.0011868476867675781,
+          "measured_optical_depth_m": 0.23953762650489807,
+          "behind_surface_m": -0.15050098627955283,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.02499969899654389,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102123862686727,
+        -0.29791425476747524,
+        0.11325518172401658
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            178.1773063930617,
+            200.00610953004062
+          ],
+          "point_optical_depth_m": 1.2905306415945694,
+          "depth_spread_m": 0.00802457332611084,
+          "measured_optical_depth_m": 1.230963945388794,
+          "behind_surface_m": 0.05956669620577548,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            381.06120704089346,
+            262.91012165235674
+          ],
+          "point_optical_depth_m": 0.5290341251308125,
+          "depth_spread_m": 0.003216266632080078,
+          "measured_optical_depth_m": 0.4707784652709961,
+          "behind_surface_m": 0.0582556598598164,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            401.628277619791,
+            208.07335224116224
+          ],
+          "point_optical_depth_m": 0.09022299105305608,
+          "depth_spread_m": 0.001216799020767212,
+          "measured_optical_depth_m": 0.24254357814788818,
+          "behind_surface_m": -0.1523205870948321,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.029999638795852657,
+        0.1034
+      ],
+      "world_point_m": [
+        0.26102036547815405,
+        -0.29291431504478865,
+        0.11325524356003472
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            179.86573346456518,
+            199.11870428327293
+          ],
+          "point_optical_depth_m": 1.293928231154679,
+          "depth_spread_m": 0.2796396017074585,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            384.46582654759106,
+            260.99290102160626
+          ],
+          "point_optical_depth_m": 0.5321661173620098,
+          "depth_spread_m": 0.0033038854598999023,
+          "measured_optical_depth_m": 0.4739866256713867,
+          "behind_surface_m": 0.058179491690623086,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            416.68267045620087,
+            213.250824005297
+          ],
+          "point_optical_depth_m": 0.0914093418807669,
+          "depth_spread_m": 0.0033723115921020508,
+          "measured_optical_depth_m": 0.24071893095970154,
+          "behind_surface_m": -0.14930958907893466,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.03499957859516144,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610194923294408,
+        -0.287914375322102,
+        0.11325530539605286
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            181.54531683296872,
+            198.23594711912853
+          ],
+          "point_optical_depth_m": 1.2973258207147882,
+          "depth_spread_m": 0.20395267009735107,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            387.83060566758064,
+            259.0981154415812
+          ],
+          "point_optical_depth_m": 0.5352981095932071,
+          "depth_spread_m": 0.0033583641052246094,
+          "measured_optical_depth_m": 0.47747480869293213,
+          "behind_surface_m": 0.05782330090027499,
+          "status": "occluded"
+        },
+        "wrist": {
+          "pixel_uv": [
+            431.35130471400436,
+            218.29562657644524
+          ],
+          "point_optical_depth_m": 0.09259569270847773,
+          "depth_spread_m": 0.0013350248336791992,
+          "measured_optical_depth_m": 0.10085789859294891,
+          "behind_surface_m": -0.008262205884471185,
+          "status": "in_front_of_surface"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.03999951839447022,
+        0.1034
+      ],
+      "world_point_m": [
+        0.2610186191807276,
+        -0.2829144355994154,
+        0.113255367232071
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            183.21612579956982,
+            197.3578016141598
+          ],
+          "point_optical_depth_m": 1.300723410274898,
+          "depth_spread_m": 0.009290456771850586,
+          "measured_optical_depth_m": 1.3023494482040405,
+          "behind_surface_m": -0.0016260379291426208,
+          "status": "surface_consistent"
+        },
+        "right": {
+          "pixel_uv": [
+            391.1562396430926,
+            257.2253734051705
+          ],
+          "point_optical_depth_m": 0.5384301018244044,
+          "depth_spread_m": 0.06135272979736328,
+          "status": "depth_edge"
+        },
+        "wrist": {
+          "pixel_uv": [
+            445.64882002969557,
+            223.21279478433476
+          ],
+          "point_optical_depth_m": 0.09378204353618855,
+          "depth_spread_m": 0.0008242279291152954,
+          "measured_optical_depth_m": 0.09511923789978027,
+          "behind_surface_m": -0.001337194363591726,
+          "status": "surface_consistent"
+        }
+      }
+    }
+  ],
+  "limitation": "Nominal closing centerline only, not exact pad surfaces, finite finger volume, object identity, contact force or grasp/clearance proof. Occluded samples are unknown, not occupied/free. In-front samples concern only measured rays. 5mm comparison tolerance is diagnostic, not calibrated uncertainty."
+}

@@ -1,0 +1,673 @@
+{
+  "observation_id": "92a08cc3751a4fd29a2025d079d2860e:0",
+  "samples": [
+    {
+      "hand_point_m": [
+        0.0,
+        -0.04,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13995868845058398,
+        -0.37997901536561135,
+        0.4500676269225321
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            87.28714862297923,
+            58.53550527879429
+          ],
+          "point_optical_depth_m": 1.131089020645239,
+          "depth_spread_m": 0.004850149154663086,
+          "measured_optical_depth_m": 1.1226645708084106,
+          "behind_surface_m": 0.00842444983682844,
+          "status": "occluded"
+        },
+        "right": {
+          "pixel_uv": [
+            210.71469213897242,
+            -134.0994982943473
+          ],
+          "point_optical_depth_m": 0.42225712584495134,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            415.1595035475993,
+            -41.24561422446133
+          ],
+          "point_optical_depth_m": 0.06740000709561834,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.035,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13996076916499356,
+        -0.37497901579854864,
+        0.4500676264741289
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            89.48590280022856,
+            57.9473592459609
+          ],
+          "point_optical_depth_m": 1.134485097599236,
+          "depth_spread_m": 3.982123613357544,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            216.23031292227205,
+            -133.57514603333163
+          ],
+          "point_optical_depth_m": 0.4253872113804473,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            391.3696550356739,
+            -41.24561458291435
+          ],
+          "point_optical_depth_m": 0.06740000687684705,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.03,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13996284987940313,
+        -0.36997901623148594,
+        0.4500676260257257
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            91.67153234099423,
+            57.36272392976883
+          ],
+          "point_optical_depth_m": 1.137881174553233,
+          "depth_spread_m": 0.055733680725097656,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            221.6653564922021,
+            -133.0584539878521
+          ],
+          "point_optical_depth_m": 0.42851729691594337,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            367.5798063693112,
+            -41.245614941367265
+          ],
+          "point_optical_depth_m": 0.06740000665807577,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.025,
+        0.1034
+      ],
+      "world_point_m": [
+        0.1399649305938127,
+        -0.36497901666442323,
+        0.4500676255773226
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            93.84415440946766,
+            56.78156798990037
+          ],
+          "point_optical_depth_m": 1.14127725150723,
+          "depth_spread_m": 0.06206178665161133,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            227.02157576269397,
+            -132.54925551404085
+          ],
+          "point_optical_depth_m": 0.43164738245143935,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            343.7899575485113,
+            -41.24561529982065
+          ],
+          "point_optical_depth_m": 0.06740000643930437,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.02,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13996701130822228,
+        -0.3599790170973605,
+        0.4500676251289194
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            96.00388477940493,
+            56.20386045796636
+          ],
+          "point_optical_depth_m": 1.144673328461227,
+          "depth_spread_m": 0.057654380798339844,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            232.30067316879328,
+            -132.0473887668939
+          ],
+          "point_optical_depth_m": 0.4347774679869353,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            320.00010857327413,
+            -41.24561565827357
+          ],
+          "point_optical_depth_m": 0.06740000622053309,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.015,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13996909202263183,
+        -0.35497901753029776,
+        0.4500676246805162
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            98.15083785469135,
+            55.629570732004794
+          ],
+          "point_optical_depth_m": 1.1480694054152238,
+          "depth_spread_m": 0.06429910659790039,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            237.5043024707305,
+            -131.55269652876535
+          ],
+          "point_optical_depth_m": 0.43790755352243144,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            296.2102594435994,
+            -41.24561601672644
+          ],
+          "point_optical_depth_m": 0.0674000060017618,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.010000000000000002,
+        0.1034
+      ],
+      "world_point_m": [
+        0.1399711727370414,
+        -0.34997901796323505,
+        0.450067624232113
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            100.28512668954356,
+            55.05866857107774
+          ],
+          "point_optical_depth_m": 1.1514654823692207,
+          "depth_spread_m": 0.059645652770996094,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            242.63407048116946,
+            -131.0650260451628
+          ],
+          "point_optical_depth_m": 0.4410376390579274,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            272.4204101594877,
+            -41.24561637517944
+          ],
+          "point_optical_depth_m": 0.0674000057829905,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        -0.0049999999999999975,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13997325345145098,
+        -0.34497901839617234,
+        0.4500676237837099
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            102.40686300835317,
+            54.4911240899627
+          ],
+          "point_optical_depth_m": 1.1548615593232179,
+          "depth_spread_m": 0.05380105972290039,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            247.69153871942376,
+            -130.58422886748644
+          ],
+          "point_optical_depth_m": 0.44416772459342335,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            248.63056072093866,
+            -41.24561673363276
+          ],
+          "point_optical_depth_m": 0.06740000556421911,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.0,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13997533416586055,
+        -0.33997901882910964,
+        0.4500676233353067
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            104.51615722518277,
+            53.926907753937954
+          ],
+          "point_optical_depth_m": 1.1582576362772148,
+          "depth_spread_m": 0.06189537048339844,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            252.67822499621843,
+            -130.11016070237062
+          ],
+          "point_optical_depth_m": 0.4472978101289194,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            224.8407111279524,
+            -41.245617092085745
+          ],
+          "point_optical_depth_m": 0.06740000534544782,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.0049999999999999975,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13997741488027013,
+        -0.33497901926204693,
+        0.4500676228869035
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            106.61311846291999,
+            53.36599037365877
+          ],
+          "point_optical_depth_m": 1.1616537132312117,
+          "depth_spread_m": 0.05765056610107422,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            257.59560493237433,
+            -129.64268126730795
+          ],
+          "point_optical_depth_m": 0.4504278956644154,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            201.05086138052886,
+            -41.245617450538774
+          ],
+          "point_optical_depth_m": 0.06740000512667653,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.010000000000000002,
+        0.1034
+      ],
+      "world_point_m": [
+        0.1399794955946797,
+        -0.3299790196949842,
+        0.4500676224385004
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            108.69785457209552,
+            52.808343100124
+          ],
+          "point_optical_depth_m": 1.1650497901852086,
+          "depth_spread_m": 0.06419181823730469,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            262.4451134146094,
+            -129.18165415225064
+          ],
+          "point_optical_depth_m": 0.45355798119991136,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            177.26101147866785,
+            -41.2456178089921
+          ],
+          "point_optical_depth_m": 0.06740000490790514,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.015,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13998157630908928,
+        -0.3249790201279215,
+        0.4500676219900972
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            110.77047214937384,
+            52.25393741973003
+          ],
+          "point_optical_depth_m": 1.1684458671392057,
+          "depth_spread_m": 0.05965995788574219,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            267.2281459914721,
+            -128.72694668690357
+          ],
+          "point_optical_depth_m": 0.4566880667354074,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            153.4711614223698,
+            -41.24561816744511
+          ],
+          "point_optical_depth_m": 0.06740000468913385,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.019999999999999997,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13998365702349883,
+        -0.31997902056085875,
+        0.450067621541694
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            112.8310765557222,
+            51.70274514941044
+          ],
+          "point_optical_depth_m": 1.1718419440932026,
+          "depth_spread_m": 0.06653356552124023,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            271.9460602122599,
+            -128.2784298134377
+          ],
+          "point_optical_depth_m": 0.45981815227090345,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            129.68131121163418,
+            -41.24561852589799
+          ],
+          "point_optical_depth_m": 0.06740000447036255,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.025,
+        0.1034
+      ],
+      "world_point_m": [
+        0.1399857377379084,
+        -0.31497902099379604,
+        0.4500676210932908
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            114.87977193426445,
+            51.15473843186034
+          ],
+          "point_optical_depth_m": 1.1752380210471998,
+          "depth_spread_m": 0.06171131134033203,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            276.6001769116221,
+            -127.8359779643673
+          ],
+          "point_optical_depth_m": 0.46294823780639943,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            105.8914608464616,
+            -41.24561888435094
+          ],
+          "point_optical_depth_m": 0.06740000425159128,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.030000000000000006,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13998781845231797,
+        -0.30997902142673334,
+        0.4500676206448877
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            116.91666122782648,
+            50.609889730843626
+          ],
+          "point_optical_depth_m": 1.1786340980011967,
+          "depth_spread_m": 0.0689229965209961,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            281.19178144239976,
+            -127.3994689453476
+          ],
+          "point_optical_depth_m": 0.4660783233418954,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            82.10161032685129,
+            -41.245619242804345
+          ],
+          "point_optical_depth_m": 0.06740000403281987,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.034999999999999996,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13998989916672755,
+        -0.30497902185967063,
+        0.4500676201964845
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            118.94184619617873,
+            50.06817182658012
+          ],
+          "point_optical_depth_m": 1.1820301749551936,
+          "depth_spread_m": 4.126612663269043,
+          "status": "depth_edge"
+        },
+        "right": {
+          "pixel_uv": [
+            285.7221248591198,
+            -126.96878382266341
+          ],
+          "point_optical_depth_m": 0.4692084088773914,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            58.31175965280412,
+            -41.24561960125734
+          ],
+          "point_optical_depth_m": 0.06740000381404858,
+          "status": "out_of_frame"
+        }
+      }
+    },
+    {
+      "hand_point_m": [
+        0.0,
+        0.04,
+        0.1034
+      ],
+      "world_point_m": [
+        0.13999197988113712,
+        -0.2999790222926079,
+        0.4500676197480813
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            120.95542743298284,
+            49.529557811212705
+          ],
+          "point_optical_depth_m": 1.1854262519091907,
+          "depth_spread_m": 0.005848526954650879,
+          "measured_optical_depth_m": 1.1877301931381226,
+          "behind_surface_m": -0.0023039412289318495,
+          "status": "surface_consistent"
+        },
+        "right": {
+          "pixel_uv": [
+            290.1924250544329,
+            -126.54380681519235
+          ],
+          "point_optical_depth_m": 0.47233849441288744,
+          "status": "out_of_frame"
+        },
+        "wrist": {
+          "pixel_uv": [
+            34.52190882431969,
+            -41.245619959710346
+          ],
+          "point_optical_depth_m": 0.0674000035952773,
+          "status": "out_of_frame"
+        }
+      }
+    }
+  ],
+  "limitation": "Nominal closing centerline only, not exact pad surfaces, finite finger volume, object identity, contact force or grasp/clearance proof. Occluded samples are unknown, not occupied/free. In-front samples concern only measured rays. 5mm comparison tolerance is diagnostic, not calibrated uncertainty."
+}

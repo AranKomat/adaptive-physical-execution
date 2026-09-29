@@ -75,7 +75,8 @@ def main():
                 return
             request = {key: stage[key] for key in ('hand_pose_world', 'gripper_open')}
             request.update(observation_id=obs.key, max_steps=64,
-                           target_source='fresh Astra pixel plus legal depth; operator-defined correction; unknown clearance')
+                           target_source=plan.get('target_source', 'unspecified target source')
+                           + '; operator-defined correction; unknown clearance')
             envelope = dict(command_id=uuid4().hex, action=request)
             write_json(args.output/f'{index:02d}_request.json', envelope)
             result = decode_result(client.call('/local-stage', envelope, mutating=True))

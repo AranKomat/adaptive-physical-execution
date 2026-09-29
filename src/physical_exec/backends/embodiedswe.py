@@ -49,14 +49,16 @@ class EmbodiedSWEEnvironment:
         if extra: scene_cls.CAMERAS = {**(original_cameras or {}), **extra}
         from engine import replay
         original_camera_cfg = replay._camera_cfg
-        def camera_cfg_with_depth(*args, **kwargs):
-            cfg = original_camera_cfg(*args, **kwargs)
-            cfg.data_types = [*cfg.data_types, "distance_to_image_plane"]
+        def camera_cfg_with_depth(name, view, size, surface_z):
+            from ..config import configured_camera_view
+            cfg = original_camera_cfg(name, configured_camera_view(task, name, view), size, surface_z)
+            if record_depth:
+                cfg.data_types = [*cfg.data_types, "distance_to_image_plane"]
             # Link-mounted cameras move after initialization; cached spawn poses
             # cannot calibrate their current rendered depth.
             cfg.update_latest_camera_pose = True
             return cfg
-        if record_depth:
+        if record_depth or 'wrist_target_hand' in task:
             replay._camera_cfg = camera_cfg_with_depth
         try:
             self.sim = module.load_sim(preset, num_envs=1, device=device,
@@ -273,6 +275,7 @@ class EmbodiedSWEEnvironment:
                 "time_model": "physics_paused_during_inference", "privileged_policy_inputs": False,
                 "depth_recording": bool(getattr(self, "record_depth", False)),
                 "depth_policy_input": False,
+                "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",
                 "real_hardware_supported": False, "camera_map": self.camera_map,

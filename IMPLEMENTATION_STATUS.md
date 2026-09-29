@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+- Wrist framing fixed in an opt-in condition: nominal closing line now 17/17
+  samples in frame versus 0/17 originally. Matched 640-action open approach
+  passed; visual review still inspect. Separate explicitly exploratory closure
+  ran 64 actions but missed rotation arrival tolerance (0.04097 vs 0.03 rad),
+  then stopped without lift/retry. No secure grasp or phase completion. Cached
+  target provenance correction disclosed. See `docs/WRIST_AIM_20260930.md`.
+
 - Oblique-view sensor approach ran without Hybrid replay: 640 open-gripper
   actions, ten endpoint passes, then pre-closure pause. Review supported rough
   centering but still requested inspection for occluded far pad/support gap.
