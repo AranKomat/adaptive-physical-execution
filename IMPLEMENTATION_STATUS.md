@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
+
+- Close-target refresh trial is paused at open standoff: 448 actions, all arrival
+  checks passed, final 1.933 mm / 0.000151 rad. No new paid calls, descent or
+  closure. Next fresh close-range target, then separately qualified suspension.
+  See `docs/CLOSE_TARGET_20260930.md`; no task phase newly completed.
+
 - Fresh contact-integral trial: 640-action approach passed; closure passed even
   strict arrival (1.759 mm / 0.01035 rad). One 5 cm lift executed 64 actions,
   ending at 4.714 mm / 0.03341 rad error: exploratory completion passed,

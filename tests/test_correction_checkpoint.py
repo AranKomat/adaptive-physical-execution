@@ -12,13 +12,19 @@ def load_script(name):
     path = Path(__file__).resolve().parents[1]/'scripts'/f'{name}.py'
     spec = importlib.util.spec_from_file_location(name, path)
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    with pytest.MonkeyPatch.context() as patch:
+        patch.syspath_prepend(str(path.parent))
+        spec.loader.exec_module(module)
     return module
 
 
-def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation):
+@pytest.mark.parametrize('pause,terminal,grasp_only', [
+    ('--pause-before-close','awaiting_preclosure_review',False),
+    ('--pause-at-standoff','awaiting_close_range_target',False),
+    ('--pause-before-close','awaiting_preclosure_review',True)])
+def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation, pause, terminal, grasp_only):
     module = load_script('run_grounded_correction')
-    initial = replace(observation, eef_pose=np.array([.18,-.34,.35,0,0,1,0]))
+    initial = replace(observation, eef_pose=np.array([.18,-.34,.35,0,0,1,0]), gripper_open=1.)
     calls = []
 
     class Client:
@@ -51,14 +57,19 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     monkeypatch.setattr(module, 'decode_result', lambda value:value)
     monkeypatch.setenv('PHYSICAL_EXEC_SIM_TOKEN','test-only')
     monkeypatch.setattr(module.sys, 'argv', ['test','--url','http://unused','--plan',str(plan),
-                                           '--output',str(output),'--pause-before-close'])
+                                           '--output',str(output),pause]
+                        + (['--grasp-only','--lift-height','.23'] if grasp_only else []))
     module.main()
     assert calls and all(action['gripper_open'] == 1 for action in calls)
     assert all(action['target_source'].startswith('cached pixel on fresh depth') for action in calls)
     result = json.loads((output/'result.json').read_text())
-    assert result['terminal_reason'] == 'awaiting_preclosure_review'
+    assert result['terminal_reason'] == terminal
     assert result['actions'] == 64*len(calls)
     assert result['grasp_verified'] is False
+    if grasp_only:
+        stages = json.loads((output/'declared_sequence.json').read_text())
+        assert {s['name'] for s in stages} == {'descend','close','short_lift'}
+        assert stages[-1]['hand_pose_world'][2] == pytest.approx(.13+.1034-.015+.23)
 
 
 def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, observation):

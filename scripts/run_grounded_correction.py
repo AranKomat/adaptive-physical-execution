@@ -15,6 +15,7 @@ from physical_exec.geometry import pose_error, quat_mul, rotvec_to_quat
 from physical_exec.imaging import png_bytes
 from physical_exec.trace import write_json
 from physical_exec.transport import LocalClient, decode_observation, decode_result
+from probe_contact_stage import exploratory_completion
 
 
 def main():
@@ -24,7 +25,15 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--pause-before-close', action='store_true',
                         help='Stop after descent for a separate fresh visual contact-geometry review')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--pause-at-standoff', action='store_true')
+    mode.add_argument('--grasp-only', action='store_true', help='Resume from a fresh close-range target')
+    parser.add_argument('--lift-height', type=float, default=.05)
+    parser.add_argument('--phase-completion', action='store_true',
+                        help='Use predeclared exploratory bounds for closure/lift only')
     args = parser.parse_args()
+    if not math.isfinite(args.lift_height) or not 0 < args.lift_height <= .23:
+        raise ValueError('Lift height must be in (0, 0.23] m')
     plan = json.loads(args.plan.read_text())
     surface = np.asarray(plan['measured_surface']['surface_point_world_m'], dtype=float)
     if surface.shape != (3,) or not np.isfinite(surface).all():
@@ -38,6 +47,8 @@ def main():
         obs = decode_observation(client.call('/observe'))
         if obs.key != plan['observation_id']:
             raise ValueError('Target plan is not current; no automatic reset or retry')
+        if args.grasp_only and obs.gripper_open < .95:
+            raise ValueError('Grasp-only continuation requires an already open gripper')
         write_json(args.output/'initial.json', obs.public_state())
         write_json(args.output/'source_plan.json', plan)
         retract = obs.eef_pose.copy()
@@ -49,7 +60,9 @@ def main():
                      ('standoff', np.r_[surface+[0,0,.22], top], 1.),
                      ('descend', np.r_[hand, top], 1.),
                      ('close', np.r_[hand, top], .3),
-                     ('short_lift', np.r_[hand+[0,0,.05], top], .3)]
+                     ('short_lift', np.r_[hand+[0,0,args.lift_height], top], .3)]
+        if args.grasp_only:
+            endpoints = endpoints[3:]
         # Predeclare the entire bounded sequence before the first mutation.
         stages = []
         start = obs.eef_pose.copy()
@@ -65,7 +78,17 @@ def main():
         if len(stages) > 16:
             raise ValueError('Correction exceeds 16-stage/1024-action limit')
         write_json(args.output/'declared_sequence.json', stages)
+        write_json(args.output/'completion_policy.json', dict(
+            exploratory_contact_completion=args.phase_completion,
+            lift_height_m=args.lift_height, position_bound_m=.01, rotation_bound_rad=.15,
+            hard_worker_abort_checks='unchanged', grasp_verified=False))
         for index, stage in enumerate(stages):
+            if stage['name'] == 'descend' and args.pause_at_standoff:
+                write_json(args.output/'result.json', dict(stages=index, actions=64*index,
+                           final_observation_id=obs.key, grasp_verified=False,
+                           terminal_reason='awaiting_close_range_target'))
+                print('Paused at standoff at '+obs.key, flush=True)
+                return
             if stage['name'] == 'close' and args.pause_before_close:
                 write_json(args.output/'result.json', dict(stages=index, actions=64*index,
                            final_observation_id=obs.key, grasp_verified=False,
@@ -86,7 +109,10 @@ def main():
             for role, pixels in obs.images.items():
                 (args.output/f'{index:02d}_{role}.png').write_bytes(png_bytes(pixels))
             print(stage['name'], result.receipt.to_dict(), flush=True)
-            if result.receipt.reason != 'local stage arrived':
+            contact_phase = stage['name'] in ('close', 'short_lift') and args.phase_completion
+            passed = (exploratory_completion(result.receipt.to_dict()) if contact_phase
+                      else result.receipt.reason == 'local stage arrived')
+            if not passed:
                 raise RuntimeError('Nonarrival: stop without retry or subsequent stages')
         write_json(args.output/'result.json', dict(stages=len(stages), actions=64*len(stages),
                    final_observation_id=obs.key, grasp_verified=False,
