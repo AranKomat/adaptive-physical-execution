@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+- Corrected pose ramp now live-qualified in integrated correction: all 14 stages,
+  896 actions, maximum endpoint error 1.596 mm. Card tilted/lifted at one end but
+  remained partly supported; independent image review says partial_contact.
+  No secure grasp, autonomous recovery or assembly success. Ten calls cost
+  $0.97526375. Next improve observable grasp geometry, not repeat Hybrid wording
+  sweeps or assume a continuous depth patch defines a grasp. See
+  `docs/HYBRID_POSE_RAMP_20260930.md`.
+
 - Latest same-episode Hybrid -> RGB-D correction attempted: 74 FLUX actions,
   then one fresh target call and a successful 5 cm local retract (1.582 mm error).
   Rotation failed before confirmed action due to a translation-only ramp inside

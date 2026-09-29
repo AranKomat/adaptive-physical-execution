@@ -1,0 +1,7 @@
+{
+  "decision": "partial_contact",
+  "card_motion_evidence": "The card's pose is nearly unchanged after closure. After the attempted lift, the left end beneath the gripper is visibly higher and the card is more tilted, while its right/lower end remains near its original support position.",
+  "support_clearance_evidence": "The right/lower end still appears seated against the gray support. No gap establishes clearance of the entire card; the visible change is consistent with lifting one end while the other remains supported.",
+  "grasp_stability_evidence": "The card's tilt indicates some interaction with the gripper, but not a secure, fully suspended grasp. Its orientation also changes in the wrist view, so stable capture is not demonstrated.",
+  "uncertainty": "Exact finger contact and the card-support interface are partly occluded. These still images cannot establish grip force or continued retention, but they support partial lifting rather than a clear lift."
+}
