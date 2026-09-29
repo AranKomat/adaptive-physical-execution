@@ -157,6 +157,7 @@ def main(argv=None):
                             RunBudget(args.max_decisions,args.max_control_steps,args.max_wall_seconds),
                             {"model":args.model,"reasoning_effort":args.reasoning,"endpoint":args.endpoint,
                              "service_tier":args.service_tier,"provider_only":args.provider_only,
+                             "motor_policy_metadata":proposer.metadata if proposer is not None else None,
                              "task_config_path":str(Path(args.task).resolve()),
                              "model_output_token_cap":args.max_output_tokens},
                             reference_run=args.reference_run,allow_related_reference=args.allow_related_reference)

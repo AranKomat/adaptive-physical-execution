@@ -104,9 +104,11 @@ class Proposal:
     eef_preview: np.ndarray  # Hx8 xyz+wxyz+open; robot-only FK
     model_identity: str
     inference_seconds: float
+    boundary_conversion: dict | None = None
 
     def public(self) -> dict:
         return {"proposal_id": self.action.proposal_id, "observation_id": self.action.observation_id,
+                "boundary_conversion": self.boundary_conversion,
                 "model_identity": self.model_identity,
                 "joint_proposal": self.action.to_dict(),
                 "robot_only_fk_world_xyz_wxyz_gripper_open": self.eef_preview.tolist(),

@@ -45,7 +45,11 @@ def droid_output_to_chunk(raw: np.ndarray, obs: Observation, model_identity: str
 
 
 class FluxEngine:
-    def __init__(self, checkpoint: str | Path, camera_map: dict[str,str], device="cuda:0", compile_model=False):
+    def __init__(self, checkpoint: str | Path, camera_map: dict[str,str], device="cuda:0", compile_model=False,
+                 gripper_boundary_tolerance=0.):
+        if not np.isfinite(gripper_boundary_tolerance) or not 0 <= gripper_boundary_tolerance <= .01:
+            raise ValueError("gripper boundary tolerance must be between 0 and 0.01")
+        self.gripper_boundary_tolerance = gripper_boundary_tolerance
         path = Path(checkpoint).resolve()
         if not path.is_dir():
             raise ValueError("pass a local, explicitly downloaded FLUX package directory; no implicit Hub download")
@@ -65,6 +69,7 @@ class FluxEngine:
         if path == "/metadata":
             return {"backend": "flux_action_droid", "checkpoint": self.identity, "config_hashes": self.fingerprint,
                     "camera_map": self.camera_map, "compile_model": self.compile_model,
+                    "gripper_boundary_tolerance": self.gripper_boundary_tolerance,
                     "output": "32x(7 absolute joint radians + closed fraction)", "task_transfer_verified": False}
         if path != "/propose" or set(payload) != {"observation"}:
             raise InputRejected("only /metadata and /propose are available")
@@ -77,8 +82,10 @@ class FluxEngine:
             raw = self.policy.predict_action_chunk(batch)
         if str(self.device).startswith("cuda"): torch.cuda.synchronize(self.device)
         raw = raw.detach().float().cpu().numpy() if hasattr(raw, "detach") else np.asarray(raw)
+        raw, conversion = gripper_boundary_conversion(raw, self.gripper_boundary_tolerance)
         action = droid_output_to_chunk(raw, obs, Path(self.identity).name)
         return {"action": action.to_dict(), "identity": self.identity,
+                "boundary_conversion": conversion,
                 "inference_seconds": time.monotonic()-started, "config_hashes": self.fingerprint}
 
 
@@ -96,7 +103,30 @@ class RemoteFluxProposer:
         if action.observation_id != obs.key: raise ProtocolError("stale FLUX proposal")
         fk = self.env.fk_preview(obs, action.values[:,:-1])
         if fk.shape != (len(action.values), 7): raise ProtocolError("FK shape mismatch")
-        return Proposal(action, np.c_[fk, action.values[:,-1]], str(obj["identity"]), float(obj["inference_seconds"]))
+        return Proposal(action, np.c_[fk, action.values[:,-1]], str(obj["identity"]), float(obj["inference_seconds"]),
+                        obj.get("boundary_conversion"))
 
     def close(self):
         self.client.close()
+
+
+def gripper_boundary_conversion(raw: np.ndarray, tolerance: float) -> tuple[np.ndarray, dict]:
+    """Explicit proposal conversion only; canonical execution validation is unchanged."""
+    if not np.isfinite(tolerance) or not 0 <= tolerance <= .01:
+        raise InputRejected("gripper boundary tolerance must be between 0 and 0.01")
+    a = np.asarray(raw)
+    if a.ndim == 3 and a.shape[0] == 1:
+        a = a[0]
+    if a.ndim != 2 or a.shape[1] != 8 or not 1 <= len(a) <= 64 or not np.isfinite(a).all():
+        raise InputRejected("invalid FLUX raw proposal")
+    closed = a[:, -1]
+    overshoot = np.maximum(np.maximum(-closed, closed - 1), 0)
+    if np.any(overshoot > tolerance):
+        raise InputRejected(f"FLUX gripper overshoot {float(overshoot.max()):.8f} exceeds declared tolerance {tolerance}")
+    result = a.copy()
+    result[:, -1] = np.clip(closed, 0, 1)
+    return result, {"kind": "explicit_gripper_boundary_saturation", "tolerance": tolerance,
+                    "raw_closed_fractions": closed.tolist(),
+                    "converted_closed_fractions": result[:, -1].tolist(),
+                    "changed_indices": np.flatnonzero(overshoot > 0).tolist(),
+                    "max_overshoot": float(overshoot.max()), "joint_targets_modified": False}
