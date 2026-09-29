@@ -1,0 +1,14 @@
+{
+  "observation_id": "c3145c96f5344d6fa999b5b506de89ae:896",
+  "decision": "inspect",
+  "held_feature": {
+    "camera": "right",
+    "pixel_uv": [
+      354,
+      134
+    ]
+  },
+  "slot_feature": null,
+  "evidence": "The card is visibly elevated above the empty support stand, with its bottom PCIe connector edge exposed. The wrist view shows part of the motherboard, but the card and surrounding structures obstruct a reliable identification of the matching PCIe socket.",
+  "uncertainty": "A solid pixel at the socket center cannot be selected confidently without confusing nearby components. Inspect the motherboard from a clearer angle before carrying above the slot."
+}

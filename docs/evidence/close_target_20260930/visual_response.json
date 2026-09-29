@@ -1,0 +1,7 @@
+{
+  "decision": "clear_lift",
+  "card_motion_evidence": "Closure alone produces little visible card movement. After the attempted lift, the card's exposed circuit-board end and metal bracket are visibly higher relative to the stationary case and tabletop support, demonstrating card movement rather than hand movement alone.",
+  "support_clearance_evidence": "The gray tabletop cradle is visibly empty after lifting, with a substantial gap beneath the raised card. No visible end remains seated on that support; the images support a lift clear rather than one-end tilting.",
+  "grasp_stability_evidence": "The wrist views show a similar card-to-finger position after closure and after lifting, while the external view shows the card raised with the gripper. This supports capture over the observed short lift, but does not establish longer-term stability.",
+  "uncertainty": "Parts of the card and its possible proximity to the case are occluded. Exact finger contact, grasp force, and clearance at every hidden surface cannot be verified from these still images."
+}

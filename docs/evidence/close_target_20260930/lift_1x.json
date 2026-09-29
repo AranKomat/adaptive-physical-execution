@@ -1,0 +1,8 @@
+{
+  "source": "/Users/macbookpro/Developer/random/gpu/adaptive_physical_execution/runs/close_target_20260930_recordings/c3145c96f5344d6fa999b5b506de89ae",
+  "frames": 897,
+  "view": "left",
+  "speed": 1.0,
+  "label": "SIMULATION | 1x simulated-time playback\nmodel waits excluded | grasp assist ON",
+  "time_model": "physics_paused_during_inference"
+}

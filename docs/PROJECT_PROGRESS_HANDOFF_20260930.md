@@ -12,6 +12,12 @@ Primary checklist: `/Users/macbookpro/Developer/random/gpu/GPT6_ADAPTIVE_PHYSICA
 This report summarizes current evidence rather than treating every historical
 "next" item in older reports as still pending.
 
+Latest follow-up: the paused close-target trial has now achieved clear assisted
+suspension in the integrated worker. All strict endpoints passed. Three fresh
+calls including subsequent carry review cost $0.072945. Carry review requested
+inspection because the destination socket is occluded; no carry was issued.
+See updated live state below and `docs/CLOSE_TARGET_20260930.md`.
+
 ## 1. Executive assessment
 
 **We have not completed the main objective.** No nonprivileged autonomous PC
@@ -254,15 +260,17 @@ Videos and component tests exist; neither substitutes for these task requirement
 
 ## 6. Current paused episode and exact continuation
 
-At report preparation, `close_target_20260930` completed **448 actions** across
-seven open-gripper approach stages. All strict arrival checks passed. Final
-standoff error: **1.933 mm / 0.000151 rad**. It stopped intentionally before
-descent, fresh target selection, closure or lift. Zero new paid calls so far.
+`close_target_20260930` has now completed **896 actions**: 448 approach and 448
+descent/closure/lift actions. All strict arrival checks passed. Final lift error:
+**0.817 mm / 0.002588 rad**. A fresh target call selected a current-image pixel,
+depth was measured, and independent review returned clear_lift. A third call
+requested inspection before carry because the destination socket is occluded.
+Execution wall time 400.042 s; simulated time 59.733 s; three-call cost $0.072945.
 
 - Episode: `c3145c96f5344d6fa999b5b506de89ae`.
-- Last observation: `c3145c96f5344d6fa999b5b506de89ae:448`.
+- Last observation: `c3145c96f5344d6fa999b5b506de89ae:896` (card suspended).
 - Local worker URL: `http://127.0.0.1:18767`; remote port 8767.
-- Server shell session at this snapshot: 30978; approach session 45864 exited 0.
+- Server shell session at this snapshot: 30978; approach and grasp clients exited 0.
 - Local approach evidence: `runs/close_target_20260930_approach`.
 - Remote recordings: `/workspace/adaptive-physical-execution/runs/close_target_20260930_recordings`.
 - Protocol: `docs/CLOSE_TARGET_20260930.md`.
@@ -271,17 +279,18 @@ Next operator should verify the live observation and process, not assume these
 handles remain valid. One episode per worker; do not reset this paused worker.
 Do not restart a motion on a timeout without checking execution state.
 
-Planned continuation: fresh current RGB-D capture -> one Astra grasp pixel
-selection -> checked depth deprojection -> inspect target -> bounded descent,
-closure and 23 cm lift -> independent suspension review. `inspect`, invalid
-depth, hard stops or failed completion bounds stop continuation. No automatic
-carry/insertion on partial-contact evidence. This remains a labeled exploratory
-recipe, not autonomous recovery.
+Planned continuation: obtain an informative legal destination view while
+preserving suspension, then localize corresponding features before carrying.
+The independently movable camera exists in the older pilot; it is not yet an
+available camera-control endpoint in this integrated worker. Do not restart
+and replay the grasp merely to repeat a static-view guess. No automatic carry
+on the inspect response, no privileged destination coordinates, and no release
+without observed support. This remains exploratory, not autonomous recovery.
 
 ## 7. Recommended next sequence
 
-1. Finish the current integrated close-target grasp qualification, without a
-   new full approach or another camera/controller sweep.
+1. Preserve the now-demonstrated integrated assisted suspension; do not repeat
+   its approach or another grasp/controller sweep.
 2. If suspension is established, preserve observed hand/card geometry and
    obtain corresponding connector/socket features before descent. A top-surface
    pixel is neither a grasp center nor an insertion pose.
@@ -304,7 +313,7 @@ Costs above are per documented trial, not an audited project grand total. They
 exclude rental charges, prior projects and unresolved API holds. The shared
 private ledger is authoritative; preserve its $75 ceiling and unresolved holds,
 including the older $1 routing-error reservation. Last completed review brought
-the reserved-call count to 4,352; recheck before the next request.
+the reserved-call count to 4,355; recheck before the next request.
 
 Small stage reviews often cost cents, whereas history-heavy Direct loops used
 many calls without task completion. Lower call count is useful only if physical

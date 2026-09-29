@@ -4,10 +4,13 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
-- Close-target refresh trial is paused at open standoff: 448 actions, all arrival
-  checks passed, final 1.933 mm / 0.000151 rad. No new paid calls, descent or
-  closure. Next fresh close-range target, then separately qualified suspension.
-  See `docs/CLOSE_TARGET_20260930.md`; no task phase newly completed.
+- Close-target refresh trial now achieved visually reviewed assisted suspension:
+  896 actions including approach, all strict arrival checks passed, final lift
+  0.817 mm / 0.002588 rad. Fresh RGB-D target plus independent clear_lift review
+  cost $0.0503675 (two calls). Operator recipe, assistance on, unknown clearance;
+  not autonomous recovery or assembly. Paused at observation 896. Subsequent
+  carry review returned inspect, slot occluded; no carry issued. Three-call
+  total $0.072945. Lift video saved. See `docs/CLOSE_TARGET_20260930.md`.
 
 - Fresh contact-integral trial: 640-action approach passed; closure passed even
   strict arrival (1.759 mm / 0.01035 rad). One 5 cm lift executed 64 actions,
