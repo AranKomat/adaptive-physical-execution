@@ -49,8 +49,10 @@ def parser():
     r.add_argument("--flux-url",default="http://127.0.0.1:8766");r.add_argument("--flux-token-env",default="PHYSICAL_EXEC_FLUX_TOKEN")
     r.add_argument("--ack-experimental-flux",action="store_true")
     r.add_argument("--model",required=True,help="exact model ID authorized on YOUR chosen endpoint")
-    r.add_argument("--endpoint",required=True,help="complete https://.../responses; never inherited from upstream")
+    r.add_argument("--endpoint",required=True,help="complete HTTPS Responses or Chat Completions URL; no implicit fallback")
     r.add_argument("--key-env",default="OPENAI_API_KEY");r.add_argument("--allow-paid",action="store_true")
+    r.add_argument("--service-tier",choices=("flex","default"))
+    r.add_argument("--provider-only",help="OpenRouter provider tag; disables fallback")
     r.add_argument("--reasoning",choices=("low","medium","high","xhigh"),default="medium")
     r.add_argument("--horizon",type=int);r.add_argument("--memory",choices=("anchored","full"))
     r.add_argument("--max-images",type=int,default=50);r.add_argument("--image-edge",type=int,default=640)
@@ -136,7 +138,8 @@ def main(argv=None):
             task,limits=load_task(args.task)
             from .providers.responses import ProviderConfig, ResponsesProvider
             cfg=ProviderConfig(args.model,args.endpoint,args.key_env,args.reasoning,args.request_timeout,
-                               args.max_output_tokens,args.max_decisions,args.max_total_tokens)
+                               args.max_output_tokens,args.max_decisions,args.max_total_tokens,
+                               service_tier=args.service_tier,provider_only=args.provider_only)
             env=RemoteEnvironment(LocalClient(args.sim_url,token(args.sim_token_env),timeout=180))
             if env.metadata().get("preset") != task["preset"]:
                 env.close();raise ValueError("task preset does not match running simulator")
@@ -153,6 +156,7 @@ def main(argv=None):
             out=run_episode(env,controller,args.output,args.seed,
                             RunBudget(args.max_decisions,args.max_control_steps,args.max_wall_seconds),
                             {"model":args.model,"reasoning_effort":args.reasoning,"endpoint":args.endpoint,
+                             "service_tier":args.service_tier,"provider_only":args.provider_only,
                              "task_config_path":str(Path(args.task).resolve()),
                              "model_output_token_cap":args.max_output_tokens},
                             reference_run=args.reference_run,allow_related_reference=args.allow_related_reference)

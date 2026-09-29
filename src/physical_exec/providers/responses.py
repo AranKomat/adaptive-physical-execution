@@ -1,4 +1,4 @@
-"""Explicit-endpoint Responses API client; no account access or inference on import.
+"""Explicit Responses/Chat API client; no account access or inference on import.
 
 One requested Act tool result per decision. No shell, browser, file access,
 model fallback, automatic endpoint substitution, or executable Python output.
@@ -18,7 +18,7 @@ from ..errors import ProviderError, BudgetExceeded
 @dataclass(frozen=True)
 class ProviderConfig:
     model: str
-    endpoint: str  # complete URL ending in /responses, chosen by operator
+    endpoint: str  # complete Responses or Chat Completions URL chosen by operator
     api_key_env: str = "OPENAI_API_KEY"
     reasoning_effort: str = "medium"
     timeout_seconds: float = 180.0
@@ -26,6 +26,8 @@ class ProviderConfig:
     max_calls: int = 100
     max_total_tokens: int = 20_000_000
     allow_insecure_localhost: bool = False
+    service_tier: str | None = None
+    provider_only: str | None = None
 
     def __post_init__(self):
         u = urlsplit(self.endpoint)
@@ -34,12 +36,16 @@ class ProviderConfig:
         local = u.hostname in ("localhost", "127.0.0.1", "::1")
         if u.scheme != "https" and not (local and u.scheme == "http" and self.allow_insecure_localhost):
             raise ValueError("use HTTPS, except explicitly authorized loopback test endpoints")
-        if not u.path.rstrip("/").endswith("/responses"):
-            raise ValueError("endpoint must be the complete Responses URL")
+        if not u.path.rstrip("/").endswith(("/responses", "/chat/completions")):
+            raise ValueError("endpoint must be a complete Responses or Chat Completions URL")
         if not self.model or self.reasoning_effort not in ("low", "medium", "high", "xhigh"):
             raise ValueError("explicit model and supported reasoning effort are required")
         if min(self.timeout_seconds, self.max_calls, self.max_total_tokens) <= 0 or self.max_output_tokens < 256:
             raise ValueError("invalid provider budget")
+        if self.service_tier not in (None, "flex", "default"):
+            raise ValueError("unsupported explicit service tier")
+        if self.provider_only is not None and (u.hostname != "openrouter.ai" or not self.provider_only.strip()):
+            raise ValueError("provider routing is only supported for OpenRouter")
 
 
 @dataclass(frozen=True)
@@ -95,6 +101,14 @@ class ResponsesProvider:
                 "tools": [{"type": "function", "name": "Act", "description": "Submit one bounded physical decision.",
                            "parameters": schema, "strict": True}],
                 "tool_choice": {"type": "function", "name": "Act"}, "parallel_tool_calls": False}
+        if cfg.service_tier is not None:
+            body["service_tier"] = cfg.service_tier
+        if cfg.provider_only is not None:
+            body["provider"] = {"only": [cfg.provider_only], "allow_fallbacks": False,
+                                "require_parameters": True}
+        chat = cfg.endpoint.rstrip('/').endswith('/chat/completions')
+        if chat:
+            body = chat_request(body)
         self.calls += 1; started = time.monotonic()
         timeout = min(cfg.timeout_seconds, timeout_seconds) if timeout_seconds is not None else cfg.timeout_seconds
         if timeout <= 0: raise BudgetExceeded("wall-clock budget exhausted before request")
@@ -115,6 +129,8 @@ class ResponsesProvider:
         except ValueError as e:
             self.usage_log.append(Usage(latency_seconds=time.monotonic()-started, usage_reported=False))
             raise ProviderError("non-JSON provider response") from e
+        if chat:
+            result = chat_response(result)
         usage = Usage.from_response(result, time.monotonic()-started)
         self.usage_log.append(usage); self.total_tokens += usage.total_tokens
         # Record usage even when a subsequent validation rejects the action.
@@ -124,3 +140,61 @@ class ResponsesProvider:
     def close(self):
         if self._owns_client: self._client.close()
         self._key = ""
+
+
+def chat_request(body: dict) -> dict:
+    messages = [{"role": "system", "content": body["instructions"]}]
+    for message in body["input"]:
+        if message.get('type') == 'function_call':
+            messages.append({'role': 'assistant', 'content': None, 'tool_calls': [{
+                'id': message['call_id'], 'type': 'function', 'function': {
+                    'name': message['name'], 'arguments': message['arguments']}}]})
+            continue
+        if message.get('type') == 'function_call_output':
+            messages.append({'role': 'tool', 'tool_call_id': message['call_id'],
+                             'content': message['output']})
+            continue
+        content = []
+        for part in message["content"]:
+            if part["type"] == "input_text":
+                content.append({"type": "text", "text": part["text"]})
+            elif part["type"] == "input_image":
+                content.append({"type": "image_url", "image_url": {
+                    "url": part["image_url"], "detail": part.get("detail", "auto")}})
+            else:
+                raise ProviderError("unsupported chat input part")
+        messages.append({"role": message["role"], "content": content})
+    function = {k: v for k, v in body["tools"][0].items() if k != "type"}
+    result = {"model": body["model"], "messages": messages, "reasoning": body["reasoning"],
+              "max_tokens": body["max_output_tokens"], "stream": False,
+              "tools": [{"type": "function", "function": function}],
+              "tool_choice": {"type": "function", "function": {"name": "Act"}}}
+    for key in ("service_tier", "provider"):
+        if key in body:
+            result[key] = body[key]
+    return result
+
+
+def chat_response(raw: dict) -> dict:
+    choices = raw.get('choices', [])
+    usage = raw.get('usage')
+    converted = None if not usage else {
+        'input_tokens': usage.get('prompt_tokens', 0),
+        'output_tokens': usage.get('completion_tokens', 0),
+        'input_tokens_details': usage.get('prompt_tokens_details', {}),
+        'output_tokens_details': usage.get('completion_tokens_details', {}),
+    }
+    result = {'id': raw.get('id'), 'usage': converted, 'status': 'incomplete', 'output': []}
+    if len(choices) != 1 or raw.get('error'):
+        return result
+    choice = choices[0]
+    message = choice.get('message', {})
+    if choice.get('finish_reason') != 'tool_calls' or message.get('refusal'):
+        return result
+    if any(c.get('type') != 'function' for c in message.get('tool_calls', [])):
+        return result
+    result['status'] = 'completed'
+    result['output'] = [dict(type='function_call', name=c.get('function', {}).get('name'),
+                             arguments=c.get('function', {}).get('arguments'))
+                        for c in message.get('tool_calls', [])]
+    return result
