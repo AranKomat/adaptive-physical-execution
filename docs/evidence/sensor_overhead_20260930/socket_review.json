@@ -1,0 +1,27 @@
+{
+  "observation_id": "50eea9d3b33f45269569bfa048228c91:0",
+  "decision": "localized",
+  "center": {
+    "camera": "right",
+    "pixel_uv": [
+      311,
+      193
+    ]
+  },
+  "end_a": {
+    "camera": "right",
+    "pixel_uv": [
+      282,
+      193
+    ]
+  },
+  "end_b": {
+    "camera": "right",
+    "pixel_uv": [
+      339,
+      193
+    ]
+  },
+  "evidence": "The right image shows a narrow horizontal PCIe socket housing below the CPU area and above the lower motherboard heatsink. The selected pixels span its visible solid housing, distinct from the vertical RGB RAM, case rim, fan, and external loose-card support.",
+  "uncertainty": "The housing and approximate long axis are visible, but the insertion gap and key are not resolved at this scale. Pixel placement is approximate. Occluded clearance is unknown; no depth or world-coordinate certification is claimed."
+}

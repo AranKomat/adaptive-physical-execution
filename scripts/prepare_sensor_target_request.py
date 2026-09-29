@@ -10,7 +10,9 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket'], required=True)
+    p.add_argument('--prior-socket-capture', type=Path)
+    p.add_argument('--prior-socket-response', type=Path)
     args = p.parse_args()
     state = json.loads((args.capture / 'state.json').read_text())
     prompt = (
@@ -50,7 +52,7 @@ def main():
             '\nRobot-only state: ' + json.dumps(state))
     if args.stage == 'alignment':
         prompt = (
-            'Review CURRENT RGB-D camera images after an elevated graphics-card carry. '
+            'Review CURRENT RGB camera images after an elevated graphics-card carry. '
             'Determine whether the held card bottom PCIe connector and matching motherboard socket '
             'are actually visible and aligned. Do not assume the preceding carry chose the correct socket. '
             'Distinguish RAM sticks, heatsinks, case walls and card support from the PCIe socket. '
@@ -65,11 +67,57 @@ def main():
             'This review does NOT authorize insertion or descent. If occluded, explain which view '
             'is missing without presuming any unobserved space is clear. '
             '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'socket':
+        prompt = (
+            'Before grasping the loose graphics card, identify its destination motherboard PCIe '
+            'socket in the CURRENT RGB images. Do not choose the loose card support, RAM sticks '
+            'or RAM slots, heatsink fins, case rim, or the large black case fan. '
+            'This is a visual localization test, NOT permission to move. '
+            'Choose localized only if you can distinguish the destination socket from distractors. '
+            'Select center, end_a, end_b: three ORIGINAL 640x360 integer pixels on the visible '
+            'solid socket housing, spanning its LONG axis. Avoid empty socket gaps and background. '
+            'Each feature is {camera: left/right/wrist, pixel_uv: [u,v]}. '
+            'Pixel origin is upper-left; u increases right, v down. '
+            'Measured depth exists separately and will be sampled after your selection; it is not '
+            'included here. Never invent world coordinates or claim depth certification. '
+            'Return JSON with observation_id, decision (localized/inspect), center, end_a, end_b, '
+            'evidence, uncertainty. Features may be null when inspect is required. '
+            'Explicitly distinguish seeing a socket housing/axis from seeing its insertion gap '
+            'or key: do not require a visible key for rough localization, but report its absence. '
+            'Do not infer that any occluded space is clear. '
+            '\nRobot-only state: ' + json.dumps(state))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):
         encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
                         {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
+    if args.prior_socket_capture or args.prior_socket_response:
+        if args.stage != 'alignment' or not (args.prior_socket_capture and args.prior_socket_response):
+            raise ValueError('historical socket context requires alignment and both prior inputs')
+        old_state = json.loads((args.prior_socket_capture/'state.json').read_text())
+        old_response = json.loads(args.prior_socket_response.read_text())
+        old_episode, old_seq = old_state['observation_id'].rsplit(':', 1)
+        episode, seq = state['observation_id'].rsplit(':', 1)
+        if (old_episode != episode or int(old_seq) >= int(seq)
+                or old_response['observation_id'] != old_state['observation_id']
+                or old_response['decision'] != 'localized'):
+            raise ValueError('historical socket evidence must be an earlier localized view in this episode')
+        role = old_response['center']['camera']
+        if role not in ('left', 'right', 'wrist'):
+            raise ValueError('invalid historical camera')
+        encoded = base64.b64encode((args.prior_socket_capture/f'{role}.png').read_bytes()).decode()
+        content.extend([
+            {'type': 'text', 'text': (
+                'HISTORICAL evidence, NOT a current view or clearance certificate. '
+                'An earlier pre-grasp review localized a candidate socket housing in this same episode. '
+                'Reconcile this evidence with the current views; do not describe it as never observed. '
+                'Keep the current decision schema, and add historical_assessment explaining what '
+                'this memory resolves, what may have changed, and what current evidence remains missing. '
+                'Localization was coarse, not verified gap/key geometry. Memory alone does not '
+                'authorize descent, prove absence of slip, or establish current free space. '
+                + json.dumps(old_response))},
+            {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}},
+        ])
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps([{'role': 'user', 'content': content}]))
 

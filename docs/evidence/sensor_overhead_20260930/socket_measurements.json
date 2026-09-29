@@ -1,0 +1,45 @@
+{
+  "observation_id": "50eea9d3b33f45269569bfa048228c91:0",
+  "measurements": {
+    "center": {
+      "observation_id": "50eea9d3b33f45269569bfa048228c91:0",
+      "pixel_uv": [
+        311,
+        193
+      ],
+      "surface_point_world_m": [
+        0.47357553965299043,
+        0.014823799521919145,
+        0.043678351527642434
+      ],
+      "optical_depth_m": 1.4400849342346191,
+      "local_depth_spread_m": 0.001996159553527832,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    "end_a": {
+      "error": "depth discontinuity: select an interior surface pixel",
+      "pixel_uv": [
+        282,
+        193
+      ]
+    },
+    "end_b": {
+      "observation_id": "50eea9d3b33f45269569bfa048228c91:0",
+      "pixel_uv": [
+        339,
+        193
+      ],
+      "surface_point_world_m": [
+        0.39997954893887294,
+        0.012394947477995244,
+        0.036888388068326394
+      ],
+      "optical_depth_m": 1.4472942352294922,
+      "local_depth_spread_m": 0.0020062923431396484,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    }
+  },
+  "motion_authorized": false
+}

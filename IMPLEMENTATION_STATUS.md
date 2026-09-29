@@ -18,7 +18,11 @@
   Its 74 MB trace is backed up locally, with compact public evidence and video.
 - Next: sensor-localize the socket before grasp/carry occludes it and retain
   measured geometry through carry; do not substitute privileged reference poses.
-- 130 CPU tests pass. They do not establish manipulation robustness.
+- An explicitly changed overhead-right-camera condition exposed a candidate
+  socket before carry. Lift/carry repeated, but hand/card occlusion remained
+  afterward; a historical-context review recognized the prior socket without
+  claiming present alignment. No insertion yet. See `docs/OVERHEAD_SOCKET_20260930.md`.
+- 135 CPU tests pass. They do not establish manipulation robustness.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and

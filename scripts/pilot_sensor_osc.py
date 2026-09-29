@@ -122,9 +122,11 @@ def main():
         native_translation_command_cap_m=(.03 if args.integral_feedback else .01) if args.controller=='diff_ik' else None,
         action_budget=budget, reference_action_budget_15hz=args.max_reference_actions,
         frame_kind=f'sampled every {record_every} actions',
+        extra_cameras=task['extra_cameras'], image_size=task['image_size'],
         camera_map=task['camera_map'], initial_warmup_actions=0, privileged_control_inputs=False,
         ramp_targets=args.ramp_targets, rotation_abort_rad=.35, joint_limit_margin_rad=.005))
     started = time.monotonic()
+    command_wait_seconds = 0.
     try:
         state = capture()
         for index in range(8):
@@ -132,17 +134,20 @@ def main():
                        last_stage=result['stages'][-1] if result['stages'] else None, **state))
             print('READY', index, state['observation_id'], flush=True)
             path = args.output / f'command_{index}.json'
-            deadline = time.monotonic() + 1800
+            wait_started = time.monotonic()
+            deadline = wait_started + 1800
             while not path.exists():
                 if time.monotonic() > deadline:
                     raise TimeoutError('No command within 30 minutes; no motion retry')
                 time.sleep(1)
+            command_wait_seconds += time.monotonic() - wait_started
             command = json.loads(path.read_text())
             scaled_command = {**command,'phases':phases_at_cadence(command,control_dt)}
             phases = validate_plan(scaled_command, state['observation_id'], budget-seq,
                                    max_phase_actions=round(12/control_dt))
             with (args.output / 'robot_actions.jsonl').open('a') as log:
                 for phase in phases:
+                    phase_started = time.monotonic()
                     target = np.asarray(phase['hand_pose_world'])
                     phase_start = robot_state()['hand_pose_world']
                     for tick in range(phase['actions']):
@@ -167,6 +172,8 @@ def main():
                     state = capture()
                     error = pose_error(state['hand_pose_world'], target)
                     row = dict(name=phase['name'], observation_id=state['observation_id'],
+                               execution_wall_seconds=time.monotonic()-phase_started,
+                               simulated_seconds=phase['actions']*control_dt,
                                position_error_m=float(np.linalg.norm(error[:3])),
                                rotation_error_rad=float(np.linalg.norm(error[3:])))
                     row['arrival_passed'] = row['position_error_m'] <= .02 and row['rotation_error_rad'] <= .15
@@ -184,7 +191,8 @@ def main():
         traceback.print_exc()
     finally:
         capture()
-        result.update(actions=seq, simulated_seconds=seq*control_dt, wall_seconds=time.monotonic()-started)
+        result.update(actions=seq, simulated_seconds=seq*control_dt, wall_seconds=time.monotonic()-started,
+                      completed_command_wait_seconds=command_wait_seconds)
         write_json(args.output / 'result.json', result)
         # Scoring only AFTER all control; never read by the command-generating path.
         write_json(args.output / 'evaluator_only.json', dict(
