@@ -1,0 +1,55 @@
+{
+  "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+  "measurements": {
+    "center": {
+      "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+      "pixel_uv": [
+        278,
+        241
+      ],
+      "surface_point_world_m": [
+        0.48361181018623933,
+        0.027613081601736478,
+        0.03758810650456457
+      ],
+      "optical_depth_m": 0.8554674983024597,
+      "local_depth_spread_m": 0.0006259679794311523,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    "end_a": {
+      "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+      "pixel_uv": [
+        224,
+        241
+      ],
+      "surface_point_world_m": [
+        0.5268270552609268,
+        0.027613057071975644,
+        0.03758805011151156
+      ],
+      "optical_depth_m": 0.8554675579071045,
+      "local_depth_spread_m": 0.0006259679794311523,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    "end_b": {
+      "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+      "pixel_uv": [
+        331,
+        241
+      ],
+      "surface_point_world_m": [
+        0.44119685206818443,
+        0.027613068071612124,
+        0.03758804969203833
+      ],
+      "optical_depth_m": 0.8554675579071045,
+      "local_depth_spread_m": 0.0006257295608520508,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    }
+  },
+  "motion_authorized": false,
+  "limitation": "Housing samples are not insertion gap, full endpoint correspondence, or clearance."
+}

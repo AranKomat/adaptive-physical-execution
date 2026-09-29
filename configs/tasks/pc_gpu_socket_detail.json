@@ -1,0 +1,22 @@
+{
+  "schema": "physical-exec-task/v1",
+  "id": "pc_gpu",
+  "preset": "assembly.pc_gpu.franka.joint",
+  "instruction": "Install the loose graphics card into the computer case's PCIe slot. Use visual feedback to align and seat it.",
+  "control_hz": 15,
+  "image_size": [640, 360],
+  "camera_map": {"wrist": "wrist", "left": "external_left", "right": "external_right"},
+  "extra_cameras": {
+    "external_left": {"eye": [1.2, -0.95, 0.8], "target": [0.45, 0.0, 0.1], "focal": 18.0},
+    "external_right": {"eye": [0.45, 0.3, 0.85], "target": [0.45, 0.0, 0.1], "focal": 35.0}
+  },
+  "limits": {"max_translation_m": 0.03, "max_rotation_rad": 0.15, "max_joint_step_rad": 0.15, "max_chunk": 32},
+  "default_horizons": {"direct_roboicl": 5, "direct_reference": 3, "hybrid": 8},
+  "notes": [
+    "Exploratory higher-detail pre-grasp socket view: closer right camera and longer focal length; not an isolated position or lens ablation.",
+    "Generic workcell look-at unchanged. No object truth used. Camera has no collision body; placement clearance unknown.",
+    "Cached right-camera pixels from earlier camera configurations are invalid here. Select new pixels on current RGB-D.",
+    "Upstream task physics and grasp assistance unchanged. Not matched to DROID training views."
+  ],
+  "source": "https://github.com/EmbodiedSWE/EmbodiedSWE/blob/d34837e99e5016525f0e9b6bb84791eb3d4b8162/robobench/suites/assembly/configs/envs.py"
+}

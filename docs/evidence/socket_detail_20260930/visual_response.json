@@ -1,0 +1,27 @@
+{
+  "observation_id": "6b429bfbb76e43cebc00886aadbcb0b3:0",
+  "decision": "localized",
+  "center": {
+    "camera": "right",
+    "pixel_uv": [
+      278,
+      241
+    ]
+  },
+  "end_a": {
+    "camera": "right",
+    "pixel_uv": [
+      224,
+      241
+    ]
+  },
+  "end_b": {
+    "camera": "right",
+    "pixel_uv": [
+      331,
+      241
+    ]
+  },
+  "evidence": "The right image shows the upper long motherboard PCIe socket below the CPU area and left of the silver cover. Its solid housing runs approximately horizontally, distinct from the vertical RAM, heatsink fins, lower expansion socket, case rim, fan, and loose card support. Points select the visible upper housing rail along its long axis, not the dark insertion gap.",
+  "uncertainty": "The housing and rough axis are visible; the insertion gap is not fully resolved and the internal key is not discernible. Pixel placement is approximate. Occluded clearance is unknown; no depth or world-coordinate certification is claimed. No motion is authorized."
+}

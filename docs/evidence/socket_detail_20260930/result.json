@@ -1,0 +1,1 @@
+{"actions": 0, "completed_command_wait_seconds": 0.0, "condition": "sensor-target diff_ik pilot; exploratory unknown clearance; grasp assistance enabled", "simulated_seconds": 0.0, "stages": [], "success_claimed": false, "target_provenance": "file commands; inspect target_source in each command", "wall_seconds": 1.5779652270011866}

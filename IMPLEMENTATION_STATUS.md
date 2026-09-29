@@ -36,6 +36,11 @@
   axis qualification was incomplete. Acquire higher-detail socket geometry before
   occlusion in the next trial. No additional motion was run in this review.
 - 145 CPU tests pass. They do not establish manipulation robustness.
+- Higher-detail pre-grasp capture completed with zero control actions. Three
+  housing-rail samples passed depth continuity (about 0.626 mm spread); sampling
+  improved to about 0.80 mm/px. Internal key/gap still unresolved. Camera position
+  AND focal length changed; old right-camera pixel templates are invalid. See
+  `docs/SOCKET_DETAIL_20260930.md`. This is sensing progress, not insertion success.
 - Next: obtain corresponding connector/slot endpoints or axes from legal images
   and depth, then attempt one bounded alignment/recovery. Do not compensate for
   uncertain correspondence by pressing farther down.

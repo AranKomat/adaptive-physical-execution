@@ -28,6 +28,7 @@ def main():
     p.add_argument('--integral-feedback', action='store_true',help='native DiffIK bounded translation integral and 3 cm command cap')
     p.add_argument('--pause-on-arrival-failure', action='store_true',help='nonterminal timeout only; unsafe motion stops stay terminal')
     p.add_argument('--inspection-camera', action='store_true', help='opt-in idealized right-camera positioning; no collision body')
+    p.add_argument('--capture-only', action='store_true', help='capture initial RGB-D then exit without control actions')
     from isaaclab.app import AppLauncher
     AppLauncher.add_app_launcher_args(p)
     args = p.parse_args()
@@ -134,7 +135,7 @@ def main():
     command_wait_seconds = 0.
     try:
         state = capture()
-        for index in range(8):
+        for index in range(0 if args.capture_only else 8):
             write_json(args.output / 'ready.json', dict(command_index=index,
                        last_stage=result['stages'][-1] if result['stages'] else None, **state))
             print('READY', index, state['observation_id'], flush=True)
