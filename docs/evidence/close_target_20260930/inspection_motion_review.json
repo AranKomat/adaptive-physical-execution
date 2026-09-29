@@ -1,0 +1,13 @@
+{
+  "observation_id": "c3145c96f5344d6fa999b5b506de89ae:896",
+  "decision": "no_informative_motion",
+  "delta_world_m": null,
+  "expected_visible_region": "No specific socket-relevant background region is sufficiently supported as becoming more visible within the permitted translation.",
+  "geometric_reasoning": "The wrist image shows a limited motherboard region to the right of the held card, but no identifiable PCIe socket. Translating the hand would preserve the card's occlusion of the wrist camera; only background parallax could help, and the images do not establish a useful direction for that parallax. In the fixed right view, lifting might uncover a narrow strip beneath the card, but the chassis wall and rim still obstruct the interior. The left view is substantially obstructed by the robot and chassis. These observations do not justify a particular translation of at most 0.05 m as informative rather than speculative.",
+  "visible_risks": [
+    "The card and its projecting metal bracket appear near the chassis rim; their clearance is unknown.",
+    "The hand, card and case obscure potential obstacles along lateral translations.",
+    "Upward motion alone would not establish clearance for the entire held assembly."
+  ],
+  "uncertainty": "Socket location, object pose, collision truth and force feedback are unavailable. A small translation might improve background visibility, but no useful direction is established from these views. No motion is requested; any future inspection motion would remain exploratory, simulator-only and not safety-certified."
+}

@@ -17,6 +17,10 @@ suspension in the integrated worker. All strict endpoints passed. Three fresh
 calls including subsequent carry review cost $0.072945. Carry review requested
 inspection because the destination socket is occluded; no carry was issued.
 See updated live state below and `docs/CLOSE_TARGET_20260930.md`.
+One later inspection-planning call declined a <=5 cm non-descending hand move;
+no motion. Four-call episode total is now $0.0995975. Independent camera control
+exists in the older pilot but must be ported to the integrated worker before a
+new camera view can be commanded; a fresh process would be required to load it.
 
 ## 1. Executive assessment
 
@@ -313,7 +317,7 @@ Costs above are per documented trial, not an audited project grand total. They
 exclude rental charges, prior projects and unresolved API holds. The shared
 private ledger is authoritative; preserve its $75 ceiling and unresolved holds,
 including the older $1 routing-error reservation. Last completed review brought
-the reserved-call count to 4,355; recheck before the next request.
+the reserved-call count to 4,356; recheck before the next request.
 
 Small stage reviews often cost cents, whereas history-heavy Direct loops used
 many calls without task completion. Lower call count is useful only if physical

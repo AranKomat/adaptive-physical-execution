@@ -10,7 +10,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     args = p.parse_args()
@@ -139,6 +139,30 @@ def main():
             'seating depth, or certify clearance. A midpoint between measured rail surfaces would '
             'only be an inferred centerline, not a directly observed gap surface. '
             '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'inspection_motion':
+        calibrations = {role: json.loads((args.capture/f'{role}_calibration.json').read_text())
+                        for role in ('left','right','wrist')}
+        if any(c['observation_id'] != state['observation_id'] for c in calibrations.values()):
+            raise ValueError('Inspection camera geometry is stale')
+        prompt = (
+            'The loose graphics card has been lifted, but the motherboard PCIe socket is '
+            'not identifiable in the current views. Plan at most ONE bounded simulator-only '
+            'inspection translation, or decline if no useful small motion is justified. '
+            'This is NOT a carry toward a guessed socket or insertion. External cameras are '
+            'fixed; wrist camera moves rigidly with the hand and held card. Therefore moving '
+            'the hand does not change card-to-wrist-camera occlusion; explain which background '
+            'region or external view would become more informative. Do not assume unseen space '
+            'is free. No object pose, collision truth or force sensor is supplied. '
+            'Allowed motion: keep hand orientation and gripper command unchanged, translate '
+            'at most 0.05 m Euclidean norm in WORLD coordinates, dz >= 0 (no lowering). '
+            'The bounded local controller, not GPT, executes and stops the movement. '
+            'If these limits cannot produce an informative view, choose no_informative_motion. '
+            'Do not suggest a move merely to comply. Return JSON: observation_id, decision '
+            '(inspect_motion/no_informative_motion), delta_world_m ([dx,dy,dz] or null), '
+            'expected_visible_region, geometric_reasoning, visible_risks, uncertainty. '
+            'Motion remains exploratory with unknown clearance, not safety-certified. '
+            '\nRobot-only state: '+json.dumps(state)+
+            '\nCurrent sensor calibration: '+json.dumps(calibrations))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):
         encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()

@@ -4,6 +4,11 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Current held-state inspection planning declined a <=5 cm non-descending hand
+  move: no informative direction justified by existing views. No motion issued.
+  The integrated worker lacks the older pilot's independent camera command;
+  port that bounded capability next, rather than repeated grasp/view guesses.
+
 - Close-target refresh trial now achieved visually reviewed assisted suspension:
   896 actions including approach, all strict arrival checks passed, final lift
   0.817 mm / 0.002588 rad. Fresh RGB-D target plus independent clear_lift review

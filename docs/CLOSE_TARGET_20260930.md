@@ -66,3 +66,21 @@ the held state, not another grasp or a carry using hidden slot coordinates.
 control-latch frames at 1x simulated time, excluding model waits and disclosing
 grasp assistance. Left frames and final RGB-D are backed up locally; complete
 multi-view/depth recordings remain on the host, so this is not a full disk backup.
+
+## Inspection-action feasibility
+
+One subsequent Astra request supplied current RGB, robot state and calibrated
+sensor poses. It allowed one <=5 cm non-descending hand translation, unchanged
+orientation/gripper, solely to improve observation, or no_informative_motion.
+The model chose no_informative_motion: card/wrist occlusion is rigid, fixed views
+remain blocked by chassis/robot, and no specific useful parallax direction was
+supported. No motion was issued. This is not proof that no viewpoint exists.
+Inspection planning cost $0.0266525; episode total now four calls / $0.0995975.
+
+Source inspection confirms the integrated worker only exposes robot steps and
+local stages, not the independent camera operation already tested in the older
+pilot. Next port that bounded sensor-control capability; do not loop over the
+same obstructed images or execute an arbitrary carry. Installing a new worker
+capability requires a fresh process; do not imply a code edit changes the current
+live process or silently reset its suspended episode. Preserve current evidence
+before any separately declared fresh run. No task phase was completed here.
