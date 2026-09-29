@@ -17,6 +17,7 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--observation-id', required=True)
     parser.add_argument('--eye', nargs=3, type=float, required=True)
+    parser.add_argument('--gaze', nargs=3, type=float, help='Legal sensor-derived aim point; idealized camera only')
     parser.add_argument('--output', type=Path, required=True)
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
@@ -25,6 +26,8 @@ def main():
         meta = client.call('/metadata')
         if not meta.get('inspection_camera_enabled') or meta.get('real_hardware_supported') is not False:
             raise ValueError('Requires opt-in simulator inspection camera')
+        if args.gaze is not None and not meta.get('inspection_camera_gaze_enabled'):
+            raise ValueError('Running worker does not support camera aiming; no command sent')
         opening = meta.get('last_gripper_command')
         if opening is None:
             raise ValueError('Requires a previously established gripper command')
@@ -38,6 +41,8 @@ def main():
             observation_id=obs.key, hand_pose_world=obs.eef_pose.tolist(),
             gripper_open=opening, max_steps=64, camera_eye_world=args.eye,
             target_source='Operator-selected idealized inspection-camera move; arm hold; unknown clearance'))
+        if args.gaze is not None:
+            envelope['action']['camera_gaze_world'] = args.gaze
         write_json(args.output/'request.json', envelope)
         result = decode_result(client.call('/local-stage', envelope, mutating=True))
         write_json(args.output/'receipt.json', result.receipt.to_dict())

@@ -7,6 +7,12 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+Observation 885 revalidated after the timing-fix report, with no further motion.
+Bounded adjustable camera gaze is now implemented and software-tested but NOT
+loaded in the current worker. See `docs/CAMERA_AIM_20260930.md` for legal depth
+evidence and the next fresh-trial protocol. Fixed gaze still points at the grasp
+area; no useful socket selection or carry has occurred.
+
 Continuous-transit fixed-fixture lift completed: 693 vs 896 actions, 46.200 vs
 59.733 sim seconds, 310.724 vs 400.042 execution seconds. Same measured targets;
 cached pixel templates declared. Strict final error 2.351 mm; separate review

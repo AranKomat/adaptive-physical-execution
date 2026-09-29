@@ -221,18 +221,19 @@ class EmbodiedSWEEnvironment:
         import torch
         eye_path = None
         if 'camera_eye_world' in value:
-            from ..inspection_camera import camera_path
+            from ..inspection_camera import camera_path, camera_gaze_path
             from ..geometry import finite_vector
             moving_camera = self.sim.sensors[self.camera_map['right']]
             if not hasattr(moving_camera._view, '_use_fabric'):
                 raise InputRejected('unsupported inspection camera transform backend')
             try:
-                gaze = finite_vector(self.task_config['extra_cameras'][self.camera_map['right']]['target'], 3)
+                gaze = finite_vector(getattr(self, '_inspection_gaze',
+                    self.task_config['extra_cameras'][self.camera_map['right']]['target']), 3)
                 eye_path = camera_path(self._numpy(moving_camera.data.pos_w)[0], value['camera_eye_world'],
                     self.current.eef_pose, target, value['max_steps'], self.current.control_dt,
                     oblique_envelope=True)
-                if np.min(np.linalg.norm(eye_path-gaze, axis=1)) < .1:
-                    raise ValueError('camera eye too close to fixed gaze target')
+                gaze_path = camera_gaze_path(self._numpy(moving_camera.data.pos_w)[0],
+                    eye_path, gaze, value.get('camera_gaze_world', gaze), self.current.control_dt)
             except (ValueError, TypeError, KeyError) as exc:
                 raise InputRejected('invalid inspection camera path') from exc
         from robobench.controllers.diff_ik import DiffIKController, DiffIKControllerCfg
@@ -271,7 +272,7 @@ class EmbodiedSWEEnvironment:
                 if eye_path is not None:
                     moving_camera.set_world_poses_from_view(
                         torch.as_tensor(eye_path[index][None], dtype=torch.float32, device=self.sim.env.device),
-                        torch.as_tensor(gaze[None], dtype=torch.float32, device=self.sim.env.device))
+                        torch.as_tensor(gaze_path[index][None], dtype=torch.float32, device=self.sim.env.device))
                 self.step(action, f'{command_id}:{index}')
                 completed += 1
                 if eye_path is not None:
@@ -294,6 +295,15 @@ class EmbodiedSWEEnvironment:
                 camera_error = np.linalg.norm(self._numpy(moving_camera.data.pos_w)[0]-eye_path[-1])
                 if completed != value['max_steps'] or camera_error > .001 or not np.isfinite(camera_error):
                     raise RuntimeError('inspection camera did not arrive; no retry')
+                if 'camera_gaze_world' in value:
+                    from ..geometry import quat_to_matrix
+                    optical = self._numpy(moving_camera.data.quat_w_ros)[0]
+                    forward = quat_to_matrix(optical)[:, 2]
+                    desired = gaze_path[-1]-eye_path[-1]
+                    desired /= np.linalg.norm(desired)
+                    if np.linalg.norm(forward-desired) > .001:
+                        raise RuntimeError('inspection camera aim readback failed; no retry')
+                self._inspection_gaze = gaze_path[-1].copy()
             arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
                 'executed', ('transit waypoint passed' if waypoint_passed else
@@ -305,6 +315,7 @@ class EmbodiedSWEEnvironment:
                     stream.write(__import__('json').dumps({'command_id': command_id, 'request': value,
                         'receipt': receipt.to_dict(), 'unknown_clearance': True,
                         'camera_path_world': None if eye_path is None else eye_path.tolist(),
+                        'camera_gaze_path_world': None if eye_path is None else gaze_path.tolist(),
                         'camera_eye_error_m': None if eye_path is None else float(camera_error)})+'\n')
             if waypoint_passed:
                 self._transit_context = dict(observation_id=self.current.key,target=target.copy(),
@@ -342,6 +353,7 @@ class EmbodiedSWEEnvironment:
                 "continuous_transit_enabled": True,
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
+                "inspection_camera_gaze_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_qualification": "idealized sensor only; no collision body or hardware clearance",
                 "last_gripper_command": getattr(self, '_last_gripper_command', None),
                 "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",

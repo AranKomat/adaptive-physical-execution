@@ -1,6 +1,6 @@
 import numpy as np
 import pytest
-from physical_exec.inspection_camera import camera_path
+from physical_exec.inspection_camera import camera_path, camera_gaze_path
 
 HAND = [.3,-.3,.45,0,0,1,0]
 
@@ -32,7 +32,8 @@ def test_oblique_envelope_requires_explicit_opt_in():
 
 
 @pytest.mark.parametrize('camera_writes_work',[True,False])
-def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,camera_writes_work):
+@pytest.mark.parametrize('aim_writes_work',[None,True,False])
+def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,camera_writes_work,aim_writes_work):
     from dataclasses import replace
     from types import SimpleNamespace, ModuleType
     import sys
@@ -52,9 +53,16 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
                              data=SimpleNamespace(pos_w=np.array([[.55,-.65,.4]])))
     camera_calls = []
     def set_camera(eye,gaze):
+        from physical_exec.geometry import matrix_to_quat
         camera_calls.append(np.asarray(eye).copy())
         if camera_writes_work:
             camera.data.pos_w = np.asarray(eye).copy()
+        forward = np.asarray(gaze)[0]-np.asarray(eye)[0]
+        forward /= np.linalg.norm(forward)
+        right = np.cross(forward,[0,0,1])
+        right /= np.linalg.norm(right)
+        rotation = np.column_stack([right,np.cross(forward,right),forward])
+        camera.data.quat_w_ros = np.array([matrix_to_quat(rotation) if aim_writes_work else [1,0,0,0]])
     camera.set_world_poses_from_view = set_camera
     env = EmbodiedSWEEnvironment.__new__(EmbodiedSWEEnvironment)
     env.current = observation
@@ -78,7 +86,10 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
     value = dict(observation_id=observation.key,hand_pose_world=observation.eef_pose.tolist(),
                  gripper_open=1.,max_steps=64,target_source='TEST CAMERA HOLD',
                  camera_eye_world=[.6,-.35,.7])
-    if camera_writes_work:
+    if aim_writes_work is not None:
+        value['camera_gaze_world'] = [.45,.03,.035]
+    succeeds = camera_writes_work and aim_writes_work is not False
+    if succeeds:
         result = env.local_stage(value,'test')
         assert result.receipt.executed_steps == 64
         assert result.receipt.reason == 'local stage arrived'
@@ -89,7 +100,7 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         assert env._poisoned
     assert len(actions) == len(camera_calls) == 64
     assert all(action.values[0][-1] == 1. for action in actions)
-    if camera_writes_work:
+    if succeeds:
         from physical_exec.osc_reference import NativeDiffIKFeedback
         points, controller_ids = [], []
         original = NativeDiffIKFeedback.command
@@ -124,3 +135,17 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
             env.local_stage(dict(observation_id=env.current.key,hand_pose_world=target.tolist(),
                 gripper_open=1.,max_steps=64,target_source='TEST STALL',settle_at_end=False),'stall')
         assert env._poisoned and env._transit_context is None
+
+
+def test_gaze_path_and_angular_limit():
+    eye = [.6,-.35,1.55]
+    eyes = np.tile(eye,(64,1))
+    start, end = [.22,-.34,.2], [.45,.03,.035]
+    path = camera_gaze_path(eye,eyes,start,end,1/15)
+    np.testing.assert_allclose(path[-1],end)
+    with pytest.raises(ValueError,match='angular speed'):
+        camera_gaze_path(eye,eyes[:1],start,end,1/15)
+    with pytest.raises(ValueError,match='too close'):
+        camera_gaze_path(eye,eyes,start,eye,1/15)
+    with pytest.raises(ValueError,match='singularity'):
+        camera_gaze_path(eye,eyes,start,[.6,-.35,.2],1/15)

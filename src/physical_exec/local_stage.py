@@ -13,6 +13,8 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     if camera and not allow_inspection_camera:
         raise InputRejected('inspection camera not enabled')
     optional = ({'camera_eye_world'} if camera else set()) | ({'settle_at_end'} if 'settle_at_end' in fields else set())
+    if camera and 'camera_gaze_world' in fields:
+        optional.add('camera_gaze_world')
     if not isinstance(value, dict) or fields != required | optional:
         raise InputRejected('invalid local-stage fields')
     if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
@@ -45,6 +47,8 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
             raise InputRejected('inspection camera must preserve previous gripper command')
         try:
             finite_vector(value['camera_eye_world'], 3)
+            if 'camera_gaze_world' in value:
+                finite_vector(value['camera_gaze_world'], 3)
         except (ValueError, TypeError) as exc:
             raise InputRejected('invalid camera eye') from exc
     return pose

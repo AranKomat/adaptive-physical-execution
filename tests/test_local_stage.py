@@ -61,7 +61,8 @@ def test_stage_bounds_and_no_mutation(observation):
 
 
 def test_camera_stage_is_opt_in_and_preserves_commanded_grip(observation):
-    value = {**request(observation), 'camera_eye_world':[.6,-.35,.7]}
+    value = {**request(observation), 'camera_eye_world':[.6,-.35,.7],
+             'camera_gaze_world':[.45,.03,.035]}
     with pytest.raises(InputRejected, match='not enabled'):
         validate_local_stage(value,observation)
     # Measured aperture is .7, but the existing commanded opening is 1.0.

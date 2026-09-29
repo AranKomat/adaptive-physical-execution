@@ -4,6 +4,12 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Bounded camera aiming added; live observation 885 revalidated without motion.
+  Fixed gaze limits motherboard framing. New gaze path/readback tests pass;
+  current process does not contain the change. Next explicitly fresh integrated
+  replay and sensor-derived aiming, not another fixed-gaze sweep. See
+  `docs/CAMERA_AIM_20260930.md`. No task phase completed by this software change.
+
 - Continuous transit live-qualified in a fixed-fixture assisted lift: 693 versus
   896 actions, 46.200 versus 59.733 sim seconds, 310.724 versus 400.042 execution
   seconds. Final 2.351 mm, clear_lift review, one call $0.0194525. Subsequent
