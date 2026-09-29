@@ -23,9 +23,14 @@ from ..trace import write_json, sha256_file
 
 class EmbodiedSWEEnvironment:
     def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None,
-                 record_depth=False, allow_local_stages=False, local_stage_rotation_integral=False):
+                 record_depth=False, allow_local_stages=False, local_stage_rotation_integral=False,
+                 allow_inspection_camera=False):
         self.allow_local_stages = allow_local_stages
         self.local_stage_rotation_integral = local_stage_rotation_integral
+        self.allow_inspection_camera = allow_inspection_camera
+        self._last_gripper_command = None
+        if allow_inspection_camera and not (allow_local_stages and record_depth):
+            raise ValueError('inspection camera requires local stages and recorded depth/calibration')
         if record_depth and record_dir is None:
             raise ValueError("depth capture requires a recording directory")
         self.record_depth = record_depth
@@ -182,6 +187,7 @@ class EmbodiedSWEEnvironment:
                 self.raw = self.sim.step(np.asarray(row, dtype=np.float32)[None])
                 self.seq += 1; count += 1
                 self.current = self._extract(self.raw)
+                self._last_gripper_command = float(1.-row[-1])
                 if self._evaluation.success: break  # host terminates; scorer never sent to model
         except Exception as e:
             self._poisoned = True
@@ -207,8 +213,26 @@ class EmbodiedSWEEnvironment:
             raise InputRejected('local stage requires an initialized, unpoisoned worker')
         from ..local_stage import validate_local_stage
         from ..osc_reference import NativeDiffIKFeedback, ramped_pose_target, motion_stop_reason
-        target = validate_local_stage(value, self.current)
+        target = validate_local_stage(value, self.current,
+            allow_inspection_camera=self.allow_inspection_camera,
+            last_gripper_command=self._last_gripper_command)
         import torch
+        eye_path = None
+        if 'camera_eye_world' in value:
+            from ..inspection_camera import camera_path
+            from ..geometry import finite_vector
+            moving_camera = self.sim.sensors[self.camera_map['right']]
+            if not hasattr(moving_camera._view, '_use_fabric'):
+                raise InputRejected('unsupported inspection camera transform backend')
+            try:
+                gaze = finite_vector(self.task_config['extra_cameras'][self.camera_map['right']]['target'], 3)
+                eye_path = camera_path(self._numpy(moving_camera.data.pos_w)[0], value['camera_eye_world'],
+                    self.current.eef_pose, target, value['max_steps'], self.current.control_dt,
+                    oblique_envelope=True)
+                if np.min(np.linalg.norm(eye_path-gaze, axis=1)) < .1:
+                    raise ValueError('camera eye too close to fixed gaze target')
+            except (ValueError, TypeError, KeyError) as exc:
+                raise InputRejected('invalid inspection camera path') from exc
         from robobench.controllers.diff_ik import DiffIKController, DiffIKControllerCfg
         cfg = DiffIKControllerCfg(ee_body='panda_hand', arm_joint_names=self.joint_names)
         solver = DiffIKController(cfg)
@@ -220,6 +244,8 @@ class EmbodiedSWEEnvironment:
         started = time.monotonic()
         completed = 0
         try:
+            if eye_path is not None:
+                moving_camera._view._use_fabric = False
             for index in range(value['max_steps']):
                 state = self.current
                 reason = motion_stop_reason(state.eef_pose, target, state.joints, self.kin.limits)
@@ -232,14 +258,26 @@ class EmbodiedSWEEnvironment:
                                                                device=self.sim.env.device)))[0]
                 action = ActionChunk('joint_absolute', [np.r_[q, value['gripper_open']]],
                                      state.key, state.control_dt, 'sensor_local_diffik', self.joint_names)
+                if eye_path is not None:
+                    moving_camera.set_world_poses_from_view(
+                        torch.as_tensor(eye_path[index][None], dtype=torch.float32, device=self.sim.env.device),
+                        torch.as_tensor(gaze[None], dtype=torch.float32, device=self.sim.env.device))
                 self.step(action, f'{command_id}:{index}')
                 completed += 1
+                if eye_path is not None:
+                    hold_error = pose_error(self.current.eef_pose, target)
+                    if np.linalg.norm(hold_error[:3]) > .01 or np.linalg.norm(hold_error[3:]) > .15:
+                        raise RuntimeError('inspection arm hold drift exceeded bounds')
                 reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
                 if self._evaluation.success:
                     break
             error = pose_error(self.current.eef_pose, target)
+            if eye_path is not None:
+                camera_error = np.linalg.norm(self._numpy(moving_camera.data.pos_w)[0]-eye_path[-1])
+                if completed != value['max_steps'] or camera_error > .001 or not np.isfinite(camera_error):
+                    raise RuntimeError('inspection camera did not arrive; no retry')
             arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
                 'executed', 'local stage arrived' if arrived else 'local stage budget ended without arrival',
@@ -248,7 +286,9 @@ class EmbodiedSWEEnvironment:
             if self.record_episode is not None:
                 with (self.record_episode/'local_stages.jsonl').open('a') as stream:
                     stream.write(__import__('json').dumps({'command_id': command_id, 'request': value,
-                        'receipt': receipt.to_dict(), 'unknown_clearance': True})+'\n')
+                        'receipt': receipt.to_dict(), 'unknown_clearance': True,
+                        'camera_path_world': None if eye_path is None else eye_path.tolist(),
+                        'camera_eye_error_m': None if eye_path is None else float(camera_error)})+'\n')
             return StepResult(self.current, receipt, self._evaluation)
         except Exception as exc:
             self._poisoned = True
@@ -280,6 +320,9 @@ class EmbodiedSWEEnvironment:
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
+                "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
+                "inspection_camera_qualification": "idealized sensor only; no collision body or hardware clearance",
+                "last_gripper_command": getattr(self, '_last_gripper_command', None),
                 "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",
                 "real_hardware_supported": False, "camera_map": self.camera_map,
                 "grasp_weld": getattr(scfg, "grasp_weld", "not_declared"),

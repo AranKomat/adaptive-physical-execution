@@ -19,6 +19,7 @@ def main():
     p.add_argument("--record-depth",action="store_true",help="record aligned idealized depth/calibration; not yet policy input")
     p.add_argument("--allow-local-stages",action="store_true",help="opt-in bounded same-episode native-DiffIK correction; unknown clearance")
     p.add_argument("--local-stage-rotation-integral",action="store_true",help="experimental bounded rotation-integral feedback; default off")
+    p.add_argument("--allow-inspection-camera",action="store_true",help="opt-in idealized right-camera movement during arm hold; requires local stages and recorded depth")
     # Import-light CLI help is available before Isaac is installed.
     if "--help" in sys.argv and __import__('importlib.util').util.find_spec("isaaclab") is None:
         p.add_argument("--headless",action="store_true");p.add_argument("--device",default="cuda:0")
@@ -40,7 +41,8 @@ def main():
         from physical_exec.transport import make_server,EnvironmentService
         env=EmbodiedSWEEnvironment(args.repo,task,limits,device=args.device,record_dir=args.record_dir,
                                    record_depth=args.record_depth,allow_local_stages=args.allow_local_stages,
-                                   local_stage_rotation_integral=args.local_stage_rotation_integral)
+                                   local_stage_rotation_integral=args.local_stage_rotation_integral,
+                                   allow_inspection_camera=args.allow_inspection_camera)
         env.worker_id=os.environ.get("PHYSICAL_EXEC_WORKER_ID") or __import__("uuid").uuid4().hex
         server=make_server(args.port,token,EnvironmentService(env).dispatch)
         print(f"READY simulator http://127.0.0.1:{server.server_port}; preset={task['preset']}; one episode only",flush=True)

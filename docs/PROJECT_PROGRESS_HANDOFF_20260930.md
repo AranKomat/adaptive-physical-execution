@@ -21,6 +21,9 @@ One later inspection-planning call declined a <=5 cm non-descending hand move;
 no motion. Four-call episode total is now $0.0995975. Independent camera control
 exists in the older pilot but must be ported to the integrated worker before a
 new camera view can be commanded; a fresh process would be required to load it.
+Update: this port is now implemented and covered by 183 CPU tests, but is not
+loaded in the current worker or live-qualified. See
+`docs/INTEGRATED_INSPECTION_CAMERA_20260930.md`. The suspended episode remains untouched.
 
 ## 1. Executive assessment
 

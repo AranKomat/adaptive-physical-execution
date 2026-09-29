@@ -4,6 +4,12 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Independent inspection camera is now ported into opt-in local stages, with
+  arm-hold/unchanged-gripper checks and camera readback failure stops. Software
+  tests only; not loaded into the paused live episode. Next explicitly fresh
+  camera-enabled worker and held-state view qualification. No phase completed.
+  See `docs/INTEGRATED_INSPECTION_CAMERA_20260930.md`.
+
 - Current held-state inspection planning declined a <=5 cm non-descending hand
   move: no informative direction justified by existing views. No motion issued.
   The integrated worker lacks the older pilot's independent camera command;

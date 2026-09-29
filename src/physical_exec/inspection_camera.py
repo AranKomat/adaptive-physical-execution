@@ -4,11 +4,12 @@ import numpy as np
 from .geometry import finite_vector, pose_error
 
 
-def camera_path(start_eye, end_eye, measured_hand, commanded_hand, actions, control_dt):
+def camera_path(start_eye, end_eye, measured_hand, commanded_hand, actions, control_dt,
+                *, oblique_envelope=False):
     start, end = finite_vector(start_eye, 3), finite_vector(end_eye, 3)
-    low, high = np.array([0., -.7, .85]), np.array([1., .7, 1.6])
+    low, high = np.array([0., -.7, .3 if oblique_envelope else .85]), np.array([1., .7, 1.6])
     if np.any(np.minimum(start, end) < low) or np.any(np.maximum(start, end) > high):
-        raise ValueError('camera path outside declared overhead envelope')
+        raise ValueError('camera path outside declared inspection envelope')
     error = pose_error(measured_hand, commanded_hand)
     if np.linalg.norm(error[:3]) > .003 or np.linalg.norm(error[3:]) > .03:
         raise ValueError('camera inspection requires a hold target, not arm transit')

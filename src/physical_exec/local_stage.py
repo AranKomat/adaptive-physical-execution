@@ -5,9 +5,14 @@ from .errors import InputRejected
 from .geometry import finite_vector, pose_error, unit_quaternion
 
 
-def validate_local_stage(value, observation):
+def validate_local_stage(value, observation, *, allow_inspection_camera=False,
+                         last_gripper_command=None):
     required = {'observation_id', 'hand_pose_world', 'gripper_open', 'max_steps', 'target_source'}
-    if not isinstance(value, dict) or set(value) != required:
+    fields = set(value) if isinstance(value, dict) else set()
+    camera = 'camera_eye_world' in fields
+    if camera and not allow_inspection_camera:
+        raise InputRejected('inspection camera not enabled')
+    if not isinstance(value, dict) or fields != required | ({'camera_eye_world'} if camera else set()):
         raise InputRejected('invalid local-stage fields')
     if value['observation_id'] != observation.key:
         raise InputRejected('stale local stage')
@@ -28,4 +33,13 @@ def validate_local_stage(value, observation):
         raise InputRejected('invalid gripper opening')
     if not isinstance(value['target_source'], str) or not 1 <= len(value['target_source']) <= 2000:
         raise InputRejected('explicit target provenance required')
+    if camera:
+        if np.linalg.norm(delta[:3]) > .003 or np.linalg.norm(delta[3:]) > .03:
+            raise InputRejected('inspection camera requires arm hold')
+        if last_gripper_command is None or abs(opening-last_gripper_command) > 1e-8:
+            raise InputRejected('inspection camera must preserve previous gripper command')
+        try:
+            finite_vector(value['camera_eye_world'], 3)
+        except (ValueError, TypeError) as exc:
+            raise InputRejected('invalid camera eye') from exc
     return pose

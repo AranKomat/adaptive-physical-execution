@@ -59,6 +59,23 @@ def test_stage_bounds_and_no_mutation(observation):
         validate_local_stage(value,obs)
 
 
+def test_camera_stage_is_opt_in_and_preserves_commanded_grip(observation):
+    value = {**request(observation), 'camera_eye_world':[.6,-.35,.7]}
+    with pytest.raises(InputRejected, match='not enabled'):
+        validate_local_stage(value,observation)
+    # Measured aperture is .7, but the existing commanded opening is 1.0.
+    validate_local_stage(value,observation,allow_inspection_camera=True,last_gripper_command=1.)
+    for previous in (None,.3):
+        with pytest.raises(InputRejected, match='gripper command'):
+            validate_local_stage(value,observation,allow_inspection_camera=True,last_gripper_command=previous)
+    moved = {**value,'hand_pose_world':[.41,0,.4,1,0,0,0]}
+    with pytest.raises(InputRejected,match='arm hold'):
+        validate_local_stage(moved,observation,allow_inspection_camera=True,last_gripper_command=1.)
+    with pytest.raises(InputRejected,match='camera eye'):
+        validate_local_stage({**value,'camera_eye_world':[float('nan'),0,1]},observation,
+                             allow_inspection_camera=True,last_gripper_command=1.)
+
+
 def test_stage_rpc_requires_opt_in():
     env = FixtureEnvironment()
     service = EnvironmentService(env)
