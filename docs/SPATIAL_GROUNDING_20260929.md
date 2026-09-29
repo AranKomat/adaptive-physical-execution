@@ -44,6 +44,27 @@ Do not simultaneously alter controller timing: first inspect whether repeated
 hold commands reduce endpoint error. If timing changes are needed, label that
 as a separate condition. No automatic hold/retry after ambiguous execution.
 
-Status: receipt audit complete; depth implementation and live trial not yet done.
+## Live depth capture
+
+Opt-in `serve_embodiedswe.py --record-depth` now records camera-plane depth,
+intrinsics and optical-frame world pose alongside RGB, without changing policy
+observations. The scoped camera-factory override is restored after simulator
+construction; upstream source files and RGB defaults remain unchanged.
+
+A fresh GPU worker captured seed 0 successfully, without commanded robot motion
+or paid API calls. Local evidence is under `runs/depth_capture_20260929` and
+`runs/depth_capture_recordings_20260929/5050474525a043cc86e8c892130f218d`.
+All three depth arrays are 360x640 and have finite positive values at every pixel
+in this capture. External camera focal lengths are 549.749 pixels; wrist focal
+length is 320.687 pixels. These are sensor-reported intrinsics, not inferred values.
+The live worker predates the extra manifest depth flags; per-frame calibration
+files explicitly identify depth provenance and `policy_input=false`.
+
+106 CPU tests pass, including a recording test for invalid-depth preservation,
+alignment rejection and exclusion of arbitrary object-state metadata. This does
+not qualify deprojection or prove depth accuracy. Robot-geometry reprojection,
+target selection and a depth-assisted policy episode remain outstanding.
+
+Status: receipt audit and live depth capture complete; assisted live trial not done.
 The overall task remains unsolved. This is a focused observation-interface test,
 not a reason to restart broad perception or reasoning-level sweeps.

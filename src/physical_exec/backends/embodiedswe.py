@@ -22,7 +22,11 @@ from ..trace import write_json, sha256_file
 
 
 class EmbodiedSWEEnvironment:
-    def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None):
+    def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None,
+                 record_depth=False):
+        if record_depth and record_dir is None:
+            raise ValueError("depth capture requires a recording directory")
+        self.record_depth = record_depth
         repo = Path(repo).resolve()
         path = repo / "vla/eval/sim.py"
         if not path.is_file(): raise FileNotFoundError(f"clone the pinned EmbodiedSWE checkout first: {path}")
@@ -42,12 +46,21 @@ class EmbodiedSWEEnvironment:
         # Static operator-specified camera installation, not task-object-ground-truth queries.
         extra = task.get("extra_cameras", {})
         if extra: scene_cls.CAMERAS = {**(original_cameras or {}), **extra}
+        from engine import replay
+        original_camera_cfg = replay._camera_cfg
+        def camera_cfg_with_depth(*args, **kwargs):
+            cfg = original_camera_cfg(*args, **kwargs)
+            cfg.data_types = [*cfg.data_types, "distance_to_image_plane"]
+            return cfg
+        if record_depth:
+            replay._camera_cfg = camera_cfg_with_depth
         try:
             self.sim = module.load_sim(preset, num_envs=1, device=device,
                                        control_space="joint_pos", control_freq_hz=float(task.get("control_hz", 15)),
                                        size=tuple(task.get("image_size", [640, 360])),
                                        cams=tuple(task["camera_map"].values()), warmup=12)
         finally:
+            replay._camera_cfg = original_camera_cfg
             if extra:
                 if original_cameras is None: delattr(scene_cls, "CAMERAS")
                 else: scene_cls.CAMERAS = original_cameras
@@ -94,7 +107,30 @@ class EmbodiedSWEEnvironment:
             for role, image in obs.images.items():
                 directory = self.record_episode / role; directory.mkdir(exist_ok=True)
                 (directory / f"{self.seq:06d}.png").write_bytes(png_bytes(image))
+            if self.record_depth:
+                self._record_depth(obs)
         return obs
+
+    def _record_depth(self, obs):
+        """Sensor-only recording; excludes object poses, labels and evaluator state."""
+        for role, name in self.camera_map.items():
+            data = self.sim.sensors[name].data
+            depth = self._numpy(data.output["distance_to_image_plane"])[0].squeeze(-1)
+            if depth.shape != obs.images[role].shape[:2]:
+                raise ValueError("depth/RGB alignment shape mismatch")
+            directory = self.record_episode / (role + "_depth")
+            directory.mkdir(exist_ok=True)
+            np.save(directory / f"{self.seq:06d}.npy", depth, allow_pickle=False)
+            write_json(directory / f"{self.seq:06d}.json", {
+                "observation_id": obs.key, "depth_units": "meters",
+                "depth_convention": "camera_optical_z",
+                "source": "idealized simulator depth sensor; not object-state query",
+                "intrinsic_matrix": self._numpy(data.intrinsic_matrices)[0].tolist(),
+                "camera_position_world": self._numpy(data.pos_w)[0].tolist(),
+                "camera_quaternion_world_wxyz_optical": self._numpy(data.quat_w_ros)[0].tolist(),
+                "invalid_depth": "nonfinite or nonpositive; preserved in npy",
+                "policy_input": False,
+            })
 
     def reset(self, seed):
         if self.episode_id is not None: raise InputRejected("one episode per worker, no in-episode reset")
@@ -172,6 +208,8 @@ class EmbodiedSWEEnvironment:
                 "controller": "joint PD; direct EEF via robot-only DLS IK",
                 "controller_qualification": "GPU execution not validated by package author",
                 "time_model": "physics_paused_during_inference", "privileged_policy_inputs": False,
+                "depth_recording": bool(getattr(self, "record_depth", False)),
+                "depth_policy_input": False,
                 "real_hardware_supported": False, "camera_map": self.camera_map,
                 "grasp_weld": getattr(scfg, "grasp_weld", "not_declared"),
                 "physics_assists": "upstream scene defaults preserved; inspect grasp_weld and SOURCE_AUDIT",
