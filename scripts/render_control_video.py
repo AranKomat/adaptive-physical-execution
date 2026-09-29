@@ -26,7 +26,7 @@ def main():
     if a.output.exists(): raise SystemExit('Refusing to overwrite video')
     ffmpeg=shutil.which('ffmpeg')
     if not ffmpeg: raise SystemExit('Install ffmpeg first')
-    label=f'SIMULATION | {a.speed:g}x simulated-time playback | model waits excluded'
+    label=f'SIMULATION | {a.speed:g}x simulated-time playback\nmodel waits excluded'
     if meta.get('metadata',{}).get('grasp_weld') is True: label+=' | grasp assist ON'
     vf=f"setpts=PTS/{a.speed},drawtext=text='{label}':x=10:y=10:fontsize=16:fontcolor=white:box=1:boxcolor=black@0.8,pad=ceil(iw/2)*2:ceil(ih/2)*2"
     cmd=[ffmpeg,'-n','-framerate',str(meta['fps']),'-i',str(root/a.view/'%06d.png'),'-vf',vf,
