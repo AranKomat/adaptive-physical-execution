@@ -1,0 +1,12 @@
+{
+  "python": "3.13.5",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+  "packages": {
+    "numpy": "2.3.5",
+    "Pillow": "12.3.0",
+    "httpx": "0.28.1",
+    "pytest": "9.0.2",
+    "setuptools": "82.0.1"
+  },
+  "note": "Observed validation environment, not a mandatory GPU lockfile. GPU environments follow each pinned upstream."
+}

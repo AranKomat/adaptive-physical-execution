@@ -1,0 +1,6 @@
+{
+  "mode": "direct_roboicl",
+  "reasoning_effort": "medium",
+  "status": "Single-arm adaptation, not a benchmark-equivalent upstream reproduction",
+  "default_memory": "anchored"
+}

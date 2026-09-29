@@ -1,0 +1,6 @@
+{
+  "mode": "direct_reference",
+  "reasoning_effort": "medium",
+  "status": "Single-arm adaptation, not a benchmark-equivalent upstream reproduction",
+  "default_memory": "full"
+}

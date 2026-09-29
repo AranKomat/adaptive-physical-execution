@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+"""Run INSIDE the upstream Isaac/EmbodiedSWE Python 3.11 environment.
+
+No model API is used here. One episode per process. Only loopback is exposed.
+"""
+from pathlib import Path
+import argparse
+import os
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/"src"))
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--repo",required=True);p.add_argument("--task",required=True)
+    p.add_argument("--port",type=int,default=8765);p.add_argument("--record-dir",required=True)
+    p.add_argument("--token-env",default="PHYSICAL_EXEC_SIM_TOKEN")
+    # Import-light CLI help is available before Isaac is installed.
+    if "--help" in sys.argv and __import__('importlib.util').util.find_spec("isaaclab") is None:
+        p.add_argument("--headless",action="store_true");p.add_argument("--device",default="cuda:0")
+        p.print_help();return
+    if os.environ.get("OMNI_KIT_ACCEPT_EULA","").upper() not in ("YES","Y","1","TRUE"):
+        raise SystemExit("Review Isaac Sim's terms and set OMNI_KIT_ACCEPT_EULA yourself. This launcher does not accept licenses for you.")
+    from isaaclab.app import AppLauncher
+    AppLauncher.add_app_launcher_args(p)
+    args=p.parse_args();args.enable_cameras=True
+    token=os.environ.get(args.token_env,"")
+    if len(token)<16: raise SystemExit(f"Set {args.token_env} to a fresh random token (at least 16 characters)")
+    from physical_exec.config import load_task
+    task,limits=load_task(args.task)
+    # Hardware capability is tested by Isaac itself. No CPU substitute is selected.
+    launcher=AppLauncher(args);app=launcher.app
+    server=None;env=None
+    try:
+        from physical_exec.backends.embodiedswe import EmbodiedSWEEnvironment
+        from physical_exec.transport import make_server,EnvironmentService
+        env=EmbodiedSWEEnvironment(args.repo,task,limits,device=args.device,record_dir=args.record_dir)
+        env.worker_id=os.environ.get("PHYSICAL_EXEC_WORKER_ID") or __import__("uuid").uuid4().hex
+        server=make_server(args.port,token,EnvironmentService(env).dispatch)
+        print(f"READY simulator http://127.0.0.1:{server.server_port}; preset={task['preset']}; one episode only",flush=True)
+        server.serve_forever(poll_interval=.2)
+    except KeyboardInterrupt: pass
+    finally:
+        if server: server.server_close()
+        if env: env.close()
+        app.close()
+
+if __name__=="__main__": main()

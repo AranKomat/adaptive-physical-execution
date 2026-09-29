@@ -1,0 +1,181 @@
+"""Source-backed EvalSim integration for ONE Franka PC assembly environment.
+
+Needs upstream commit d34837e..., Isaac Sim/Lab and assets. Not GPU-validated
+in the build environment. All simulator/torch imports are lazy. AppLauncher
+MUST already exist; use scripts/serve_embodiedswe.py rather than importing Isaac
+from the policy process. No task-code access is exposed to the model.
+"""
+from __future__ import annotations
+import importlib.util
+from pathlib import Path
+import sys
+import time
+from uuid import uuid4
+import numpy as np
+from ..contracts import Observation, ActionChunk, StepResult, ExecutionReceipt, Evaluation
+from ..errors import InputRejected, AmbiguousExecution
+from ..geometry import pose_error
+from ..kinematics import URDFKinematics
+from ..safety import Limits, validate_chunk
+from ..imaging import png_bytes
+from ..trace import write_json, sha256_file
+
+
+class EmbodiedSWEEnvironment:
+    def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None):
+        repo = Path(repo).resolve()
+        path = repo / "vla/eval/sim.py"
+        if not path.is_file(): raise FileNotFoundError(f"clone the pinned EmbodiedSWE checkout first: {path}")
+        for p in (repo, repo/"vla/eval", repo/"data_engine", repo/"vla/convert"):
+            sys.path.insert(0, str(p))
+        spec = importlib.util.spec_from_file_location("_physical_exec_evalsim", path)
+        module = importlib.util.module_from_spec(spec); sys.modules[spec.name] = module; spec.loader.exec_module(module)
+        import robobench
+        robobench.discover()
+        from robobench.core.registries import ENVS, SCENES
+        preset = task["preset"]
+        if preset not in ENVS.list(): raise ValueError(f"unknown upstream env {preset}; run the upstream --list command")
+        cfg = ENVS.get(preset)()
+        if cfg.robot != "franka": raise ValueError("first adapter release supports Franka only")
+        scene_cls = SCENES.get(cfg.scene)
+        original_cameras = getattr(scene_cls, "CAMERAS", None)
+        # Static operator-specified camera installation, not task-object-ground-truth queries.
+        extra = task.get("extra_cameras", {})
+        if extra: scene_cls.CAMERAS = {**(original_cameras or {}), **extra}
+        try:
+            self.sim = module.load_sim(preset, num_envs=1, device=device,
+                                       control_space="joint_pos", control_freq_hz=float(task.get("control_hz", 15)),
+                                       size=tuple(task.get("image_size", [640, 360])),
+                                       cams=tuple(task["camera_map"].values()), warmup=12)
+        finally:
+            if extra:
+                if original_cameras is None: delattr(scene_cls, "CAMERAS")
+                else: scene_cls.CAMERAS = original_cameras
+        self.repo, self.task_config, self.limits = repo, task, limits
+        self.camera_map = task["camera_map"]
+        if len(set(self.camera_map.values())) != len(self.camera_map):
+            raise ValueError("camera duplication is not a substitute for missing views")
+        for source in self.camera_map.values():
+            if source not in self.sim.sensors: raise ValueError(f"camera {source} not available")
+        self.kin = URDFKinematics.from_urdf(self.sim.env.robot.cfg.franka_urdf)
+        self.joint_names = tuple(self.sim.arm_names)
+        if self.joint_names != self.kin.joint_names:
+            raise ValueError(f"URDF/simulator joint order mismatch: {self.kin.joint_names} vs {self.joint_names}")
+        self.body_index = self.sim.env.robot.articulation.body_names.index("panda_hand")
+        self.seq = 0; self.episode_id = None; self.current = None; self.raw = None
+        self.record_root = Path(record_dir).resolve() if record_dir else None
+        self.record_episode = None
+        self._evaluation = Evaluation(native=True)
+        self._poisoned = False
+
+    @staticmethod
+    def _numpy(v):
+        return v.detach().cpu().numpy() if hasattr(v, "detach") else np.asarray(v)
+
+    def _base(self):
+        d = self.sim.env.robot.articulation.data
+        return np.r_[self._numpy(d.root_pos_w)[0], self._numpy(d.root_quat_w)[0]]
+
+    def _measured_eef(self):
+        d = self.sim.env.robot.articulation.data
+        return np.r_[self._numpy(d.body_pos_w)[0, self.body_index], self._numpy(d.body_quat_w)[0, self.body_index]]
+
+    def _extract(self, raw) -> Observation:
+        state = np.asarray(raw["state"])[0]
+        if state.shape != (8,): raise ValueError("expected seven Franka joints plus closedness")
+        imgs = {role: np.asarray(raw["images"][name])[0, ..., :3] for role, name in self.camera_map.items()}
+        obs = Observation(self.episode_id, self.seq, self.seq/self.sim.rate_hz,
+                          self.task_config["instruction"], "franka", imgs, state[:7], self.joint_names,
+                          self._measured_eef(), 1.-float(state[-1]), 1./self.sim.rate_hz)
+        # Privileged evaluator values remain host-side, not in Observation.
+        self._evaluation = Evaluation(bool(np.asarray(raw["success"])[0]),
+                                      float(np.asarray(raw["progress"])[0]), True, "upstream native grader")
+        if self.record_episode is not None:
+            for role, image in obs.images.items():
+                directory = self.record_episode / role; directory.mkdir(exist_ok=True)
+                (directory / f"{self.seq:06d}.png").write_bytes(png_bytes(image))
+        return obs
+
+    def reset(self, seed):
+        if self.episode_id is not None: raise InputRejected("one episode per worker, no in-episode reset")
+        self.episode_id = uuid4().hex; self.seq = 0
+        if self.record_root is not None:
+            self.record_episode = self.record_root / self.episode_id
+            self.record_episode.mkdir(parents=True, exist_ok=False)
+            write_json(self.record_episode/"recording.json", {"fps": self.sim.rate_hz, "backend": "embodiedswe",
+                       "view_roles": list(self.camera_map), "time_model": "physics_paused_during_inference",
+                       "frame_kind": "every_control_latch", "metadata": self.metadata()})
+        self.raw = self.sim.reset(seed=seed)
+        self.current = self._extract(self.raw)
+        self.base_pose = self._base()
+        error = pose_error(self.kin.fk(self.current.joints, self.base_pose), self.current.eef_pose)
+        if np.linalg.norm(error[:3]) > .005 or np.linalg.norm(error[3:]) > .05:
+            raise ValueError(f"robot-only FK qualification failed: {error.tolist()}; check URDF/root/hand frame")
+        return self.current
+
+    def step(self, action: ActionChunk, command_id: str) -> StepResult:
+        if self.current is None: raise InputRejected("reset first")
+        if self._poisoned: raise AmbiguousExecution("worker is halted")
+        before = self.current; started = time.monotonic()
+        command = validate_chunk(action, before, self.limits, self.kin.limits)
+        targets = []
+        q = before.joints.copy()
+        # Complete validation/IK conversion BEFORE executing anything.
+        for row in command.values:
+            if command.kind == "joint_absolute":
+                q_next = row[:-1]
+            else:
+                ik = self.kin.solve(row[:7], q, self.base_pose)
+                if not ik.converged:
+                    raise InputRejected(f"IK not converged: position={ik.position_error_m:.5f}m rotation={ik.rotation_error_rad:.4f}rad")
+                q_next = ik.joints
+            if np.max(np.abs(q_next-q)) > self.limits.max_joint_step_rad + 1e-8:
+                raise InputRejected("IK/joint continuity guard rejected a large joint transition")
+            targets.append(np.r_[q_next, 1.-row[-1]])  # EvalSim expects CLOSED fraction
+            q = q_next
+        count = 0
+        try:
+            for row in targets:
+                self.raw = self.sim.step(np.asarray(row, dtype=np.float32)[None])
+                self.seq += 1; count += 1
+                self.current = self._extract(self.raw)
+                if self._evaluation.success: break  # host terminates; scorer never sent to model
+        except Exception as e:
+            self._poisoned = True
+            raise AmbiguousExecution(f"simulator error after {count} confirmed latches; do not replay the command") from e
+        expected = self.kin.fk(targets[count-1][:-1], self.base_pose)
+        error = pose_error(self.current.eef_pose, expected)
+        receipt = ExecutionReceipt(command_id, before.key, self.current.key, len(targets), count,
+                                   "executed" if count == len(targets) else "interrupted",
+                                   "control chunk executed" if count == len(targets) else "host ended the episode during chunk",
+                                   action.source, count/self.sim.rate_hz, time.monotonic()-started,
+                                   float(np.linalg.norm(error[:3])), float(np.linalg.norm(error[3:])))
+        if self.record_episode is not None:
+            with (self.record_episode/"native_commands.jsonl").open("a") as f:
+                f.write(__import__("json").dumps({"command_id": command_id, "start_seq": before.seq,
+                        "joint_targets_and_closedness": np.asarray(targets[:count]).tolist()})+"\n")
+        return StepResult(self.current, receipt, self._evaluation)
+
+    def fk_preview(self, joints, names):
+        if tuple(names) != self.joint_names: raise InputRejected("FK joint order mismatch")
+        a = np.asarray(joints, dtype=float)
+        if a.ndim != 2 or a.shape[1] != 7 or not 1 <= len(a) <= 64 or not np.isfinite(a).all():
+            raise InputRejected("FK needs a finite Hx7 robot joint array")
+        return np.stack([self.kin.fk(q, self.base_pose) for q in a])
+
+    def evaluate(self): return self._evaluation
+
+    def metadata(self):
+        scfg = self.sim.env.scene.cfg
+        return {"backend": "embodiedswe", "robot": "franka", "preset": self.task_config["preset"],
+                "task_instruction": self.task_config["instruction"], "control_dt": 1/self.sim.rate_hz,
+                "controller": "joint PD; direct EEF via robot-only DLS IK",
+                "controller_qualification": "GPU execution not validated by package author",
+                "time_model": "physics_paused_during_inference", "privileged_policy_inputs": False,
+                "real_hardware_supported": False, "camera_map": self.camera_map,
+                "grasp_weld": getattr(scfg, "grasp_weld", "not_declared"),
+                "physics_assists": "upstream scene defaults preserved; inspect grasp_weld and SOURCE_AUDIT",
+                "worker_id": getattr(self,"worker_id",None),
+                "record_root": str(self.record_root) if self.record_root else None}
+
+    def close(self): self.sim.close()

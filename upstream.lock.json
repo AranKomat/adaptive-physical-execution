@@ -1,0 +1,41 @@
+{
+  "schema": "physical-exec-upstream-lock/v1",
+  "audited_date": "2026-09-29",
+  "status": "Sources inspected through GitHub connector. Container git clone failed DNS. Full repositories not included.",
+  "repositories": [
+    {
+      "name": "RoboICL",
+      "url": "https://github.com/Mosi-AI/RoboICL.git",
+      "commit": "337e70591c3116d289b361aa61b38bce617831ef",
+      "file_blobs": {
+        "roboicl/policy/trajectory_memory.py": "8542840fa65ff9fc8fcc5d3e15361473a51ae499",
+        "roboicl/policy/astra_policy.py": "f70d432ef817e5bdb462a09438cb2f6a57559851",
+        "configs/shared_harness.json": "b59a60f1a42433a3b61d5fc13f81ba0bf86f15a5",
+        "configs/protocols/zero_shot_b25.json": "bb6a92cac298752f33fd32d5d64058784b4f78f8"
+      }
+    },
+    {
+      "name": "GPT-as-Policy",
+      "url": "https://github.com/anonymous-report-421/GPT-as-Policy.git",
+      "commit": "8f3d362b077d8efb77e2a7274d5b2c20e2243846",
+      "file_blobs": {
+        "hybrid_rollout/robodojo/skill/gate_prompt.md": "b721b7691f86f758a9d72fb1631ac5e8525b5088"
+      }
+    },
+    {
+      "name": "flux-action",
+      "url": "https://github.com/black-forest-labs/flux-action.git",
+      "commit": "e2dd1d8dbc5977b54315d61f7548c63c043d6d4f",
+      "file_blobs": {}
+    },
+    {
+      "name": "EmbodiedSWE",
+      "url": "https://github.com/EmbodiedSWE/EmbodiedSWE.git",
+      "commit": "d34837e99e5016525f0e9b6bb84791eb3d4b8162",
+      "file_blobs": {
+        "vla/eval/sim.py": "ebdb3f226682710ac12067ff8a49e52ec57d281f",
+        "robobench/suites/assembly/scenes/pc_gpu_assembly.py": "5c50aa841ea0a857654bbd88127735105c63c962"
+      }
+    }
+  ]
+}
