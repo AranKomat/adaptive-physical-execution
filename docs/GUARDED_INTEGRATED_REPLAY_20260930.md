@@ -18,7 +18,7 @@ Fresh episode `786fb059cd5440aea583ea7dabb0135d`:
 
 - Fresh target surface: `[0.27471155, -0.33720070, 0.14479795]` m, from the
   cached pixel template `[365,256]` and current legal depth.
-- Approach, closure and lift completed: 590 control actions, ending at
+- Approach, closure and **5 cm** lift completed: 590 control actions, ending at
   observation590. Every stage returned normal arrival or continuous-transit
   receipts; no guard stop or ambiguous execution occurred.
 - Endpoint errors: closure 1.211 mm / 0.00317 rad; lift 0.818 mm / 0.00302 rad.
@@ -32,6 +32,12 @@ and782 both returned `inspect`: the lower connector edge and separation from the
 support were not visible reliably. The final view still left the relationship
 ambiguous and the right view lost the card behind the case. No carry, descent,
 release, or insertion command was issued.
+
+The later retention continuation corrected the earlier lift interpretation: the
+5 cm default was not the earlier 23 cm lift. An explicit +18 cm probe visibly
+cleared the card but ended at its 64-action budget; a separate +84 mm continuation
+was stopped by the native guard after six actions. See
+`GUARDED_VERTICAL_RETENTION_20260930.md`.
 
 This is useful negative evidence: endpoint accuracy and a latched grasp
 milestone do not establish that the card is visually clear of its support or

@@ -8,10 +8,16 @@ below are measured per experiment; the ten-hour description is approximate.
 ## Latest continuation (supersedes the older live-state section below)
 
 Fresh guarded integrated replay completed the assisted grasp/lift recipe (590
-actions, closure/lift endpoint errors1.211/0.818mm) but native score stayed
+actions, closure/5cm-lift endpoint errors1.211/0.818mm) but native score stayed
 0.3333/grasp rung. Two fresh carry reviews and three bounded camera moves could
 not establish support clearance; no carry/descent/release. Useful negative
 result, not phase completion. See `GUARDED_INTEGRATED_REPLAY_20260930.md`.
+
+Correction: that runner default was5cm, not23cm. A separate+18cm retention
+probe visibly cleared the card but hit the64-action budget. A separate+84mm
+continuation was stopped after6 actions by the native tracking guard; full
+target error84.947mm, cause unknown, no retry. Evaluator remains0.3333. See
+`GUARDED_VERTICAL_RETENTION_20260930.md`.
 
 Recovered1800 scene-level review (minimal instruction, no source audit/evaluator
 input) recommends alignment and whole-envelope inspection before correction.

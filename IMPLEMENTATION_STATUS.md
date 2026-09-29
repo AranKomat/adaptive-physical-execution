@@ -5,11 +5,17 @@
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
 - Fresh guard-enabled integrated replay completed operator-defined approach,
-  closure and23cm lift (590 actions; endpoint errors0.818mm/0.00302rad).
+  closure and5cm lift (590 actions; endpoint errors0.818mm/0.00302rad).
   Posthoc score remains0.3333/grasp rung. Two fresh carry reviews and three
   bounded camera moves still could not establish a card/support gap; no
   carry/descent issued. Meaningful negative evidence, not task success. See
   `docs/GUARDED_INTEGRATED_REPLAY_20260930.md`.
+
+- Corrected lift interpretation: a separate+18cm retention probe visibly
+  cleared the card but ended at the64-action budget; a separate+84mm
+  continuation was natively stopped by the contact guard after6 actions.
+  Full-target error84.947mm; cause unknown, no retry. Evaluator stayed0.3333.
+  See `docs/GUARDED_VERTICAL_RETENTION_20260930.md`.
 
 - Recovered1800 review with unchanged minimal instruction produced four valid
   sensor anchors: sampled connector/rim axes differ7.947deg, mostly yaw. Full
