@@ -1,0 +1,1 @@
+{"action_budget": 700, "camera_map": {"left": "external_left", "right": "external_right", "wrist": "wrist"}, "control_dt": 0.06666666666666667, "controller": "ported frozen Motion OSC gains", "episode": "28984f0dd73e419ab45a47ecf33f9fbc", "frame_kind": "sampled every 10 actions", "initial_warmup_actions": 0, "privileged_control_inputs": false}

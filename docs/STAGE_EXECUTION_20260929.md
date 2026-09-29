@@ -17,6 +17,9 @@ them with a smaller motion-only goal.
   receipts reached 2.356 mm. Autonomous selection and general scene-change
   monitoring remain open; this is not a general qualified approach skill.
 - [ ] Inspect arrival once, then attempt grasp/lift and independently verify effect.
+  PARTIAL: Astra-selected RGB-D targets plus the OSC pilot produced an assisted
+  capture/lift, but hand attitude diverged by 2.591 rad. See
+  `SENSOR_OSC_PILOT_20260929.md`; do not proceed to insertion from that result.
 - [ ] Qualify FLUX before using it as an alternative local executor. Reviewing every
   short FLUX chunk with GPT is not sufficient to meet the call-efficiency objective.
 - [ ] Continue alignment/insertion, recovery and successful-trace reuse after capture.

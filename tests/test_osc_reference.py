@@ -1,0 +1,51 @@
+import numpy as np
+import pytest
+from physical_exec.osc_reference import ReferenceOSC, validate_plan, ramped_target, motion_stop_reason
+
+
+def test_reference_units_and_integral():
+    controller = ReferenceOSC()
+    current = [0, 0, .3, 1, 0, 0, 0]
+    target = [.01, 0, .3, 1, 0, 0, 0]
+    first = controller.command(current, target, .012)
+    assert first[0] == pytest.approx(.5175)
+    assert first[-2:].tolist() == [.012, .012]
+    assert controller.command(current, target, .012)[0] == pytest.approx(.535)
+
+
+def test_clamps_match_reference():
+    controller = ReferenceOSC()
+    a = controller.command([0, 0, .3, 1, 0, 0, 0], [1, 0, .3, 0, 1, 0, 0], .04)
+    assert a[0] == 5 and a[3] == 5
+    assert np.isfinite(a).all()
+
+
+def plan():
+    return dict(observation_id="episode:0", finish=True, phases=[dict(
+        name="approach", hand_pose_world=[.3, -.3, .4, 0, 0, 1, 0],
+        finger_position_m=.04, actions=180)])
+
+
+def test_plan_guards():
+    assert len(validate_plan(plan(), "episode:0", 180)) == 1
+    with pytest.raises(ValueError):
+        validate_plan(plan(), "episode:1", 180)
+    with pytest.raises(ValueError):
+        validate_plan(plan(), "episode:0", 179)
+    p = plan()
+    p["phases"][0]["finger_position_m"] = 1
+    with pytest.raises(ValueError):
+        validate_plan(p, "episode:0", 180)
+
+
+def test_ramp_and_stops():
+    a = [0,0,.3,1,0,0,0]
+    b = [.03,0,.3,1,0,0,0]
+    assert ramped_target(a,b,1)[0] == pytest.approx(.0015)
+    np.testing.assert_allclose(ramped_target(a,b,30),b)
+    with pytest.raises(ValueError):
+        ramped_target(a,[0,0,.3,0,1,0,0],1)
+    limits = np.tile([-2.,2.],(7,1))
+    assert motion_stop_reason(a,b,np.zeros(7),limits) is None
+    assert 'orientation' in motion_stop_reason(a,[0,0,.3,0,1,0,0],np.zeros(7),limits)
+    assert 'joint limit' in motion_stop_reason(a,b,np.full(7,1.999),limits)

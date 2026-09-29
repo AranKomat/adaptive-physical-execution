@@ -1,0 +1,11 @@
+{
+  "observation_id": "28984f0dd73e419ab45a47ecf33f9fbc:0",
+  "decision": "target",
+  "camera": "left",
+  "pixel_uv": [
+    163,
+    197
+  ],
+  "evidence": "Point lies inside the loose card's visible narrow top surface, near mid-length and centered across its thickness, away from the front face, stand, and metal end bracket.",
+  "uncertainty": "The top surface is narrow in the left view; the wrist view clips part of the card. Use measured depth for deprojection."
+}

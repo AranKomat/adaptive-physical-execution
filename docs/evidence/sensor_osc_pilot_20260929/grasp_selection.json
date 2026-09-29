@@ -1,0 +1,11 @@
+{
+  "observation_id": "28984f0dd73e419ab45a47ecf33f9fbc:180",
+  "decision": "target",
+  "camera": "wrist",
+  "pixel_uv": [
+    290,
+    153
+  ],
+  "evidence": "Visible interior heatsink top of the loose upright graphics card, near mid-length and centered across the thickness between the black shroud and PCB-side boundary.",
+  "uncertainty": "Wrist view clips one end, so length centering is approximate. Confirm measured depth and opposing-face geometry before closure; no grasp success assumed."
+}
