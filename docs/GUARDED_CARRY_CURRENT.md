@@ -1,5 +1,21 @@
 # Guarded lift and carry: current continuation
 
+## Standoff execution correction
+
+The history-based standoff planner now declares `local_stage_continuous` and
+the full compiled budget (128 actions maximum for8cm, not a single64-action
+dispatch). `run_sensor_carry.py --standoff-review <review.json>` validates the
+current plan/review,15Hz cadence, preserved grip/lateral pose, attitude bound,
+and predicted gap before dispatch. Segments are at most5cm; intermediate
+segments pass through and only the endpoint settles. Tracking guard is required
+on every segment. Legacy budget-mismatched candidates are rejected, not silently
+reinterpreted. This does not retroactively approve/replay the1355 timeout.
+
+Guard settings are now included in the carry's predeclared sequence as well as
+individual requests.224 CPU tests pass, including stale/refused review, timing,
+grip and lateral-motion rejection. No new physical result follows from these
+tests. Existing wrist imagery at1355 still lacks a clear lower mating edge.
+
 ## Latest: partial closer standoff at 1355
 
 One lower oblique camera move (eye [0.65,0.40,0.40], gaze

@@ -8,7 +8,7 @@ import sys
 from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from physical_exec.carry import carry_stages, standoff_stages
+from physical_exec.carry import carry_stages, standoff_stages, reviewed_standoff_stages
 from physical_exec.imaging import png_bytes
 from physical_exec.trace import write_json
 from physical_exec.transport import LocalClient, decode_observation, decode_result
@@ -19,13 +19,19 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--standoff-review', type=Path,
+                        help='Execute a current reviewed history-based closer-look candidate')
     parser.add_argument('--exploratory-standoff',action='store_true',
                         help='Current feature measurements; <=10 cm down, >=12 cm nominal standoff, no insertion')
     parser.add_argument('--near-standoff',action='store_true',
                         help='With exploratory-standoff: <=6cm down, >=6cm nominal gap, matched endpoint required')
     parser.add_argument('--contact-hypothesis',action='store_true',
                         help='Explicit simulator contact test to measured plane; <=8cm, no extra push/release')
+    parser.add_argument('--contact-tracking-guard', action='store_true',
+                        help='Require and attach the per-action tracking guard')
     args = parser.parse_args()
+    if args.standoff_review and (args.exploratory_standoff or args.near_standoff or args.contact_hypothesis):
+        parser.error('Reviewed standoff excludes measurement/contact modes')
     if args.near_standoff and not args.exploratory_standoff:
         parser.error('--near-standoff requires --exploratory-standoff')
     if args.contact_hypothesis and (not args.exploratory_standoff or args.near_standoff):
@@ -37,20 +43,32 @@ def main():
         meta = client.call('/metadata')
         if args.contact_hypothesis and not meta.get('contact_tracking_guard_enabled'):
             raise ValueError('Contact tests require the per-action tracking guard; current worker is too old')
+        if (args.contact_tracking_guard or args.standoff_review) and not meta.get('contact_tracking_guard_enabled'):
+            raise ValueError('Worker does not advertise the per-action tracking guard')
         if (meta.get('real_hardware_supported') is not False or not meta.get('local_stages_enabled')
                 or not meta.get('continuous_transit_enabled')):
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
-        compiler = standoff_stages if args.exploratory_standoff else carry_stages
-        stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'),
-                          **({'near':args.near_standoff,'contact':args.contact_hypothesis}
-                             if args.exploratory_standoff else {}))
+        if args.standoff_review:
+            review = json.loads(args.standoff_review.read_text())
+            stages = reviewed_standoff_stages(plan, review, obs.key, obs.eef_pose,
+                                             meta.get('last_gripper_command'), obs.control_dt)
+            write_json(args.output/'review.json', review)
+        else:
+            compiler = standoff_stages if args.exploratory_standoff else carry_stages
+            stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'),
+                              **({'near':args.near_standoff,'contact':args.contact_hypothesis}
+                                 if args.exploratory_standoff else {}))
+        if args.contact_tracking_guard:
+            for stage in stages:
+                stage['contact_tracking_guard'] = True
         write_json(args.output/'source_plan.json', plan)
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'initial.json', obs.public_state())
         actions = 0
         for i, stage in enumerate(stages):
-            request = dict(command_id=uuid4().hex, action=dict(stage, observation_id=obs.key))
+            action = dict(stage, observation_id=obs.key)
+            request = dict(command_id=uuid4().hex, action=action)
             write_json(args.output/f'{i:02d}_request.json', request)
             result = decode_result(client.call('/local-stage', request, mutating=True))
             obs = result.observation

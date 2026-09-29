@@ -60,8 +60,9 @@ def main():
             raise ValueError('fresh point contradicts proposed remaining gap')
         evidence['fresh_feature_audit'] = feature
     candidate = dict(observation_id=state['observation_id'], reference_control_dt=1/15,
+        execution_backend='local_stage_continuous',
         phases=[dict(name='bounded_closer_standoff', hand_pose_world=target, finger_position_m=.012,
-                     actions=max(90,int(np.ceil((args.descent_m/.0225+2)*15))))],
+                     actions=64*int(np.ceil(args.descent_m/.05)))],
         finish=False, target_source='sensor-history rigid-grasp prediction plus fresh robot pose; operator-defined bounded closer look',
         limitations='Exploratory unknown clearance; no insertion, contact, seating, or slip-free certificate.', evidence=evidence)
     validate_plan(candidate, state['observation_id'], 180)
@@ -71,6 +72,8 @@ def main():
         'Earlier RGB-D selected a held card surface and socket housing; robot proprioception propagates '
         'that feature under an UNVERIFIED rigid/no-slip grasp assumption. Read the estimates below as '
         'predictions, not object truth or collision clearance. No object state or evaluator is provided. '
+        'The local executor uses up to two 64-action segments at 15Hz, continuous at the '
+        'intermediate waypoint, settling only at the final endpoint, with per-action tracking guards. '
         'The proposed action lowers the hand by the explicit distance in the evidence, preserving '
         'its commanded attitude and leaving the stated estimated gap above the historical socket '
         'surface. It does not close the gripper further or correct lateral position. '

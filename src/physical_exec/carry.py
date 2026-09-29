@@ -46,6 +46,46 @@ def carry_stages(plan, observation_id, hand_pose, opening):
     return stages
 
 
+def reviewed_standoff_stages(plan, review, observation_id, hand_pose, opening, control_dt):
+    """Compile a reviewed history-based closer look, never contact or insertion."""
+    if (plan.get('observation_id') != observation_id or review.get('observation_id') != observation_id
+            or review.get('decision') != 'approve_standoff' or plan.get('finish') is not False):
+        raise ValueError('Requires current reviewed standoff')
+    if not np.isclose(control_dt, 1/15, rtol=0, atol=1e-8):
+        raise ValueError('Standoff timing is qualified only at 15Hz')
+    if isinstance(opening, bool) or not isinstance(opening, (float, int)) or not np.isfinite(opening) or not 0 <= opening <= 1:
+        raise ValueError('Established gripper command required')
+    phases = plan.get('phases')
+    if not isinstance(phases, list) or len(phases) != 1 or phases[0].get('name') != 'bounded_closer_standoff':
+        raise ValueError('Only one closer standoff is supported')
+    phase = phases[0]
+    hand, target = finite_vector(hand_pose, 7), finite_vector(phase['hand_pose_world'], 7)
+    error = pose_error(hand, target)
+    descent = -error[2]
+    if (not .01 <= descent <= .10000001 or np.linalg.norm(error[:2]) > 1e-8
+            or np.linalg.norm(error[3:]) > .03
+            or abs(phase['finger_position_m']-.04*opening) > 1e-7):
+        raise ValueError('Standoff must preserve lateral pose, attitude and grip')
+    evidence = plan['evidence']
+    if (evidence['observation_id'] != observation_id
+            or not np.isclose(evidence['proposed_descent_m'], descent, rtol=0, atol=1e-8)
+            or not np.isfinite(evidence['predicted_remaining_vertical_gap_m'])
+            or evidence['predicted_remaining_vertical_gap_m'] < .12):
+        raise ValueError('Unsupported predicted standoff gap')
+    count = math.ceil(descent/.05-1e-9)
+    if phase['actions'] != count*64 or plan.get('execution_backend') != 'local_stage_continuous':
+        raise ValueError('Plan and local execution budgets differ; regenerate and review')
+    stages = []
+    for i in range(1, count+1):
+        pose = hand.copy()
+        pose[:3] += error[:3]*i/count
+        pose[3:] = target[3:]
+        stages.append(dict(hand_pose_world=pose.tolist(), gripper_open=opening,
+            max_steps=64, settle_at_end=i==count, contact_tracking_guard=True,
+            target_source=plan['target_source']+'; reviewed closer look; unknown clearance; no insertion'))
+    return stages
+
+
 def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=False, contact=False):
     """Exploratory approach with 12/6 cm nominal separation, not a clearance bound."""
     if measurements.get('observation_id') != observation_id:

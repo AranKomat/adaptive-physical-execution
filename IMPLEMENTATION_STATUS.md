@@ -4,7 +4,8 @@
 
 NEWEST: same held episode now1355 after reviewed8cm closer-standoff attempt.
 64-action budget ended4.306mm short; no guard stop, retry, insertion or release.
-Candidate/executor duration mismatch remains to fix. See
+Candidate/executor duration mismatch is fixed for future reviewed standoffs;
+old candidates rejected, no automatic replay.224 CPU tests pass. See
 [latest continuation](docs/GUARDED_CARRY_CURRENT.md).
 
 LATEST: guarded explicit 23 cm lift (707 actions) and elevated carry (328
