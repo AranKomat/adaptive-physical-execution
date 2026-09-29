@@ -19,10 +19,12 @@ def main():
     p.add_argument('--response',type=Path,required=True)
     p.add_argument('--previous-command',type=Path,required=True)
     p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--reuse-pixel-template', action='store_true',
+                   help='fixed-fixture cached pixel replay on fresh depth; not a fresh model decision')
     args = p.parse_args()
     state = json.loads((args.capture/'state.json').read_text())
     response = json.loads(args.response.read_text())
-    if response['observation_id'] != state['observation_id'] or response['decision'] != 'carry_above_slot':
+    if (not args.reuse_pixel_template and response['observation_id'] != state['observation_id']) or response['decision'] != 'carry_above_slot':
         raise ValueError('No fresh carry selection')
     measurements = {}
     for name in ('held_feature','slot_feature'):
@@ -57,7 +59,9 @@ def main():
                    finger_position_m=.012,actions=steps) for i in range(1,segments+1)]
     value = dict(observation_id=state['observation_id'],reference_control_dt=1/15,
                  phases=phases,finish=False,measurements=measurements,
-                 target_source='fresh Astra feature selections plus legal RGB-D; relative translation',
+                 selector_observation_id=response['observation_id'],
+                 target_source=('cached Astra pixel template on fresh depth; fixed-fixture replay' if args.reuse_pixel_template
+                                else 'fresh Astra feature selections plus legal RGB-D; relative translation'),
                  limitations='Coarse carry only, no descent. 23 cm feature standoff and never lower hand. '
                  'Unknown swept clearance; semantic slot identity and precise alignment unverified.')
     validate_plan(value,state['observation_id'],700)

@@ -7,7 +7,7 @@ import pytest
 
 
 def invoke(tmp_path, monkeypatch, previous_episode='e', response_id='e:10',
-           decision='carry_above_slot', calibration_id='e:10'):
+           decision='carry_above_slot', calibration_id='e:10', reuse=False):
     source = Path(__file__).resolve().parents[1]/'scripts/plan_sensor_carry.py'
     spec = importlib.util.spec_from_file_location('carry_test',source)
     module = importlib.util.module_from_spec(spec)
@@ -26,7 +26,8 @@ def invoke(tmp_path, monkeypatch, previous_episode='e', response_id='e:10',
     previous = dict(observation_id=previous_episode+':0',phases=[dict(hand_pose_world=state['hand_pose_world'])])
     (tmp_path/'previous.json').write_text(json.dumps(previous))
     monkeypatch.setattr(sys,'argv',[str(source),'--capture',str(tmp_path),'--response',str(tmp_path/'response.json'),
-                                  '--previous-command',str(tmp_path/'previous.json'),'--output',str(tmp_path/'plan.json')])
+                                  '--previous-command',str(tmp_path/'previous.json'),'--output',str(tmp_path/'plan.json')]
+                                  + (['--reuse-pixel-template'] if reuse else []))
     module.main()
     return json.loads((tmp_path/'plan.json').read_text())
 
@@ -42,6 +43,14 @@ def test_carry_is_elevated_relative_translation(tmp_path,monkeypatch):
 def test_previous_command_must_match_episode(tmp_path,monkeypatch):
     with pytest.raises(ValueError,match='another episode'):
         invoke(tmp_path,monkeypatch,'other')
+
+
+def test_cached_selection_is_explicit_and_remeasured(tmp_path, monkeypatch):
+    result = invoke(tmp_path, monkeypatch, response_id='old:1', reuse=True)
+    assert result['selector_observation_id'] == 'old:1'
+    assert result['observation_id'] == 'e:10'
+    assert result['target_source'].startswith('cached Astra pixel template')
+    assert result['measurements']['slot_feature']['observation_id'] == 'e:10'
 
 
 @pytest.mark.parametrize('overrides', [

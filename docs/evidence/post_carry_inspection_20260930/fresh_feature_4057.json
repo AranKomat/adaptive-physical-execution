@@ -1,0 +1,39 @@
+{
+  "observation_id": "d778fec65d80489fbc1e3ecc7ca4bc4f:4057",
+  "requested_pixel": [
+    350,
+    168
+  ],
+  "measurement": {
+    "observation_id": "d778fec65d80489fbc1e3ecc7ca4bc4f:4057",
+    "pixel_uv": [
+      350,
+      167
+    ],
+    "surface_point_world_m": [
+      0.506648141113879,
+      0.015017127483233805,
+      0.19570545543133278
+    ],
+    "optical_depth_m": 0.8429967164993286,
+    "local_depth_spread_m": 0.009807586669921875,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  },
+  "predicted_feature_world_m": [
+    0.48222169003128734,
+    0.015277580769398575,
+    0.19349068504566969
+  ],
+  "fresh_minus_prediction_m": [
+    0.02442645108259167,
+    -0.00026045328616476973,
+    0.0022147703856630896
+  ],
+  "fresh_minus_historical_slot_m": [
+    0.022618065909677076,
+    -0.002585902622843139,
+    0.15202751328064712
+  ],
+  "limitation": "Existing <=2-pixel refinement. Selections may denote different points along the edge; not a complete pose or clearance."
+}

@@ -16,17 +16,25 @@
 - The bounded sensor pilot ended at 3,130 actions, held=true but task=false.
   Two alignment reviews requested inspection; no insertion was attempted.
   Its 74 MB trace is backed up locally, with compact public evidence and video.
-- Next: sensor-localize the socket before grasp/carry occludes it and retain
-  measured geometry through carry; do not substitute privileged reference poses.
+- The earlier next step was pre-grasp socket localization and retained geometry;
+  coarse localization has since run, but precise entry geometry remains open.
 - An explicitly changed overhead-right-camera condition exposed a candidate
   socket before carry. Lift/carry repeated, but hand/card occlusion remained
   afterward; a historical-context review recognized the prior socket without
   claiming present alignment. No insertion yet. See `docs/OVERHEAD_SOCKET_20260930.md`.
 - Independent camera translation is now opt-in and live-tested while the arm
   holds. A Fabric-backed pose failure was detected; the pinned USD pose route
-  passed. The idealized camera has no collision body. Applying it after carry
-  is next; see `docs/INSPECTION_CAMERA_20260930.md`.
-- 140 CPU tests pass. They do not establish manipulation robustness.
+  passed. The idealized camera has no collision body. Post-carry use is recorded
+  below; see `docs/INSPECTION_CAMERA_20260930.md` for the initial qualification.
+- Post-carry independent views now supported a fresh contact-edge measurement,
+  two reviewed closer approaches and one contact-intended attempt. All endpoints
+  passed, but the native seating predicate remained false and the card stayed
+  held. Four fresh calls cost $0.08531625. Precise correspondence remains unresolved;
+  see `docs/POST_CARRY_CONTACT_20260930.md`. No release or successful recovery yet.
+- 144 CPU tests pass. They do not establish manipulation robustness.
+- Next: obtain corresponding connector/slot endpoints or axes from legal images
+  and depth, then attempt one bounded alignment/recovery. Do not compensate for
+  uncertain correspondence by pressing farther down.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and

@@ -10,7 +10,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'held_feature'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     args = p.parse_args()
@@ -85,6 +85,19 @@ def main():
             'Explicitly distinguish seeing a socket housing/axis from seeing its insertion gap '
             'or key: do not require a visible key for rough localization, but report its absence. '
             'Do not infer that any occluded space is clear. '
+            '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'held_feature':
+        prompt = (
+            'Locate the held graphics card\'s LOWER PCIe contact/connector edge in CURRENT images. '
+            'The camera has moved to inspect the PCB side. We need one solid-surface pixel near the '
+            'middle of that lower mating edge, not the upper grasp edge, bracket, heatsink or background. '
+            'Use original 640x360 integer pixel_uv [u,v], upper-left origin. Depth will be measured '
+            'after selection; do not invent world coordinates or claim clearance. '
+            'This is feature localization only, not insertion authorization. You do not need to see '
+            'the socket or resolve a key notch to locate a visible contact edge. '
+            'Return JSON with observation_id, decision (target/inspect), camera (left/right/wrist), '
+            'pixel_uv, evidence, uncertainty. If the lower mating edge is not reliably identifiable, '
+            'choose inspect and use null for camera and pixel_uv. '
             '\nRobot-only state: ' + json.dumps(state))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):

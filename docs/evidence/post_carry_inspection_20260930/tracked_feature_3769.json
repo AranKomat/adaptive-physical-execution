@@ -1,0 +1,41 @@
+{
+  "observation_id": "d778fec65d80489fbc1e3ecc7ca4bc4f:3769",
+  "predicted_feature_world_m": [
+    0.48233100637842674,
+    0.01517953453525649,
+    0.19232922759004453
+  ],
+  "views": [
+    {
+      "camera": "left",
+      "pixel_uv": [
+        334.21698638648064,
+        148.99220365330544
+      ],
+      "predicted_optical_z_m": 1.3449608003048836,
+      "measured_optical_z_m": 0.9441550374031067,
+      "residual_m": -0.40080576290177694
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        315.9116585188513,
+        173.20710886426792
+      ],
+      "predicted_optical_z_m": 0.9755533523832153,
+      "measured_optical_z_m": 0.8517148494720459,
+      "residual_m": -0.12383850291116938
+    },
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        319.0861693476648,
+        0.614520109104437
+      ],
+      "predicted_optical_z_m": 0.15346864696202744,
+      "measured_optical_z_m": 0.06769564747810364,
+      "residual_m": -0.0857729994839238
+    }
+  ],
+  "limitation": "Point-depth agreement only, not identity, no-slip proof or whole-object clearance."
+}
