@@ -1,5 +1,35 @@
 # Guarded lift and carry: current continuation
 
+## Latest1675: socket endpoints recovered using robot-aware view
+
+Offline robot-only check used measured joints and the kinematics-only URDF;
+root transform inferred from measured hand pose and FK. Failed1611 sightline
+passed32.3mm from joint-link centerlines. Opposite-side view passed140.3mm away.
+This is a coarse visibility proxy, NOT a mesh intersection/clearance certificate.
+Selected eye[0.60,0.20,0.45], gaze[0.478,0.028,0.038] passed full camera path
+bounds and64-action hold to1675 (arm0.821mm/0.001930rad). Actual image clears
+the forearm and exposes the selected socket housing.
+
+Fresh correspondence selected socket end_a[272,210], end_b[365,153]. Depth:
+[0.525967,0.027613,0.037626] and [0.430492,0.028455,0.036401]m; local spreads
+0.816/8.696mm. Housing span95.486mm. Connector is hidden in this view, so
+do not relabel its1547 samples as current measurements.
+
+Propagating1547 connector endpoints with measured robot poses under explicit
+rigid/no-slip assumption gives connector-minus-socket offsets:
+end_a[-5.210,-2.771,138.440]mm, end_b[7.136,-3.600,137.401]mm.
+Horizontal distances are approximately5.9/8.0mm. Housing versus contact-strip
+span differs; endpoint rims are not identical physical mating surfaces. Do not
+force both offsets to zero or infer centerline/clearance from them. These are
+useful inputs for a reviewed closer standoff, not insertion permission.
+
+State held1675; no arm descent, insertion or release this continuation. Next
+evaluate one bounded nearer standoff using explicitly historical connector
+evidence plus current socket samples. Preserve assumptions and the measured
+span discrepancy. Artifacts: `_sightline_proxy.json`, `_socket_opposite_view`,
+`_capture1675_flat`, `_correspondence1675_review`, `_correspondence1675_measured.json`,
+`_historical_endpoint_comparison.json`, under `runs/guarded_full_lift_20261001`.
+
 ## Historical socket audit: no motion, state remains1611
 
 Revisited unobstructed835 motherboard RGB-D while retaining the previously

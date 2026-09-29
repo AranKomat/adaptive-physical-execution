@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT1675: robot-centerline-screened opposite view exposed socket endpoints.
+Two current socket depth samples valid. Historical1547 connector propagation
+predicts5.9/8.0mm paired horizontal offsets and~138mm vertical gap, conditional
+on no slip. Housing/contact spans differ; no insertion permission. Next review
+a bounded nearer standoff; see `docs/GUARDED_CARRY_CURRENT.md`.
+
 CURRENT1611: connector endpoints measured at1547 (83.160mm separation, notch
 reported visible), socket endpoints unresolved. Subsequent board-facing camera
 view is forearm-occluded; no model call or descent on that view. Next viewpoint
