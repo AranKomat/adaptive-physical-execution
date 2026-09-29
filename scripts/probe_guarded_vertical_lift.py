@@ -20,8 +20,11 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--height', type=float, default=.18)
     args = parser.parse_args()
-    if not np.isfinite(args.height) or not 0 < args.height <= .20:
-        raise ValueError('height must be in (0, .20] m')
+    # A 64-action stage at the configured 0.0225 m/s ramp covers 96 mm before
+    # arrival tolerance. Reject larger requests instead of silently creating a
+    # partial state-changing stage that would need an implicit continuation.
+    if not np.isfinite(args.height) or not 0 < args.height <= .09:
+        raise ValueError('height must be in (0, .09] m per explicitly reviewed stage')
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
     try:

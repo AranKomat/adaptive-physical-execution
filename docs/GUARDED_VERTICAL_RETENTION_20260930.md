@@ -25,3 +25,6 @@ controller issue. Preserve the state and investigate offline; do not push
 farther from this worker. The probe wrapper now records budget-ended and
 guard-stopped receipts as terminal `result.json` outcomes with
 `no_automatic_retry=true` instead of an unhandled traceback.
+It now rejects requests above9cm before motion because one64-action chunk
+cannot safely cover a longer ramp; longer lifts must be split into separately
+reviewed stages.
