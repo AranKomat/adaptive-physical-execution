@@ -31,3 +31,14 @@ def test_large_or_nonfinite_predictions_rejected(value):
 def test_invalid_tolerance_rejected(tolerance):
     with pytest.raises(InputRejected):
         gripper_boundary_conversion(np.zeros((2, 8)), tolerance)
+
+
+def test_native_gripper_semantics_explicit_and_joint_preserving():
+    raw = np.zeros((2, 8)); raw[:, -1] = [-.0132, 1.2]
+    out, audit = gripper_boundary_conversion(raw, 0, native_joint_pos=True)
+    np.testing.assert_array_equal(out[:, -1], [0, 1])
+    np.testing.assert_array_equal(out[:, :7], raw[:, :7])
+    assert audit['kind'] == 'embodiedswe_joint_pos_clamp'
+    assert audit['raw_closed_fractions'] == raw[:, -1].tolist()
+    with pytest.raises(InputRejected):
+        gripper_boundary_conversion(raw, .01, native_joint_pos=True)

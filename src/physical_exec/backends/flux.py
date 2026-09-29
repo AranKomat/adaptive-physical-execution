@@ -46,10 +46,15 @@ def droid_output_to_chunk(raw: np.ndarray, obs: Observation, model_identity: str
 
 class FluxEngine:
     def __init__(self, checkpoint: str | Path, camera_map: dict[str,str], device="cuda:0", compile_model=False,
-                 gripper_boundary_tolerance=0.):
+                 gripper_boundary_tolerance=0., native_joint_pos_gripper=False, audit_dir=None):
         if not np.isfinite(gripper_boundary_tolerance) or not 0 <= gripper_boundary_tolerance <= .01:
             raise ValueError("gripper boundary tolerance must be between 0 and 0.01")
         self.gripper_boundary_tolerance = gripper_boundary_tolerance
+        if native_joint_pos_gripper and gripper_boundary_tolerance != 0:
+            raise ValueError("choose native semantics or bounded tolerance, not both")
+        self.native_joint_pos_gripper = native_joint_pos_gripper
+        self.audit_dir = Path(audit_dir) if audit_dir else None
+        if self.audit_dir: self.audit_dir.mkdir(parents=True, exist_ok=True)
         path = Path(checkpoint).resolve()
         if not path.is_dir():
             raise ValueError("pass a local, explicitly downloaded FLUX package directory; no implicit Hub download")
@@ -70,6 +75,7 @@ class FluxEngine:
             return {"backend": "flux_action_droid", "checkpoint": self.identity, "config_hashes": self.fingerprint,
                     "camera_map": self.camera_map, "compile_model": self.compile_model,
                     "gripper_boundary_tolerance": self.gripper_boundary_tolerance,
+                    "native_joint_pos_gripper": self.native_joint_pos_gripper,
                     "output": "32x(7 absolute joint radians + closed fraction)", "task_transfer_verified": False}
         if path != "/propose" or set(payload) != {"observation"}:
             raise InputRejected("only /metadata and /propose are available")
@@ -82,7 +88,17 @@ class FluxEngine:
             raw = self.policy.predict_action_chunk(batch)
         if str(self.device).startswith("cuda"): torch.cuda.synchronize(self.device)
         raw = raw.detach().float().cpu().numpy() if hasattr(raw, "detach") else np.asarray(raw)
-        raw, conversion = gripper_boundary_conversion(raw, self.gripper_boundary_tolerance)
+        if self.audit_dir:
+            # Preserve rejected proposals too, before any conversion/validation.
+            ident = uuid4().hex
+            np.save(self.audit_dir / (ident + ".npy"), raw, allow_pickle=False)
+            from ..trace import write_json
+            write_json(self.audit_dir / (ident + ".json"), {
+                "observation_id": obs.key, "checkpoint": self.identity,
+                "native_joint_pos_gripper": self.native_joint_pos_gripper,
+                "gripper_boundary_tolerance": self.gripper_boundary_tolerance})
+        raw, conversion = gripper_boundary_conversion(raw, self.gripper_boundary_tolerance,
+                                                       native_joint_pos=self.native_joint_pos_gripper)
         action = droid_output_to_chunk(raw, obs, Path(self.identity).name)
         return {"action": action.to_dict(), "identity": self.identity,
                 "boundary_conversion": conversion,
@@ -110,7 +126,7 @@ class RemoteFluxProposer:
         self.client.close()
 
 
-def gripper_boundary_conversion(raw: np.ndarray, tolerance: float) -> tuple[np.ndarray, dict]:
+def gripper_boundary_conversion(raw: np.ndarray, tolerance: float, *, native_joint_pos=False) -> tuple[np.ndarray, dict]:
     """Explicit proposal conversion only; canonical execution validation is unchanged."""
     if not np.isfinite(tolerance) or not 0 <= tolerance <= .01:
         raise InputRejected("gripper boundary tolerance must be between 0 and 0.01")
@@ -121,11 +137,13 @@ def gripper_boundary_conversion(raw: np.ndarray, tolerance: float) -> tuple[np.n
         raise InputRejected("invalid FLUX raw proposal")
     closed = a[:, -1]
     overshoot = np.maximum(np.maximum(-closed, closed - 1), 0)
-    if np.any(overshoot > tolerance):
+    if native_joint_pos and tolerance != 0:
+        raise InputRejected("native gripper semantics and tolerance are mutually exclusive")
+    if not native_joint_pos and np.any(overshoot > tolerance):
         raise InputRejected(f"FLUX gripper overshoot {float(overshoot.max()):.8f} exceeds declared tolerance {tolerance}")
     result = a.copy()
     result[:, -1] = np.clip(closed, 0, 1)
-    return result, {"kind": "explicit_gripper_boundary_saturation", "tolerance": tolerance,
+    return result, {"kind": "embodiedswe_joint_pos_clamp" if native_joint_pos else "explicit_gripper_boundary_saturation", "tolerance": None if native_joint_pos else tolerance,
                     "raw_closed_fractions": closed.tolist(),
                     "converted_closed_fractions": result[:, -1].tolist(),
                     "changed_indices": np.flatnonzero(overshoot > 0).tolist(),

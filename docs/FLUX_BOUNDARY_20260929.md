@@ -38,3 +38,30 @@ This demonstrates that a one-percent conversion does not generally resolve the
 model's output-contract mismatch. Do not keep widening the tolerance based on
 successive failures. Before Hybrid execution, inspect upstream gripper-domain
 handling and preserve rejected raw predictions for a principled decision.
+
+## Native joint-position semantics
+
+Source inspection resolves a distinction: FLUX `predict_action_chunk` returns
+dataset-unit continuous predictions without a final gripper clamp, while pinned
+EmbodiedSWE `vla/eval/sim.py:step_targets` explicitly applies `c.clamp(0,1)` for
+`joint_pos`. Its separate `joint_target` mode intentionally preserves squeeze
+intent beyond one; our adapter does NOT use that mode.
+
+An explicit `--native-joint-pos-gripper` option now reproduces the former clamp
+at our boundary, preserving raw fractions and leaving all joint targets and
+execution limits unchanged. It is mutually exclusive with the earlier tolerance
+option; strict zero tolerance remains the default. This is an experiment condition,
+not evidence that FLUX itself produced in-range actions. No claim is made about
+DROID's real actuator behavior or suitability for hardware.
+
+`--audit-dir` saves raw NumPy predictions plus observation identity before
+conversion, including rejected outputs. 118 CPU tests pass. Native semantic
+compatibility does not establish task competence or contact safety.
+
+Live proposal-only result: `runs/flux_native_probe_20260929` on observation
+`3cff69ee0d184428a33eb0af51fd1937:280` passed generic action bounds and robot-only
+FK preview. Three gripper entries (22,26,30) were clamped, with maximum overshoot
+0.00718296. Raw arrays and identity are retained in `runs/flux_native_raw_20260929`.
+No motion occurred. This particular proposal would also fit the earlier 1% mode;
+it does not prove that native clamping improved task behavior. Full execution,
+task transfer and contact competence remain untested.
