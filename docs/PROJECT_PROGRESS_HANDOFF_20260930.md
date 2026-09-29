@@ -7,6 +7,16 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+NEWEST state 1503: face-on view resolves two rough connector surface points;
+operator-scoped 10 cm descent leaves nominal 12.3 cm feature standoff. 98 actions,
+1.949 mm final error; suspended, no insertion/release. Camera [.6,-.35,.45],
+gaze [.47224,.02803,.20]. Connector ends selected by fresh review, socket ends
+still unresolved with inconsistent verbal identity. Projected historical socket
+anchor [320,316] has current depth agreement within 0.602 mm. Next use that
+sensor-derived projected memory in correspondence review; no new view needed
+yet. Latest two calls $0.08973625; episode total $0.26042625, reserved calls 4366.
+209 tests. Full update in `docs/MATING_FEATURES_20260930.md`; old video ends1213.
+
 LATEST after aimed carry: same episode now 1341, eye [.8,-.05,.5], gaze
 [.47224,.02803,.15], held/paused. See `docs/MATING_FEATURES_20260930.md`.
 Independent feature detection likely switched to a neighboring slot while the

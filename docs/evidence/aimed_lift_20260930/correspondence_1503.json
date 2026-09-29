@@ -1,0 +1,39 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1503",
+  "decision": "inspect",
+  "connector": {
+    "end_a": {
+      "camera": "right",
+      "pixel_uv": [
+        283,
+        209
+      ],
+      "surface": "Visible gold contact surface near the connector's bracket-side end, along the lower PCB edge."
+    },
+    "end_b": {
+      "camera": "right",
+      "pixel_uv": [
+        382,
+        229
+      ],
+      "surface": "Visible gold contact surface near the connector's opposite end, just before the PCB edge steps upward."
+    }
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": null
+  },
+  "key_visible": false,
+  "target_identity_assessment": "The historical anchor appears to select the CPU-adjacent PCIe socket. In the current right view, that corresponds provisionally to the upper/rear expansion-slot region, not the more exposed lower/front slot. Both terminal mating surfaces of that same socket cannot be confidently traced. The historical selection is not independently certified.",
+  "evidence": [
+    "The right image exposes the card's narrow gold connector edge; the metal bracket is on the left, establishing connector end_a versus end_b.",
+    "The motherboard has multiple elongated slot-like features. Visibility of a neighboring slot does not establish correspondence with the historical target.",
+    "The left view is largely obstructed by the robot and case. The wrist view is dominated by the hand, card, and cooler rather than the destination socket."
+  ],
+  "uncertainty": [
+    "Both corresponding ends of the historically selected socket are not established as visible solid-surface pixels.",
+    "The connector/socket key relationship is not sufficiently resolved.",
+    "The connector samples alone establish neither alignment nor insertion success."
+  ],
+  "next_view": "Obtain a more nearly overhead view toward the motherboard's CPU-adjacent PCIe slot, retaining the CPU area and bracket-side case wall as identity landmarks. The view must expose both socket terminal surfaces and its key. The hand/card obstruct the useful sightline in the wrist view; use a viewing direction around their silhouette rather than through the card. A complementary view facing the gold-contact edge would resolve its key."
+}

@@ -192,8 +192,8 @@ def main():
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
                         {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
     if args.prior_carry_capture or args.prior_carry_response:
-        if args.stage != 'feature_inventory' or not (args.prior_carry_capture and args.prior_carry_response):
-            raise ValueError('carry history requires feature inventory and both prior inputs')
+        if args.stage not in ('feature_inventory','correspondence') or not (args.prior_carry_capture and args.prior_carry_response):
+            raise ValueError('carry history requires feature inventory/correspondence and both prior inputs')
         old_state = json.loads((args.prior_carry_capture/'state.json').read_text())
         old_response = json.loads(args.prior_carry_response.read_text())
         old_episode, old_seq = old_state['observation_id'].rsplit(':', 1)

@@ -8,7 +8,7 @@ import sys
 from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
-from physical_exec.carry import carry_stages
+from physical_exec.carry import carry_stages, standoff_stages
 from physical_exec.imaging import png_bytes
 from physical_exec.trace import write_json
 from physical_exec.transport import LocalClient, decode_observation, decode_result
@@ -19,6 +19,8 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--exploratory-standoff',action='store_true',
+                        help='Current feature measurements; <=10 cm down, >=12 cm nominal standoff, no insertion')
     args = parser.parse_args()
     plan = json.loads(args.plan.read_text())
     args.output.mkdir(parents=True, exist_ok=False)
@@ -29,7 +31,8 @@ def main():
                 or not meta.get('continuous_transit_enabled')):
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
-        stages = carry_stages(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'))
+        compiler = standoff_stages if args.exploratory_standoff else carry_stages
+        stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'))
         write_json(args.output/'source_plan.json', plan)
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'initial.json', obs.public_state())

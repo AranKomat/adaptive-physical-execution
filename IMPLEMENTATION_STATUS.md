@@ -4,6 +4,14 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Newest: face-on view yielded two depth-supported connector samples without
+  threshold changes. Exploratory 10 cm vertical standoff approach completed
+  in 98 actions, 1.949 mm final error. Current held observation 1503; no insertion
+  or release. Correspondence now sees connector ends but confuses socket identity.
+  Original sensor anchor projects to [320,316], matching current depth within
+  0.602 mm. Next projected-history correspondence review, not more camera sweeps.
+  Two new calls $0.08973625; 209 tests. See `docs/MATING_FEATURES_20260930.md`.
+
 - Latest continuation at held observation 1341: separate feature localization
   exposed a likely neighboring-slot switch when the original target was cropped.
   Labeled same-episode carry history plus reframing recovered consistent socket

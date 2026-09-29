@@ -71,3 +71,62 @@ Next obtain a less foreshortened, better-resolved contact strip using calibrated
 view geometry, or a justified edge-aware measurement with explicit uncertainty;
 do not turn an RGB label into certified depth. Retain socket identity across
 view changes. Do not restart the successful carry or descend on a guessed axis.
+
+## Face-on measurement follow-up (predeclared)
+
+From 1341, test eye [0.60,-0.35,0.45], gaze [0.47224,0.02803,0.20], 64 holds.
+This changes the viewing direction from predominantly along the socket/card
+long axis to predominantly across its observed y-normal plane. It seeks a
+wider contact-strip projection without moving the card. Camera displacement
+0.364 m; translational/angular preflight passed. Eye remains above case-height
+features observed previously, but camera clearance is still unknown. Preserve
+grip and arm target; inspect imagery before any measurement/model call.
+
+At 1405, face-on camera move passed (0.859 mm arm error). Fresh history-aware
+selection produced two valid connector samples [309,114], [355,120], depth
+spreads 1.333/1.269 mm. Points [0.4630944,0.0275521,0.2608775] and
+[0.5013030,0.0275279,0.2615007] give an undirected axis
+[0.999867,-0.000636,0.016307], 38.214 mm separation. No measurement threshold
+was changed. One current socket rail sample [357,327] passes with 9.804 mm
+spread at [0.5118023,0.0253378,0.0378590]; the other is rejected.
+
+Predeclared exploratory standoff approach: descend 0.10 m vertically in two
+<=5 cm locally monitored chunks, preserve measured hand attitude and exact grip,
+settle at final endpoint. Minimum current connector-surface to socket-rail
+vertical separation is 0.2230 m, leaving approximately 0.1230 m. This is NOT
+insertion, gap-centerline alignment, certified collision-free motion, or GPT
+approval. Whole-card/bracket swept clearance is unknown; no contact intended.
+Existing hard stops and strict endpoint gates remain. No release or automatic
+retry. Review fresh actual images after this bounded simulator-only approach.
+
+## Standoff approach outcome
+
+At 1503, approach completed: 98 actions, 6.533 sim seconds, 46.310 execution
+seconds, final 1.949 mm / 0.000073 rad. Card remains visibly suspended. The
+12.3 cm remaining separation is a nominal feature estimate, not a calibrated
+clearance bound for the whole card or bracket. No insertion or release.
+
+Fresh correspondence review returned inspect, but now selected connector ends
+right [283,209] and [382,229]. Socket ends remain unresolved. Its verbal socket
+identity assessment also contradicts prior descriptions (upper/rear versus
+lower/front), despite the historical image. Do not act on that inconsistency.
+
+Geometric memory check: original legal carry socket point
+[0.4722426527,0.0280299827,0.0375729090] projects through CURRENT right-camera
+calibration to [320.0025,315.8249], predicted optical depth 0.5571163 m.
+Current nearest-pixel depth is 0.5565141 m, difference 0.602 mm. The old anchor
+has visible depth support at its projected location, but this does not prove
+the original semantic choice correct or certify insertion endpoints. Next
+provide this explicitly labeled projected historical anchor to correspondence
+review, rather than relying only on changing verbal scene layout descriptions.
+No extra camera sweep or arm move is needed for that next check.
+
+Latest held observation d3645c724ce046aeab7dbd48580af359:1503. Camera eye
+[0.60,-0.35,0.45], gaze [0.47224,0.02803,0.20]. Worker/tunnel unchanged.
+Two calls $0.08973625; episode cumulative $0.26042625; reserved calls 4366.
+Selected depth/calibration and receipts preserved locally; raw recordings remote.
+Public face-on image, measured features, standoff image/receipt and correspondence
+review added under the existing evidence directory. Video still ends at 1213.
+209 tests pass. Contact-strip depth is now resolved for two rough points; matched
+socket endpoints, insertion centerline/key, actual seating/release and recovery
+remain open. No full assembly phase is claimed complete.

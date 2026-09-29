@@ -40,7 +40,8 @@ def test_feature_inventory_separates_localization_from_alignment(tmp_path):
 
 
 @pytest.mark.parametrize('old_id,accepted',[('e:1',True),('other:1',False),('e:12',False)])
-def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted):
+@pytest.mark.parametrize('stage',['feature_inventory','correspondence'])
+def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage):
     current, old = tmp_path/'current', tmp_path/'old'
     for path, obs in ((current,'e:12'),(old,old_id)):
         path.mkdir()
@@ -52,7 +53,7 @@ def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted):
                                        slot_feature=dict(camera='right',pixel_uv=[20,30]))))
     output = tmp_path/'messages.json'
     script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
-    result = subprocess.run([sys.executable,str(script),'--stage','feature_inventory',
+    result = subprocess.run([sys.executable,str(script),'--stage',stage,
         '--capture',str(current),'--output',str(output),'--prior-carry-capture',str(old),
         '--prior-carry-response',str(response)],capture_output=True,text=True)
     assert (result.returncode==0) == accepted

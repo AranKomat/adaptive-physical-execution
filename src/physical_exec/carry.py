@@ -44,3 +44,36 @@ def carry_stages(plan, observation_id, hand_pose, opening):
         raise ValueError('Carry path budget exceeded')
     stages[-1]['settle_at_end'] = True
     return stages
+
+
+def standoff_stages(measurements, observation_id, hand_pose, opening):
+    """Exploratory approach with >=12 cm nominal separation, not a clearance bound."""
+    if measurements.get('observation_id') != observation_id:
+        raise ValueError('Standoff measurements are stale')
+    hand = finite_vector(hand_pose,7)
+    if isinstance(opening,bool) or not isinstance(opening,(float,int)) or not 0 <= opening <= 1:
+        raise ValueError('Established gripper command required')
+    points = {}
+    for name, minimum in (('connector',2),('socket',1)):
+        accepted = [s['measurement'] for s in measurements[name]['samples'] if 'measurement' in s]
+        if len(accepted)<minimum or any(m['observation_id']!=observation_id for m in accepted):
+            raise ValueError('Insufficient current feature measurements')
+        if any(not np.isfinite(m['local_depth_spread_m']) or not 0 <= m['local_depth_spread_m'] <= .01
+               or m['neighborhood_radius_pixels']!=1 for m in accepted):
+            raise ValueError('Unsupported feature depth qualification')
+        points[name] = np.array([finite_vector(m['surface_point_world_m'],3) for m in accepted])
+    if np.max(np.linalg.norm(points['connector']-hand[:3],axis=1))>.35:
+        raise ValueError('Connector samples too far from held hand')
+    gap = float(np.min(points['connector'][:,2])-np.max(points['socket'][:,2]))
+    descent = min(.10,gap-.12)
+    if not np.isfinite(descent) or descent<.01:
+        raise ValueError('Insufficient measured standoff for this coarse approach')
+    count = math.ceil(descent/.05)
+    stages = []
+    for i in range(1,count+1):
+        pose = hand.copy()
+        pose[2] -= descent*i/count
+        stages.append(dict(hand_pose_world=pose.tolist(),gripper_open=opening,max_steps=64,
+            settle_at_end=i==count,target_source='Operator-scoped measured-feature standoff; '
+            '>=12cm nominal vertical feature separation; unknown swept clearance; NOT insertion approval'))
+    return stages
