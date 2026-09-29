@@ -1,0 +1,88 @@
+{
+  "start": "9fbd76d8e57641c79983eed82adbc2bc:2115",
+  "end": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+  "commanded_world_up_m": 0.01,
+  "actual_translation_m": [
+    5.677342414855957e-05,
+    -0.0001685209572315216,
+    0.009948313236236572
+  ],
+  "actions": 80,
+  "sim_seconds": 5.333333333333333,
+  "execution_wall_seconds": 36.883486280996294,
+  "receipts": [
+    {
+      "command_id": "4b93a63151b946bcb8164a8268e2af22",
+      "executed_steps": 16,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2115",
+      "reason": "local stage arrived",
+      "requested_steps": 16,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2131",
+      "sim_seconds": 1.0666666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.00017617163716791574,
+      "tracking_rotation_error_rad": 0.0003870911366499889,
+      "wall_seconds": 7.101734308998857
+    },
+    {
+      "command_id": "86b128128572438b9a427a0ef13af4cb",
+      "executed_steps": 16,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2131",
+      "reason": "local stage arrived",
+      "requested_steps": 16,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2147",
+      "sim_seconds": 1.0666666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.00017515127645630876,
+      "tracking_rotation_error_rad": 0.00024826711214840996,
+      "wall_seconds": 7.30139726500056
+    },
+    {
+      "command_id": "8a2187ee9e044c749b316a3451465f96",
+      "executed_steps": 16,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2147",
+      "reason": "local stage arrived",
+      "requested_steps": 16,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2163",
+      "sim_seconds": 1.0666666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.0001772208334842662,
+      "tracking_rotation_error_rad": 0.00026009647734932454,
+      "wall_seconds": 7.564565218999633
+    },
+    {
+      "command_id": "e9814b3a9fbd4052ba6098322ec3873a",
+      "executed_steps": 16,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2163",
+      "reason": "local stage arrived",
+      "requested_steps": 16,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2179",
+      "sim_seconds": 1.0666666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.00018183847681261248,
+      "tracking_rotation_error_rad": 0.000256564094728277,
+      "wall_seconds": 7.597831535000296
+    },
+    {
+      "command_id": "5419e48dfc2347a0a14b542ad8fd41cc",
+      "executed_steps": 16,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2179",
+      "reason": "local stage arrived",
+      "requested_steps": 16,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+      "sim_seconds": 1.0666666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.000185186544500722,
+      "tracking_rotation_error_rad": 0.00025986976834835437,
+      "wall_seconds": 7.317957952996949
+    }
+  ],
+  "visual_checks": "Assistant inspected wrist images between each 2mm target increment; step1 also left. No obvious card displacement or finger intrusion observed; not quantitative contact/clearance certification.",
+  "result": "No usable mechanical underside patch resolved. Retreat stopped at planned limit; no closure, reset or extension.",
+  "paid_calls": 0
+}

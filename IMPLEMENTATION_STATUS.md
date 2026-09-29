@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT2195: completed the capped10mm wrist retreat in five2mm targets with
+visual checks between stages.80actions; actual9.948mm up, no guard stop. Final
+view still does not resolve an underside grasp surface. Stop this inspection
+route; no closure, reset, paid call or recovery success. Selected RGB-D saved.
+Next requires a concrete geometry-grounded grasp hypothesis, not another tiny
+retreat. See `docs/GUARDED_CARRY_CURRENT.md` and public checkpoint receipts.
+
 CURRENT2115: one depth-aimed free-edge camera inspection completed64 hold
 actions but sees the exterior case wall. No regrasp/contact/reset. Stop nearby
 low-view sweeps; use retained interior evidence for a bounded recovery proposal.

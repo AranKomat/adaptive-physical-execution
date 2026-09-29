@@ -1,5 +1,32 @@
 # Guarded lift and carry: current continuation
 
+## Current2195: bounded wrist retreat did not resolve a recovery grasp
+
+Executed the2115 review's bounded observation experiment, not a contact or
+regrasp. Five fixed-orientation, open-hand world-up targets were spaced2mm
+apart, capped at10mm from the2115 origin. Each used16 local control actions
+with the native tracking guard. The assistant inspected each returned wrist
+image before continuing; the first checkpoint also included the left view.
+No obvious card displacement or finger intrusion was observed. This is visual
+screening, not measured absence of contact or a clearance certificate.
+
+All five stages reported arrival without a guard stop:80actions total,
+5.333sim seconds,36.883execution wall seconds (excludes observation review).
+Actual final translation was[+0.057,-0.169,+9.948]mm; final target error0.185mm.
+**The mechanical underside grasp surface remains unresolved.** The retreat
+stopped at its predeclared limit; no closure, extended retreat, reset or new paid
+call. Robot tracking passed; information gain was insufficient. No task phase
+or recovery success is claimed.
+
+Current episode remains9fbd76d8e57641c79983eed82adbc2bc at2195. Selected final
+RGB-D and all five receipts/images are local. Public [receipts and summary](evidence/recovery_retreat_2195/result.json)
+and [final wrist view](evidence/recovery_retreat_2195/after_wrist.png).
+Next: derive a concrete regrasp hypothesis from the visible geometry, explicitly
+distinguishing PCB-edge risk from mechanical shroud contact; assess feasibility
+before motion. Do not repeat low external views, small upward retreats, or
+inspection-only prompts. Absence of a model-selected grasp is not proof of
+physical impossibility. Earlier "not executed"2115 entries are historical.
+
 ## Current2115: free-edge inspection blocked by exterior case wall
 
 Read-only live capture confirmed2051 before execution. Astra's2051 review
