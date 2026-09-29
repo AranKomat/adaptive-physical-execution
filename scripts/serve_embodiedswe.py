@@ -17,6 +17,7 @@ def main():
     p.add_argument("--port",type=int,default=8765);p.add_argument("--record-dir",required=True)
     p.add_argument("--token-env",default="PHYSICAL_EXEC_SIM_TOKEN")
     p.add_argument("--record-depth",action="store_true",help="record aligned idealized depth/calibration; not yet policy input")
+    p.add_argument("--allow-local-stages",action="store_true",help="opt-in bounded same-episode native-DiffIK correction; unknown clearance")
     # Import-light CLI help is available before Isaac is installed.
     if "--help" in sys.argv and __import__('importlib.util').util.find_spec("isaaclab") is None:
         p.add_argument("--headless",action="store_true");p.add_argument("--device",default="cuda:0")
@@ -37,7 +38,7 @@ def main():
         from physical_exec.backends.embodiedswe import EmbodiedSWEEnvironment
         from physical_exec.transport import make_server,EnvironmentService
         env=EmbodiedSWEEnvironment(args.repo,task,limits,device=args.device,record_dir=args.record_dir,
-                                   record_depth=args.record_depth)
+                                   record_depth=args.record_depth,allow_local_stages=args.allow_local_stages)
         env.worker_id=os.environ.get("PHYSICAL_EXEC_WORKER_ID") or __import__("uuid").uuid4().hex
         server=make_server(args.port,token,EnvironmentService(env).dispatch)
         print(f"READY simulator http://127.0.0.1:{server.server_port}; preset={task['preset']}; one episode only",flush=True)

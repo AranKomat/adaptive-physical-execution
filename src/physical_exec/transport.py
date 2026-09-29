@@ -147,20 +147,25 @@ class EnvironmentService:
         if path == "/observe":
             if self.observation is None: raise InputRejected("reset first")
             return encode_observation(self.observation)
-        if path == "/step":
+        if path in ("/step", "/local-stage"):
             if self.observation is None: raise InputRejected("reset first")
             if self.poisoned: raise AmbiguousExecution("worker halted after ambiguous execution")
             if set(payload) != {"command_id", "action"}: raise InputRejected("invalid step envelope")
             cid = payload["command_id"]
             if not isinstance(cid, str) or not 1 <= len(cid) <= 100: raise InputRejected("invalid command id")
-            fingerprint = dumps(payload)
+            fingerprint = dumps({'path': path, 'payload': payload})
             if cid in self.commands:
                 old, reply = self.commands[cid]
                 if old != fingerprint: raise InputRejected("command ID reuse with different arguments")
                 return reply
-            try: action = ActionChunk.from_dict(payload["action"])
-            except (TypeError, ValueError) as e: raise InputRejected(str(e)) from e
-            try: result = self.env.step(action, cid)
+            if path == '/step':
+                try: action = ActionChunk.from_dict(payload["action"])
+                except (TypeError, ValueError) as e: raise InputRejected(str(e)) from e
+            elif not getattr(self.env, 'allow_local_stages', False):
+                raise InputRejected('local stages not enabled')
+            try:
+                result = (self.env.step(action, cid) if path == '/step'
+                          else self.env.local_stage(payload['action'], cid))
             except InputRejected: raise
             except Exception:
                 self.poisoned = True; raise

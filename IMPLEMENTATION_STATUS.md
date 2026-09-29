@@ -37,7 +37,7 @@
   paired endpoints. Earlier socket end_a had failed depth continuity; pre-grasp
   axis qualification was incomplete. Acquire higher-detail socket geometry before
   occlusion in the next trial. No additional motion was run in this review.
-- 149 CPU tests pass. They do not establish manipulation robustness.
+- 160 CPU tests pass. They do not establish manipulation robustness.
 - Higher-detail pre-grasp capture completed with zero control actions. Three
   housing-rail samples passed depth continuity (about 0.626 mm spread); sampling
   improved to about 0.80 mm/px. Internal key/gap still unresolved. Camera position
@@ -66,6 +66,12 @@
   and stopped. No correction or grasp. Stop prompt-only approach repetitions;
   next test a legal RGB-D-grounded correction stage. See
   `docs/HYBRID_MISALIGNMENT_20260930.md`.
+- Opt-in same-worker local correction bridge implemented and small unloaded
+  offset live-qualified: 1 cm upward ended within 0.246 mm, zero paid calls.
+  First attempt exposed a receipt-count mismatch after motion; halted without
+  retry, then fixed preflight to cap 64. No contact/correction success yet.
+  Next integrate fresh RGB-D correction after Hybrid misalignment in the same
+  episode. See `docs/LOCAL_STAGE_BRIDGE_20260930.md`.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and

@@ -23,7 +23,8 @@ from ..trace import write_json, sha256_file
 
 class EmbodiedSWEEnvironment:
     def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None,
-                 record_depth=False):
+                 record_depth=False, allow_local_stages=False):
+        self.allow_local_stages = allow_local_stages
         if record_depth and record_dir is None:
             raise ValueError("depth capture requires a recording directory")
         self.record_depth = record_depth
@@ -195,6 +196,64 @@ class EmbodiedSWEEnvironment:
                         "joint_targets_and_closedness": np.asarray(targets[:count]).tolist()})+"\n")
         return StepResult(self.current, receipt, self._evaluation)
 
+    def local_stage(self, value, command_id):
+        """Explicit feedback correction on the current episode, never an automatic takeover."""
+        if not self.allow_local_stages:
+            raise InputRejected('local stages not enabled')
+        if self.current is None or self._poisoned:
+            raise InputRejected('local stage requires an initialized, unpoisoned worker')
+        from ..local_stage import validate_local_stage
+        from ..osc_reference import NativeDiffIKFeedback, ramped_target, motion_stop_reason
+        target = validate_local_stage(value, self.current)
+        import torch
+        from robobench.controllers.diff_ik import DiffIKController, DiffIKControllerCfg
+        cfg = DiffIKControllerCfg(ee_body='panda_hand', arm_joint_names=self.joint_names)
+        solver = DiffIKController(cfg)
+        solver.bind(self.sim.env.robot)
+        feedback = NativeDiffIKFeedback(cfg.pos_scale, cfg.rot_scale,
+                                       control_dt=self.current.control_dt, integral_feedback=True)
+        before = self.current
+        started = time.monotonic()
+        completed = 0
+        try:
+            for index in range(value['max_steps']):
+                state = self.current
+                reason = motion_stop_reason(state.eef_pose, target, state.joints, self.kin.limits)
+                if reason:
+                    raise RuntimeError(reason)
+                waypoint = ramped_target(before.eef_pose, target, index+1, .0225*state.control_dt)
+                raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
+                q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
+                                                               device=self.sim.env.device)))[0]
+                action = ActionChunk('joint_absolute', [np.r_[q, value['gripper_open']]],
+                                     state.key, state.control_dt, 'sensor_local_diffik', self.joint_names)
+                self.step(action, f'{command_id}:{index}')
+                completed += 1
+                reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
+                if reason:
+                    raise RuntimeError(reason)
+                if self._evaluation.success:
+                    break
+            error = pose_error(self.current.eef_pose, target)
+            arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
+            receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
+                'executed', 'local stage arrived' if arrived else 'local stage budget ended without arrival',
+                'sensor_local_diffik', completed*before.control_dt, time.monotonic()-started,
+                float(np.linalg.norm(error[:3])), float(np.linalg.norm(error[3:])))
+            if self.record_episode is not None:
+                with (self.record_episode/'local_stages.jsonl').open('a') as stream:
+                    stream.write(__import__('json').dumps({'command_id': command_id, 'request': value,
+                        'receipt': receipt.to_dict(), 'unknown_clearance': True})+'\n')
+            return StepResult(self.current, receipt, self._evaluation)
+        except Exception as exc:
+            self._poisoned = True
+            if self.record_episode is not None:
+                with (self.record_episode/'local_stages.jsonl').open('a') as stream:
+                    stream.write(__import__('json').dumps({'command_id': command_id, 'request': value,
+                        'confirmed_actions': completed, 'halted': True,
+                        'error': f'{type(exc).__name__}: {exc}', 'never_retry': True})+'\n')
+            raise AmbiguousExecution(f'local stage stopped after {completed} confirmed actions; never retry') from exc
+
     def fk_preview(self, joints, names):
         if tuple(names) != self.joint_names: raise InputRejected("FK joint order mismatch")
         a = np.asarray(joints, dtype=float)
@@ -213,6 +272,8 @@ class EmbodiedSWEEnvironment:
                 "time_model": "physics_paused_during_inference", "privileged_policy_inputs": False,
                 "depth_recording": bool(getattr(self, "record_depth", False)),
                 "depth_policy_input": False,
+                "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
+                "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",
                 "real_hardware_supported": False, "camera_map": self.camera_map,
                 "grasp_weld": getattr(scfg, "grasp_weld", "not_declared"),
                 "physics_assists": "upstream scene defaults preserved; inspect grasp_weld and SOURCE_AUDIT",
