@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT2813: failed-approach trace shows persistent x error and increasing
+rotation error, not continued convergence. One reviewed retreat completed20
+single-latch updates with image review and stricter orientation/progress stops:
+25.7mm actual withdrawal,1.46mm endpoint residual, no worsening observed.
+No regrasp/reset/retry; cause of prior obstruction unresolved. Pending final
+transit context must be accounted for at the next phase.240tests, calls4399.
+See `docs/GUARDED_CARRY_CURRENT.md`; assembly/recovery remain incomplete.
+
 CURRENT2793: reviewed inclined recovery approach physically tested without
 lowering pilot bounds. Reorientation succeeded; final standoff FAILED arrival
 at2729 (9.369mm/0.0596rad error).534actions, no guard trigger, retry or closure.

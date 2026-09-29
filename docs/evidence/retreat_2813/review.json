@@ -1,0 +1,29 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2793",
+  "decision": "retreat",
+  "translation_world_m": [
+    -0.0034,
+    -0.0036,
+    0.0267
+  ],
+  "preserve_orientation": true,
+  "preserve_open_grip": true,
+  "reason": "Authorize one approximately 27.2 mm open-hand retreat toward the earlier traced hand position, reversing the recent approach displacement. Hold the CURRENT2793 orientation, not the nominal target orientation. This is a bounded simulation attempt to unload or clear the situation, not a retry of the failed standoff or an extension of settling.",
+  "visible_evidence": [
+    "The wrist and right images show enclosure edges and internal components close in view; they do not establish clearance around the entire hand.",
+    "The left image shows the arm positioned over the open enclosure, with the hand region partly occluded.",
+    "The trace shows x remaining near 0.5049 m while arrival error persists and rotational tracking worsens. No closure occurred."
+  ],
+  "uncertainty": [
+    "Contact, obstruction, and controller or kinematic limitations cannot be distinguished from the supplied evidence.",
+    "The retreat's swept-volume clearance is unknown. Earlier legal robot motion does not certify a collision-free return, particularly while preserving the current orientation.",
+    "An upward, slightly negative-x and negative-y displacement may unload the situation, but successful clearance is not guaranteed."
+  ],
+  "stop_conditions": [
+    "Execute incrementally, with commanded translation increments no larger than 2 mm and cumulative translation no larger than the specified vector.",
+    "Stop immediately if retreat progress stalls or reverses across successive control updates; do not extend settling or increase the displacement.",
+    "Stop if measured orientation departs by more than 0.02 rad from the CURRENT2793 orientation, or if the gripper begins closing.",
+    "Stop on any available contact, force, joint-limit, or controller fault indication, or visible worsening of interference; do not infer safety from the absence of such indications.",
+    "End after this single retreat attempt. No subsequent approach or closure is authorized."
+  ]
+}

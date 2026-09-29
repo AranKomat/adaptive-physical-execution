@@ -1,5 +1,44 @@
 # Guarded lift and carry: current continuation
 
+## Current2813: controlled retreat after nonconverging approach
+
+Retrospective robot-motion reconstruction from recorded rigid wrist calibration
+shows the failed approach was not merely waiting to converge: over the last
+second, position error stayed9.18--9.37mm while orientation error increased to
+0.0596rad. Hand x remained near0.5049m versus target0.5140m. This argues against
+extending the same target, but is not force/collision or object-state evidence.
+
+Astra reviewed fresh2793 images and that trace, proposing one open-hand retreat
+[-3.4,-3.6,+26.7]mm, fixed CURRENT orientation. Its stricter stop conditions
+were enforced through single-control-latch requests, not silently replaced by
+the looser64-action stage guard: commanded increments below2mm,0.02rad measured
+orientation bound, stop after two consecutive nonpositive progress updates,
+open-aperture check, and an assistant image check before every continuation.
+Native worker fault/joint/tracking checks remained active; no force sensor was
+invented. No extra settling, subsequent approach or closure was queued.
+
+All20 updates made positive retreat progress. Actual translation
+[-3.305,-3.095,+25.335]mm (25.7mm norm),1.459mm short of commanded endpoint;
+maximum orientation deviation0.000673rad. Episode now2813, gripper open.
+No obvious worsening or card displacement appeared in reviewed images; this
+is not a contact-free or task-success certificate. The completed withdrawal
+does not identify the earlier obstruction. No same-target retry or reset.
+
+Public [result](evidence/retreat_2813/result.json),
+[per-update checks](evidence/retreat_2813/control_checks.json),
+[review](evidence/retreat_2813/review.json),
+[final image](evidence/retreat_2813/20_right.png), and
+[preceding error trace](evidence/retreat_2813/preceding_approach_error.json).
+Final selected RGB-D is local. Calls4399; existing budget holds unchanged.
+
+Added `run_reviewed_retreat.py` with explicit image-review continuation and
+EOF stop, no automatic retry. Six contract tests added;240tests pass. This
+operator-supervised trial is not autonomous recovery or a completed phase.
+Next needs a genuinely different approach/contact hypothesis, not more time
+on the failed standoff. All20 latches used pass-through; the live controller
+may retain its final transit context. Account for the1.46mm nominal residual
+at the next phase boundary; do not assume the controller was reset.
+
 ## Current2793: inclined recovery standoff attempted; final nonarrival
 
 Batch-checked12 inclined endpoints (four approach azimuths,35/45/60deg down

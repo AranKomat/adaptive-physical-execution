@@ -1,0 +1,149 @@
+{
+  "rows": [
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2794",
+      "progress_m": 0.0003330369885397023,
+      "orientation_deviation_rad": 0.00023909956370900625,
+      "gripper_open": 0.9999936819076538,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2795",
+      "progress_m": 0.000653504293720876,
+      "orientation_deviation_rad": 0.00033025276797955463,
+      "gripper_open": 0.9999865889549255,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2796",
+      "progress_m": 0.0008970128599366809,
+      "orientation_deviation_rad": 0.00023087529993665032,
+      "gripper_open": 0.9999793171882629,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2797",
+      "progress_m": 0.001061941164286436,
+      "orientation_deviation_rad": 0.00018626560024289263,
+      "gripper_open": 0.9999719858169556,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2798",
+      "progress_m": 0.001172118185437511,
+      "orientation_deviation_rad": 0.00020857794663083895,
+      "gripper_open": 0.999964714050293,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2799",
+      "progress_m": 0.0012637715984324363,
+      "orientation_deviation_rad": 0.0002593750978809968,
+      "gripper_open": 0.9999635219573975,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2800",
+      "progress_m": 0.0013305804271476127,
+      "orientation_deviation_rad": 0.0003200114701970963,
+      "gripper_open": 0.9999624490737915,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2801",
+      "progress_m": 0.0013785286672622033,
+      "orientation_deviation_rad": 0.0003648505587742082,
+      "gripper_open": 0.9999628067016602,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2802",
+      "progress_m": 0.0014120333910567608,
+      "orientation_deviation_rad": 0.0003924436610060189,
+      "gripper_open": 0.9999632239341736,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2803",
+      "progress_m": 0.0014376254672130945,
+      "orientation_deviation_rad": 0.0004415970941706758,
+      "gripper_open": 0.9999635219573975,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2804",
+      "progress_m": 0.0014553294792256039,
+      "orientation_deviation_rad": 0.0004955836728135861,
+      "gripper_open": 0.9999637603759766,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2805",
+      "progress_m": 0.0014747207530367643,
+      "orientation_deviation_rad": 0.0004962987087085043,
+      "gripper_open": 0.9999638199806213,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2806",
+      "progress_m": 0.0014835460080306982,
+      "orientation_deviation_rad": 0.000512729116287743,
+      "gripper_open": 0.9999633431434631,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2807",
+      "progress_m": 0.001489273468360938,
+      "orientation_deviation_rad": 0.0005513863307535721,
+      "gripper_open": 0.9999634027481079,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2808",
+      "progress_m": 0.0014932313012115143,
+      "orientation_deviation_rad": 0.0006048406276562035,
+      "gripper_open": 0.9999635219573975,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2809",
+      "progress_m": 0.00149002392342658,
+      "orientation_deviation_rad": 0.000659219182339832,
+      "gripper_open": 0.9999637603759766,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2810",
+      "progress_m": 0.0014892052052648823,
+      "orientation_deviation_rad": 0.0006728201999728549,
+      "gripper_open": 0.9999637603759766,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2811",
+      "progress_m": 0.001482329509175023,
+      "orientation_deviation_rad": 0.0006677738693534204,
+      "gripper_open": 0.9999633431434631,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2812",
+      "progress_m": 0.00147284231067006,
+      "orientation_deviation_rad": 0.0006508929189800399,
+      "gripper_open": 0.9999633431434631,
+      "receipt_reason": "transit waypoint passed"
+    },
+    {
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+      "progress_m": 0.0014632017945683286,
+      "orientation_deviation_rad": 0.0006105133417526238,
+      "gripper_open": 0.9999635815620422,
+      "receipt_reason": "transit waypoint passed"
+    }
+  ],
+  "sim_seconds": 1.3333333333333333,
+  "execution_wall_seconds": 9.348494933001348,
+  "actual_displacement_norm_m": 0.025735955387012524,
+  "visual_review": "Assistant examined a current right or wrist image between every executed latch; final wrist image also inspected. No obvious worsening observed, not a contact or clearance certificate.",
+  "limitation": "Operator-supervised single-latch simulator execution. Image review time excluded; no hardware latency claim. Final transit context may remain pending; next phase must account for its1.46mm unachieved nominal endpoint, not assume controller reset."
+}
