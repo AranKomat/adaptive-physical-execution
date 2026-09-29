@@ -7,6 +7,21 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+NEWEST: `docs/AIMED_LIFT_20260930.md` records the integrated aiming/carry trial.
+Fresh episode d3645c724ce046aeab7dbd48580af359 reached 1213: 693-action assisted
+lift replay, bounded aimed camera inspection, fresh RGB-D feature selection and
+328-action elevated carry (1.957 mm final error). Card remains held; two
+post-carry reviews could not establish mating alignment. No descent/release.
+Worker PID 54862/session 19989, tunnel 14040, same local18767/remote8767.
+Old smooth-lift worker was explicitly ended after evidence preservation.
+Three fresh reviews $0.0632325; reserved calls 4361. Current eye [.65,.40,.65],
+gaze [.47224,.02803,.15]. Preserve held state. Camera gaze is now live-qualified;
+remaining issue is actual connector-edge/socket-axis localization, not merely
+camera command support. Carry executor added; 197 tests pass. These are partial
+integrated results, not autonomous assembly/recovery or insertion success.
+
+### Previous continuation (historical)
+
 Observation 885 revalidated after the timing-fix report, with no further motion.
 Bounded adjustable camera gaze is now implemented and software-tested but NOT
 loaded in the current worker. See `docs/CAMERA_AIM_20260930.md` for legal depth

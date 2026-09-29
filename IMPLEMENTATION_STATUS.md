@@ -4,6 +4,14 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Latest live trial: bounded camera aiming qualified, assisted lift replay
+  completed in 693 actions, fresh sensor-feature carry completed in 328 actions
+  with 1.957 mm final error. Final observation
+  d3645c724ce046aeab7dbd48580af359:1213, held, paused; no descent/release. Two
+  post-carry alignment reviews remain negative due to occluded mating features.
+  Three calls $0.0632325. Same-episode carry runner added; 197 tests pass. See
+  `docs/AIMED_LIFT_20260930.md`. This supersedes older current-worker notes below.
+
 - Bounded camera aiming added; live observation 885 revalidated without motion.
   Fixed gaze limits motherboard framing. New gaze path/readback tests pass;
   current process does not contain the change. Next explicitly fresh integrated

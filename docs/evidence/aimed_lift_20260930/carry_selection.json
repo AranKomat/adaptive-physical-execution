@@ -1,0 +1,24 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:821",
+  "decision": "carry_above_slot",
+  "held_feature": {
+    "camera": "left",
+    "pixel_uv": [
+      146,
+      151
+    ]
+  },
+  "slot_feature": {
+    "camera": "right",
+    "pixel_uv": [
+      314,
+      190
+    ]
+  },
+  "evidence": [
+    "The card is visibly suspended beneath the gripper, with a clear gap above the empty support stand.",
+    "The left view exposes the card's lower PCIe connector edge.",
+    "The right view exposes the motherboard's long PCIe socket beside the CPU area, distinct from the brightly colored RAM sticks."
+  ],
+  "uncertainty": "These are rough carry anchors. The connector is small in the left image; insertion alignment, clearance, and grasp stability are not certified. Move above the slot only, without descending."
+}

@@ -1,0 +1,8 @@
+{
+  "source": "/Users/macbookpro/Developer/random/gpu/adaptive_physical_execution/runs/aimed_lift_20260930_recordings/d3645c724ce046aeab7dbd48580af359",
+  "frames": 1214,
+  "view": "left",
+  "speed": 1.0,
+  "label": "SIMULATION | 1x simulated-time playback\nmodel waits excluded | grasp assist ON",
+  "time_model": "physics_paused_during_inference"
+}

@@ -1,0 +1,15 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1213",
+  "decision": "inspect",
+  "held_feature": null,
+  "slot_feature": null,
+  "alignment_evidence": [
+    "The right and wrist views show the graphics-card body, but do not reliably expose its bottom PCIe contact strip and key notch. Connector orientation cannot be checked.",
+    "A PCIe-like expansion-slot structure is partially visible in the lower foreground of the right view. Its identity as the matching socket and its relationship to the held connector are not established.",
+    "The illuminated green/cyan sticks are RAM, not the target socket. The striped motherboard surfaces and card fins are heatsinks; the case rim and card support are not socket features.",
+    "The left view is obstructed by the robot and case wall. The wrist view emphasizes the card PCB, cooler and gripper rather than the connector-to-socket interface.",
+    "Neither center alignment nor keyed orientation is verified. The preceding carry provides no visual evidence that the correct socket was selected."
+  ],
+  "uncertainty": "No reliable solid-surface pixel can be assigned to the held PCIe connector or a confirmed matching socket. Occlusion prevents checking the connector notch, socket key, corresponding endpoints and clearance; unobserved space must not be treated as clear.",
+  "suggested_next_observation": "Obtain an oblique side view exposing the card's bottom contact edge and notch, plus a clearer overhead motherboard view exposing the candidate PCIe socket's solid housing, key and ends. Prefer a view containing both features. Any observation repositioning requires separate clearance assessment; this review does not authorize insertion or descent."
+}
