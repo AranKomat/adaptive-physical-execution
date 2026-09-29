@@ -1,0 +1,112 @@
+{
+  "robot_offset_hand_m": [
+    0,
+    0,
+    0.1034
+  ],
+  "measurements": [
+    {
+      "observation_id": "a8fa8c5ff0534f19b7819e1d52a1eca4:72",
+      "nominal_pinch_world_m": [
+        0.22583470692817925,
+        -0.31133013416662375,
+        0.17831491891469753
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            160.04388757244806,
+            173.49561134255177
+          ],
+          "optical_depth_m": 1.2677179441851454,
+          "in_image": true
+        },
+        "right": {
+          "pixel_uv": [
+            442.2243315592034,
+            100.29917550607986
+          ],
+          "optical_depth_m": 1.3831458883679955,
+          "in_image": true
+        },
+        "wrist": {
+          "pixel_uv": [
+            224.84070160400486,
+            -41.245437532805674
+          ],
+          "optical_depth_m": 0.06740002589789978,
+          "in_image": false
+        }
+      }
+    },
+    {
+      "observation_id": "a8fa8c5ff0534f19b7819e1d52a1eca4:80",
+      "nominal_pinch_world_m": [
+        0.2351818416166082,
+        -0.3141840885201499,
+        0.1732362640218129
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            161.908462871531,
+            177.13590289290968
+          ],
+          "optical_depth_m": 1.2633076382704855,
+          "in_image": true
+        },
+        "right": {
+          "pixel_uv": [
+            438.38322675232075,
+            101.01540744159628
+          ],
+          "optical_depth_m": 1.3906233650534918,
+          "in_image": true
+        },
+        "wrist": {
+          "pixel_uv": [
+            224.84075587563572,
+            -41.24547912881652
+          ],
+          "optical_depth_m": 0.06740002405168544,
+          "in_image": false
+        }
+      }
+    },
+    {
+      "observation_id": "a8fa8c5ff0534f19b7819e1d52a1eca4:88",
+      "nominal_pinch_world_m": [
+        0.24673667012382286,
+        -0.29919671423661043,
+        0.19648716661871918
+      ],
+      "views": {
+        "left": {
+          "pixel_uv": [
+            168.98126240712247,
+            167.2972887832145
+          ],
+          "optical_depth_m": 1.2556523330056784,
+          "in_image": true
+        },
+        "right": {
+          "pixel_uv": [
+            434.099287979933,
+            94.85775759566494
+          ],
+          "optical_depth_m": 1.368001217239745,
+          "in_image": true
+        },
+        "wrist": {
+          "pixel_uv": [
+            224.84057870329187,
+            -41.24573154794789
+          ],
+          "optical_depth_m": 0.06740000858725737,
+          "in_image": false
+        }
+      }
+    }
+  ],
+  "limitation": "Nominal robot point projection only. In-frame does not imply visible/unoccluded; no target pose, contact, clearance, or grasp proof."
+}

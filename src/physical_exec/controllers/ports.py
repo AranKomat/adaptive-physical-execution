@@ -10,7 +10,7 @@ from typing import Protocol
 import numpy as np
 from ..contracts import ActionChunk, Observation, Usage
 from ..errors import InputRejected
-from ..geometry import quat_mul, rotvec_to_quat, unit_quaternion
+from ..geometry import quat_mul, rotvec_to_quat, unit_quaternion, pose_matrix
 from ..memory import ExecutionMemory, user_text, enforce_context_budget
 from ..providers.responses import ModelReply
 from ..safety import Limits
@@ -99,8 +99,11 @@ Robot motion alone is not task progress. For an approach, cite visible reduction
 hand-to-target separation or improved grasp alignment across views; a downward move
 by itself is insufficient. If that cannot be established, use execution_status='uncertain'.
 For repeated proposals that move away from the visible target, mark intent misaligned
-and stop or correct within the existing rules. If two completed chunks leave progress
-unassessable, stop for inspection rather than repeatedly labeling motion as progress.
+and stop or correct within the existing rules. Uncertainty during an open-gripper
+approach is not itself failure and has no fixed chunk-count stopping rule. Allow
+bounded self-correction within the run budget when the next motion is reasonable;
+stop for concerning motion or repeated observable lack of progress. Do not continue
+closed-gripper transport merely on an unverified grasp assumption.
 """
 
 
@@ -152,6 +155,15 @@ class ControllerPort:
         self.last_reply = None; self.last_proposal = None
         messages = self.memory.render(observation)
         prompt = BASE_PROMPT + ("\n" + HYBRID_GATE if self.mode == "hybrid" else "")
+        if observation.robot == 'franka' and observation.eef_frame == 'panda_hand':
+            # Pinned EmbodiedSWE robot pad-center convention, also used by its RL tasks.
+            pinch = (pose_matrix(observation.eef_pose) @ np.array([0., 0., .1034, 1.]))[:3]
+            prompt += ("\nRobot geometry: the nominal finger-pad pinch center is [0,0,0.1034] m"
+                       " in panda_hand coordinates, along hand-local +z, NOT world +z."
+                       " Current nominal pinch center world XYZ is " + dumps(pinch.tolist()) +
+                       ". This is computed from robot proprioception, not an object pose or contact measurement."
+                       " Hand-frame arrival, wrist-image proximity, and finger closure do not establish pad contact."
+                       " Use external views to assess whether the pads actually straddle the target before interpreting a lift test.")
         prompt += f"\nFor EEF commands: per-step Euclidean translation limit {self.limits.max_translation_m} m; rotation limit {self.limits.max_rotation_rad} rad."
         if self.mode == "hybrid":
             prompt += (f" Joint proposals instead have a per-joint target-step limit of {self.limits.max_joint_step_rad} rad."

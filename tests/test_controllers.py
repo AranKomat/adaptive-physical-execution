@@ -33,6 +33,20 @@ def test_hybrid_prompt_distinguishes_command_domains_and_progress(observation):
     build('hybrid', Inspect()).decide(observation)
 
 
+def test_franka_contact_geometry_is_robot_relative(observation):
+    class Inspect(FixtureProvider):
+        def act(self, instructions, *args, **kwargs):
+            assert 'hand-local +z, NOT world +z' in instructions
+            assert 'not an object pose or contact measurement' in instructions
+            from physical_exec.geometry import pose_matrix
+            from physical_exec.trace import dumps
+            expected = (pose_matrix(obs.eef_pose) @ np.array([0,0,.1034,1]))[:3]
+            assert dumps(expected.tolist()) in instructions
+            return super().act(instructions, *args, **kwargs)
+    obs = replace(observation, robot='franka', eef_frame='panda_hand')
+    build('hybrid', Inspect()).decide(obs)
+
+
 def gate_raw(obs,p,mode='eef',status='uncertain',intent='uncertain'):
     return {'observation_id':obs.key,'proposal_id':p.action.proposal_id,'mode':mode,'execute_steps':1,
             'assessment':{'execution_status':status,'intent_status':intent,'evidence':'visual report'},

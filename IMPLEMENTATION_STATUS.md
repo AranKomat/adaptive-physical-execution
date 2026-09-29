@@ -37,7 +37,7 @@
   paired endpoints. Earlier socket end_a had failed depth continuity; pre-grasp
   axis qualification was incomplete. Acquire higher-detail socket geometry before
   occlusion in the next trial. No additional motion was run in this review.
-- 148 CPU tests pass. They do not establish manipulation robustness.
+- 149 CPU tests pass. They do not establish manipulation robustness.
 - Higher-detail pre-grasp capture completed with zero control actions. Three
   housing-rail samples passed depth continuity (about 0.626 mm spread); sampling
   improved to about 0.80 mm/px. Internal key/gap still unresolved. Camera position
@@ -56,6 +56,11 @@
   supported; reviewer stopped, no verified grasp or success. Eight calls cost
   $1.08917125. Next inspect missed grasp and bounded recovery eligibility, not
   further blind transport. See `docs/HYBRID_GRASP_ATTEMPT_20260930.md`.
+- Robot-only projection audit places nominal pinch center outside the wrist
+  image (v=-41 px). Added explicit pad-center geometry to reviewer context.
+  Follow-up stopped after 32 actions under the fixed two-uncertain-chunk rule;
+  that rule was removed as an unjustified early cutoff, not a validator change.
+  Revised-rule live test remains next. See `docs/PINCH_VISIBILITY_20260930.md`.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and
