@@ -7,6 +7,12 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+Fresh guarded integrated replay completed the assisted grasp/lift recipe (590
+actions, closure/lift endpoint errors1.211/0.818mm) but native score stayed
+0.3333/grasp rung. Two fresh carry reviews and three bounded camera moves could
+not establish support clearance; no carry/descent/release. Useful negative
+result, not phase completion. See `GUARDED_INTEGRATED_REPLAY_20260930.md`.
+
 Recovered1800 scene-level review (minimal instruction, no source audit/evaluator
 input) recommends alignment and whole-envelope inspection before correction.
 Four selected pixels pass depth tests; sampled axes differ7.947deg, mostly yaw.

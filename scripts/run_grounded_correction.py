@@ -33,6 +33,8 @@ def main():
                         help='Use predeclared exploratory bounds for closure/lift only')
     parser.add_argument('--continuous-transit', action='store_true',
                         help='Pass intermediate same-phase waypoints without fixed settling holds')
+    parser.add_argument('--contact-tracking-guard', action='store_true',
+                        help='Require and attach the simulator contact tracking guard to stages')
     args = parser.parse_args()
     if not math.isfinite(args.lift_height) or not 0 < args.lift_height <= .23:
         raise ValueError('Lift height must be in (0, 0.23] m')
@@ -48,6 +50,8 @@ def main():
             raise ValueError('Requires opt-in simulator')
         if args.continuous_transit and not metadata.get('continuous_transit_enabled'):
             raise ValueError('Worker must be restarted with continuous-transit implementation')
+        if args.contact_tracking_guard and not metadata.get('contact_tracking_guard_enabled'):
+            raise ValueError('Worker must advertise the contact tracking guard')
         obs = decode_observation(client.call('/observe'))
         if obs.key != plan['observation_id']:
             raise ValueError('Target plan is not current; no automatic reset or retry')
@@ -111,6 +115,8 @@ def main():
             request.update(observation_id=obs.key, max_steps=64,
                            target_source=plan.get('target_source', 'unspecified target source')
                            + '; operator-defined correction; unknown clearance')
+            if args.contact_tracking_guard:
+                request['contact_tracking_guard'] = True
             envelope = dict(command_id=uuid4().hex, action=request)
             write_json(args.output/f'{index:02d}_request.json', envelope)
             result = decode_result(client.call('/local-stage', envelope, mutating=True))
