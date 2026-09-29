@@ -16,13 +16,19 @@ them with a smaller motion-only goal.
 - [x] Bounded manual sensor-target approach with local measured feedback and
   receipts reached 2.356 mm. Autonomous selection and general scene-change
   monitoring remain open; this is not a general qualified approach skill.
-- [ ] Inspect arrival once, then attempt grasp/lift and independently verify effect.
-  PARTIAL: Astra-selected RGB-D targets plus the OSC pilot produced an assisted
-  capture/lift, but hand attitude diverged by 2.591 rad. See
-  `SENSOR_OSC_PILOT_20260929.md`; do not proceed to insertion from that result.
+- [x] Inspect arrival once, then attempt grasp/lift and independently verify effect.
+  BOUNDED PILOT ONLY: fresh RGB confirms assisted lift; native DiffIK plus bounded
+  integral feedback reached the lift target within 1.945 mm / 0.02094 rad.
+  Initial model pixels were reused with fresh depth, and phases were operator-defined.
+  See `SENSOR_DIFFIK_PILOT_20260929.md`. This is not unassisted or end-to-end success.
 - [ ] Qualify FLUX before using it as an alternative local executor. Reviewing every
   short FLUX chunk with GPT is not sufficient to meet the call-efficiency objective.
 - [ ] Continue alignment/insertion, recovery and successful-trace reuse after capture.
+  Elevated carry passed (1.661 mm / 0.01778 rad). Post-carry model review could
+  not identify mating features; no insertion attempted. One bounded inspection
+  retrace passed but the second review still requested inspection. Pilot ended
+  without descent. Next localize the socket before carry occludes it; do not use
+  privileged reference slot coordinates to fill the gap.
 
 The unchanged earlier successful program passed a separate privileged replay:
 all stages through seating, release and clearance, 1,859 actions, no model calls.

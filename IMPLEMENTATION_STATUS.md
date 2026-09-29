@@ -1,5 +1,34 @@
 # Implementation status / next-agent handoff
 
+## Current experiment status (September 30 JST)
+
+- Native GPU simulation, robot FK, live Astra Flex calls and FLUX prediction/FK
+  qualification have run. Actual FLUX Hybrid manipulation remains untested.
+- Frozen privileged OSC reference replay succeeded through seating/release/retract
+  in 1,859 actions, zero calls. This is not nonprivileged success.
+- Sensor-target OSC captured/lifted with assistance but lost orientation (2.591 rad).
+- Native DiffIK preserved orientation but initially fell 99 mm short of lift.
+  Bounded translation integral plus a larger error cap then achieved a controlled
+  assisted lift (1.945 mm, 0.02094 rad) and elevated carry (1.661 mm, 0.01778 rad).
+- Nonprivileged insertion, completed task, adaptive recovery, matched mode comparisons
+  and experience reuse remain OPEN. Mating-feature visibility is the current issue,
+  not evidence that all motor control or perception problems are solved.
+- The bounded sensor pilot ended at 3,130 actions, held=true but task=false.
+  Two alignment reviews requested inspection; no insertion was attempted.
+  Its 74 MB trace is backed up locally, with compact public evidence and video.
+- Next: sensor-localize the socket before grasp/carry occludes it and retain
+  measured geometry through carry; do not substitute privileged reference poses.
+- 130 CPU tests pass. They do not establish manipulation robustness.
+
+See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
+[stage sequence](docs/STAGE_EXECUTION_20260929.md), and
+[privileged reference audit](docs/REFERENCE_TRANSFER_20260929.md).
+All sensor pilots retain grasp assistance and unknown swept clearance. They use
+operator-defined phase recipes and are not autonomous full-task success claims.
+
+## Original pre-GPU build snapshot
+
+The sections below record the original delivery, not current GPU progress.
 **Build:** 2026-09-29, version 0.1.0.
 
 ## Completed and tested on CPU

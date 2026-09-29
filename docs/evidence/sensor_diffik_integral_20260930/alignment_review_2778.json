@@ -1,0 +1,15 @@
+{
+  "observation_id": "a053fee6f9a943048737d3539dbb5cc4:2778",
+  "decision": "inspect",
+  "held_feature": null,
+  "slot_feature": null,
+  "alignment_evidence": [
+    "The held card is visible, but its bottom PCIe contact row and key notch cannot be reliably identified in these views.",
+    "The left view is substantially occluded by the robot and case. The right view shows the card above the case interior, but does not resolve a matching motherboard PCIe socket.",
+    "The wrist view shows a close, nearly edge-on PCB with adjacent finned hardware; it does not expose both the connector mating edge and the motherboard socket.",
+    "The bright parallel sticks in the right view are RAM, not evidence of a PCIe socket. Finned heatsinks, case walls, and the external gray card support must also be excluded.",
+    "Neither matching-feature center alignment nor connector orientation, including long-axis and key-notch compatibility, can be checked."
+  ],
+  "uncertainty": "Both required mating features remain unverified. Apparent placement over the case does not establish that the preceding carry selected the correct socket. No feature pixel is selected because no reliably identified mating surface with meaningful depth is available. Occluded space is not established to be clear.",
+  "suggested_next_observation": "Obtain complementary views: an oblique view beneath the held card exposing its PCIe contact row and key notch, and a clearer view into the motherboard exposing the candidate socket's solid housing, ends, and key location. Include enough motherboard context to distinguish PCIe from RAM slots and heatsinks. Any viewpoint change requires separate clearance assessment; this review does not authorize insertion or descent."
+}

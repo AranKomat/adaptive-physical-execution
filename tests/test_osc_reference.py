@@ -1,6 +1,7 @@
 import numpy as np
 import pytest
-from physical_exec.osc_reference import ReferenceOSC, validate_plan, ramped_target, motion_stop_reason
+from physical_exec.osc_reference import (ReferenceOSC, validate_plan, ramped_target, motion_stop_reason,
+                                         NativeDiffIKFeedback, phases_at_cadence)
 
 
 def test_reference_units_and_integral():
@@ -49,3 +50,24 @@ def test_ramp_and_stops():
     assert motion_stop_reason(a,b,np.zeros(7),limits) is None
     assert 'orientation' in motion_stop_reason(a,[0,0,.3,0,1,0,0],np.zeros(7),limits)
     assert 'joint limit' in motion_stop_reason(a,b,np.full(7,1.999),limits)
+
+
+def test_native_feedback_and_cadence():
+    c = NativeDiffIKFeedback(.02,.097)
+    a = c.command([0,0,.3,1,0,0,0],[.3,0,.3,1,0,0,0],.012)
+    np.testing.assert_allclose(a,[.5,0,0,0,0,0,.012,.012])
+    assert phases_at_cadence(plan(),1/48)[0]['actions'] == 576
+    assert phases_at_cadence(plan(),1/15)[0]['actions'] == 180
+    assert validate_plan(dict(observation_id='a',phases=[],finish=True),'a',0) == []
+    with pytest.raises(ValueError):
+        validate_plan(dict(observation_id='a',phases=[],finish=False),'a',10)
+
+
+def test_native_integral_feedback_is_bounded_and_time_scaled():
+    c = NativeDiffIKFeedback(.02,.097,control_dt=.02,integral_feedback=True)
+    a = c.command([0,0,.3,1,0,0,0],[.01,0,.3,1,0,0,0],.012)
+    assert a[0] == pytest.approx((.01+.525*.02*.01)/.02)
+    for _ in range(1000):
+        a = c.command([0,0,.3,1,0,0,0],[1,0,.3,1,0,0,0],.012)
+    assert a[0] == pytest.approx(1.5)
+    assert c.position_integral[0] == pytest.approx(.03)

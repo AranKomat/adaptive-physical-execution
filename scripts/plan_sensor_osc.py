@@ -20,6 +20,7 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--reuse-pixel-template', action='store_true',
                         help='Explicit fixed-fixture replay of prior pixel choice on fresh depth; not a fresh model decision')
+    parser.add_argument('--pause-after-grasp', action='store_true',help='leave the episode paused for visual review and a separate command')
     args = parser.parse_args()
     response = json.loads(args.response.read_text())
     state = json.loads((args.capture/'state.json').read_text())
@@ -61,7 +62,8 @@ def main():
         phases = [phase('sensor_descend',hand,.04,160),
                   phase('sensor_close',hand,.012,100),
                   phase('sensor_lift',hand+[0,0,.23],.012,180)]
-    value = dict(observation_id=state['observation_id'], phases=phases,finish=args.stage=='grasp',
+    value = dict(observation_id=state['observation_id'], phases=phases,
+                 reference_control_dt=1/15,finish=args.stage=='grasp' and not args.pause_after_grasp,
                  target_source=('cached Astra pixel template on fresh depth; fixed-fixture replay' if args.reuse_pixel_template
                                 else 'fresh Astra image pixel plus legal measured depth; operator-defined phase sequence'),
                  selector_observation_id=response['observation_id'],

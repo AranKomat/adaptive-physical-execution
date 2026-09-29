@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Bounded sensor-target OSC pilot, using file commands while physics is paused.
+"""Bounded sensor-target OSC/native-DiffIK pilot, with paused-world file commands.
 
 Not the standard IK/FLUX service and not a collision-certified controller.
 Only final evaluator output reads scene object state; planning captures exclude it.
@@ -22,10 +22,18 @@ def main():
     p.add_argument('--repo', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--task', type=Path, default=Path('configs/tasks/pc_gpu.json'))
-    p.add_argument('--ramp-targets', action='store_true', help='1.5 mm/action translation ramp; same final pose and gains')
+    p.add_argument('--ramp-targets', action='store_true', help='0.0225 m/s translation ramp at actual controller cadence')
+    p.add_argument('--controller', choices=['osc','diff_ik'], default='osc')
+    p.add_argument('--max-reference-actions', type=int, default=700, help='episode cap in 15 Hz action equivalents, at most 2000')
+    p.add_argument('--integral-feedback', action='store_true',help='native DiffIK bounded translation integral and 3 cm command cap')
+    p.add_argument('--pause-on-arrival-failure', action='store_true',help='nonterminal timeout only; unsafe motion stops stay terminal')
     from isaaclab.app import AppLauncher
     AppLauncher.add_app_launcher_args(p)
     args = p.parse_args()
+    if not 1 <= args.max_reference_actions <= 2000:
+        raise ValueError('invalid bounded episode budget')
+    if args.integral_feedback and args.controller != 'diff_ik':
+        raise ValueError('integral-feedback flag is for native DiffIK only')
     args.enable_cameras = True
     args.output.mkdir(parents=True, exist_ok=False)
     app = AppLauncher(args).app
@@ -33,7 +41,8 @@ def main():
     import torch
     from physical_exec.geometry import pose_error
     from physical_exec.imaging import png_bytes
-    from physical_exec.osc_reference import ReferenceOSC, validate_plan, ramped_target, motion_stop_reason
+    from physical_exec.osc_reference import (ReferenceOSC, NativeDiffIKFeedback, validate_plan,
+                                            phases_at_cadence, ramped_target, motion_stop_reason)
     from physical_exec.trace import write_json
     repo = args.repo.resolve()
     for path in (repo, repo / 'vla/eval', repo / 'data_engine', repo / 'vla/convert'):
@@ -57,7 +66,7 @@ def main():
         cfg.update_latest_camera_pose = True
         return cfg
     replay._camera_cfg = camera_cfg
-    sim = module.load_sim('assembly.pc_gpu.franka.osc', control_space=None,
+    sim = module.load_sim('assembly.pc_gpu.franka.'+args.controller, control_space=None,
                           size=tuple(task['image_size']), cams=tuple(task['camera_map'].values()), warmup=0)
     replay._camera_cfg = old_camera_cfg
     scene_cls.CAMERAS = old_cameras
@@ -97,18 +106,30 @@ def main():
                     camera_quaternion_world_wxyz_optical=array(data.quat_w_ros)[0].tolist(),
                     source='idealized legal RGB-D sensor; no object state'))
         return state
-    controller = ReferenceOSC()
-    result = dict(condition='sensor-target OSC pilot; exploratory unknown clearance; grasp assistance enabled',
+    control_dt = env.dt*env.robot.control_period
+    budget = round(args.max_reference_actions/(15*control_dt))
+    record_every = max(1,round((2/3)/control_dt))
+    native_cfg = env.robot.controller.controllers[0].cfg
+    controller = (ReferenceOSC() if args.controller == 'osc' else
+                  NativeDiffIKFeedback(native_cfg.pos_scale,native_cfg.rot_scale,
+                                       control_dt=control_dt,integral_feedback=args.integral_feedback))
+    result = dict(condition=f'sensor-target {args.controller} pilot; exploratory unknown clearance; grasp assistance enabled',
                   model_controls_targets=True, stages=[], success_claimed=False)
-    write_json(args.output / 'metadata.json', dict(episode=episode, control_dt=env.dt*env.robot.control_period,
-        controller='ported frozen Motion OSC gains', action_budget=700, frame_kind='sampled every 10 actions',
+    write_json(args.output / 'metadata.json', dict(episode=episode, control_dt=control_dt,
+        controller=('ported frozen Motion OSC gains' if args.controller=='osc' else 'native DiffIK with bounded absolute-target feedback'),
+        native_declared_control_dt=native_cfg.dt, physics_dt=env.dt,
+        integral_feedback=args.integral_feedback, pause_on_arrival_failure=args.pause_on_arrival_failure,
+        native_translation_command_cap_m=(.03 if args.integral_feedback else .01) if args.controller=='diff_ik' else None,
+        action_budget=budget, reference_action_budget_15hz=args.max_reference_actions,
+        frame_kind=f'sampled every {record_every} actions',
         camera_map=task['camera_map'], initial_warmup_actions=0, privileged_control_inputs=False,
         ramp_targets=args.ramp_targets, rotation_abort_rad=.35, joint_limit_margin_rad=.005))
     started = time.monotonic()
     try:
         state = capture()
-        for index in range(4):
-            write_json(args.output / 'ready.json', dict(command_index=index, **state))
+        for index in range(8):
+            write_json(args.output / 'ready.json', dict(command_index=index,
+                       last_stage=result['stages'][-1] if result['stages'] else None, **state))
             print('READY', index, state['observation_id'], flush=True)
             path = args.output / f'command_{index}.json'
             deadline = time.monotonic() + 1800
@@ -117,7 +138,9 @@ def main():
                     raise TimeoutError('No command within 30 minutes; no motion retry')
                 time.sleep(1)
             command = json.loads(path.read_text())
-            phases = validate_plan(command, state['observation_id'], 700-seq)
+            scaled_command = {**command,'phases':phases_at_cadence(command,control_dt)}
+            phases = validate_plan(scaled_command, state['observation_id'], budget-seq,
+                                   max_phase_actions=round(12/control_dt))
             with (args.output / 'robot_actions.jsonl').open('a') as log:
                 for phase in phases:
                     target = np.asarray(phase['hand_pose_world'])
@@ -129,7 +152,7 @@ def main():
                         stop = motion_stop_reason(state['hand_pose_world'],target,np.asarray(state['joints'])[sim.arm_ids],arm_limits)
                         if stop:
                             raise RuntimeError(stop)
-                        waypoint = ramped_target(phase_start,target,tick+1) if args.ramp_targets else target
+                        waypoint = ramped_target(phase_start,target,tick+1, .0225*control_dt) if args.ramp_targets else target
                         action = controller.command(state['hand_pose_world'], waypoint, phase['finger_position_m'])
                         env.step(torch.as_tensor(action[None], dtype=torch.float32, device=env.device))
                         seq += 1
@@ -139,16 +162,20 @@ def main():
                         stop = motion_stop_reason(state['hand_pose_world'],target,np.asarray(state['joints'])[sim.arm_ids],arm_limits)
                         if stop:
                             raise RuntimeError(stop)
-                        if seq % 10 == 0:
+                        if seq % record_every == 0:
                             capture(depth=False)
                     state = capture()
                     error = pose_error(state['hand_pose_world'], target)
                     row = dict(name=phase['name'], observation_id=state['observation_id'],
                                position_error_m=float(np.linalg.norm(error[:3])),
                                rotation_error_rad=float(np.linalg.norm(error[3:])))
+                    row['arrival_passed'] = row['position_error_m'] <= .02 and row['rotation_error_rad'] <= .15
                     result['stages'].append(row)
                     print('PHASE', json.dumps(row), flush=True)
-                    if row['position_error_m'] > .02 or row['rotation_error_rad'] > .15:
+                    if not row['arrival_passed']:
+                        if args.pause_on_arrival_failure and not command['finish']:
+                            print('ARRIVAL_TIMEOUT_PAUSED; remaining phases skipped',flush=True)
+                            break
                         raise RuntimeError('phase arrival failed; no automatic continuation')
             if command['finish']:
                 break
@@ -157,7 +184,7 @@ def main():
         traceback.print_exc()
     finally:
         capture()
-        result.update(actions=seq, wall_seconds=time.monotonic()-started)
+        result.update(actions=seq, simulated_seconds=seq*control_dt, wall_seconds=time.monotonic()-started)
         write_json(args.output / 'result.json', result)
         # Scoring only AFTER all control; never read by the command-generating path.
         write_json(args.output / 'evaluator_only.json', dict(

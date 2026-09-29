@@ -1,0 +1,19 @@
+{
+  "observation_id": "a053fee6f9a943048737d3539dbb5cc4:3130",
+  "decision": "inspect",
+  "held_feature": null,
+  "slot_feature": null,
+  "alignment_evidence": {
+    "left": "The card PCB is partly visible, but the robot and case obscure its lower mating edge and the motherboard socket region. No reliable connector-to-socket correspondence is visible.",
+    "right": "The elevated card body is visible above the case, but its bottom PCIe contacts and key notch are not resolved. The bright parallel sticks inside the case are RAM, not evidence of a PCIe socket. The case rim obscures much of the motherboard.",
+    "wrist": "The close view shows card PCB and heatsink surfaces, with only a cropped portion of the motherboard at the far left. The gray support on the tabletop is not a socket. Neither the card mating contacts nor a matching motherboard PCIe socket can be reliably identified.",
+    "orientation_check": "Not possible: the connector contact span and key notch, and the socket axis and matching key, are not jointly visible. Neither center alignment nor orientation is established."
+  },
+  "uncertainty": [
+    "The preceding carry does not establish that the card is above the correct socket.",
+    "No pixels are selected because no matching feature pair is reliably identifiable on visible solid surfaces.",
+    "No depth values are available in the supplied views to validate feature depth or separation.",
+    "Occluded motherboard regions and the space beneath the card must not be presumed clear."
+  ],
+  "suggested_next_observation": "Obtain an oblique underside view exposing the card's bottom PCIe contacts and key notch, plus an unobstructed top-oblique motherboard view exposing the candidate PCIe socket housing, longitudinal axis, key and latch. Include registered depth on visible solid connector and socket surfaces. Use camera-only viewpoint changes where possible; any robot repositioning requires separate clearance assessment. This review does not authorize insertion or descent."
+}
