@@ -1,5 +1,29 @@
 # Guarded lift and carry: current continuation
 
+## Latest1739: reviewed6cm nearer standoff arrived
+
+Used connector1547 endpoints propagated under explicit no-slip assumption and
+socket1675 measurements to propose one straight6cm descent. Paired horizontal
+offsets5.9/8.0mm and predicted remaining minimum gap77.401mm supported a review,
+not clearance. Current RGB plus historical connector view were supplied to
+Astra; it approved only the bounded closer look, with no insertion/retry.
+
+Actual request preserved measured attitude and exact previous grip command;
+64-action budget at15Hz,0.0225m/s ramp, native per-action tracking guard.
+At1739: strict arrival,2.696mm/0.001402rad error,4.267 simulated seconds,
+31.169 execution wall seconds; no guard stop. Approximate40 ramp actions plus
+24 tracking actions were declared in both proposal and review. This is a
+separate reviewed near-standoff condition, not the12cm-floor default compiler
+and not a replay of the earlier failed8cm command.
+
+Current image shows card closer to socket and apparently retained; it does not
+verify keyed alignment, no slip, physical remaining gap, contact or seating.
+No release. Next inspect actual near-state and update mating geometry before
+contact; do not convert predicted gap into measured clearance or phase success.
+
+Artifacts: `runs/guarded_full_lift_20261001_near_standoff1675`,
+`_near_standoff1675_review`, `_near_standoff1675_execution`, `_capture1739`.
+
 ## Latest1675: socket endpoints recovered using robot-aware view
 
 Offline robot-only check used measured joints and the kinematics-only URDF;

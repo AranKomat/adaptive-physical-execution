@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT1739: reviewed guarded6cm nearer standoff passed strict arrival
+(2.696mm/0.001402rad),64actions, no guard stop or retry. Image suggests retained
+card closer to socket, not seating. No insertion/release. See
+`docs/GUARDED_CARRY_CURRENT.md`; next inspect actual near-state before contact.
+
 CURRENT1675: robot-centerline-screened opposite view exposed socket endpoints.
 Two current socket depth samples valid. Historical1547 connector propagation
 predicts5.9/8.0mm paired horizontal offsets and~138mm vertical gap, conditional
