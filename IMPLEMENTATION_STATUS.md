@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+- Oblique-view sensor approach ran without Hybrid replay: 640 open-gripper
+  actions, ten endpoint passes, then pre-closure pause. Review supported rough
+  centering but still requested inspection for occluded far pad/support gap.
+  No closure or grasp attempt; two calls $0.06194875. Stop static-camera approach
+  repetitions; next bounded held-pose view or calibrated pad/surface reasoning.
+  See `docs/GRASP_OBLIQUE_20260930.md`. No phase newly completed.
+
 - Outcome-blind review of retained pre-closure images returned inspect: opposing
   contacts/centering not established. Added opt-in pre-closure pause, tested to
   issue no closing commands (167 CPU tests). No new physical success. Next use
