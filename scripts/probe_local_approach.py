@@ -19,14 +19,25 @@ def main():
     p.add_argument("--pixel", nargs=2, type=int, required=True)
     p.add_argument("--output", type=Path, required=True)
     p.add_argument("--execute", action="store_true")
+    p.add_argument("--continue-run", type=Path, help="explicit bounded extension of a completed approach")
     args = p.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     calibration = json.loads(args.depth.with_suffix(".json").read_text())
     point = surface_point(np.load(args.depth, allow_pickle=False), calibration, args.pixel)
     target = np.array(point["surface_point_world_m"]) + [0, 0, .30]
+    expected_id = calibration["observation_id"]
+    if args.continue_run:
+        previous = json.loads((args.continue_run / "result.json").read_text())
+        plan = json.loads((args.continue_run / "plan.json").read_text())
+        if previous["error"] is not None or previous["arrived"] or previous["executed_actions"] != 60:
+            raise ValueError("only a completed, unambiguous 60-action approach can be extended")
+        if not np.allclose(target, plan["target_hand_xyz"], atol=1e-10, rtol=0):
+            raise ValueError("extension target differs")
+        expected_id = previous["final_observation_id"]
     write_json(args.output / "plan.json", dict(measurement=point, target_hand_xyz=target.tolist(),
                standoff_world_z_m=.30, max_actions=60, max_seconds=120,
-               gpt_calls=0, selection="operator-selected visual pixel",
+               gpt_calls=0, selection="operator-selected visual pixel", expected_observation_id=expected_id,
+               continuation_of=str(args.continue_run) if args.continue_run else None,
                scope="SIMULATOR ONLY; unknown swept-volume clearance; approach not grasp"))
     if not args.execute:
         print("Plan saved; no commands issued."); return
@@ -35,7 +46,7 @@ def main():
     result = {"arrived": False, "error": None}
     try:
         obs = decode_observation(client.call("/observe"))
-        if obs.key != calibration["observation_id"]:
+        if obs.key != expected_id:
             raise ValueError("depth observation must exactly match current episode/step")
         if np.linalg.norm(target-obs.eef_pose[:3]) > .30:
             raise ValueError("target exceeds bounded approach distance")

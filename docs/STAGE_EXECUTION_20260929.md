@@ -78,3 +78,23 @@ execution receipts and budgets, not a general visual event detector. Do not depl
 it on hardware or represent it as a production stage executor. Next: bounded
 arrival completion and inspection, then grasp geometry/attempt; do not restart
 long GPT-Direct loops just to finish this transit.
+
+## Verified standoff arrival
+
+`runs/local_approach_settle_20260929` explicitly continued the same episode from
+observation `3cff69ee0d184428a33eb0af51fd1937:60`, preserving the target and all
+motion limits. The extension requires the previous run to have ended unambiguously
+at its 60-action cap and requires exact current observation identity; it is not
+an automatic retry after an unknown execution result.
+
+Arrival succeeded after 10 additional actions, at observation step 70: measured
+hand-target error 2.356 mm, below the unchanged 3 mm criterion. Extension wall
+time was 6.523 s. Combined transit: 70 actions, 4.667 simulated seconds, 44.148 s
+execution wall time excluding operator pause, zero GPT calls. No resets occurred.
+The inspected final left RGB image shows the open hand above the supported card.
+
+This completes the bounded manual-target standoff approach probe, not autonomous
+approach selection or manipulation. The conservative 0.30 m surface-to-hand
+offset is not a grasp-ready pose. Grasp placement/orientation, physical capture,
+task success, and stage-level model selection remain unverified. The continuation
+trace (including RGB replies) is backed up locally. 112 CPU tests still pass.
