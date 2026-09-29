@@ -7,6 +7,13 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+NEWEST: [guarded lift/carry continuation](GUARDED_CARRY_CURRENT.md) supersedes
+the older entries below. Explicit23cm lift707 actions and carry328 actions
+completed, with no guard stop. Held at1227; no insertion/release. A fresh
+history-aware review located the socket, but the connector is still occluded.
+The earlier open-gripper comparison was not configuration-matched and does not
+establish a payload cause. Full task/recovery phases remain incomplete.
+
 Fresh guarded integrated replay completed the assisted grasp/lift recipe (590
 actions, closure/5cm-lift endpoint errors1.211/0.818mm) but native score stayed
 0.3333/grasp rung. Two fresh carry reviews and three bounded camera moves could

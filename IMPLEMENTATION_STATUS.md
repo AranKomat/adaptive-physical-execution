@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: guarded explicit 23 cm lift (707 actions) and elevated carry (328
+actions) completed; same episode held at1227, no descent/release. History-aware
+review recovered the socket with two valid depth samples, but connector remains
+occluded. See [current evidence and corrected diagnosis](docs/GUARDED_CARRY_CURRENT.md).
+Older payload-baseline claims below are historical and superseded: robot
+configurations were not matched and the earlier stall cause is unresolved.
+
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
 - Fresh guard-enabled integrated replay completed operator-defined approach,
