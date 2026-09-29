@@ -1,5 +1,32 @@
 # Guarded lift and carry: current continuation
 
+## Latest state: PCB-side evidence at1483
+
+One diagnosis-driven elevated PCB-side camera move to eye[0.7,-0.3,0.55],
+gaze[0.478,0.028,0.19] passed preflight and64-action hold, ending1483.
+Arm error0.826mm/0.001947rad. This exposes PCB and a visible gold lower strip;
+it is materially different from the previous end-on/case-rim-occluded view.
+
+Fresh history-aware inventory selected connector pixels[287,180],[337,199]
+and socket pixels[320,278],[344,291]. All passed local3x3 depth-spread tests,
+but **the connector pair must not drive alignment**: first sample is
+[0.343404,0.144645,0.033624]m, while second is
+[0.498938,0.026555,0.176790]m. The first lies at near-motherboard height and
+contradicts the claimed raised contact-strip association. Locally smooth depth
+can belong to the wrong surface. The raw computed242mm separation/axis is not
+a measured card orientation and must not be interpreted as severe tilt.
+
+Socket samples are [0.478749,0.026893,0.037868]m and
+[0.511534,0.026979,0.037859]m,32.785mm apart, with2.128/2.039mm local spread.
+They support the retained socket housing association, not its gap centerline.
+No descent, rotation correction, insertion or release follows this inventory.
+Next selection must reconcile RGB feature identity with sensor depth and retained
+grasp history, rather than use either a raw smooth patch or the invalid pair.
+
+Local artifacts: `runs/guarded_full_lift_20261001_pcb_view`, `_capture1483_flat`,
+`_feature1483_review`, `_feature1483_measured.json`. The raw measurements are
+preserved, not edited to erase the contradictory sample.
+
 ## Latest state: model-selected camera at1419
 
 Added an observation-only `inspection_camera` prompt: actual legal calibration,

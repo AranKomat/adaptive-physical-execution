@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+NEWEST: held1483, elevated PCB-side view exposes contact strip. Fresh inventory
+has one depth-inconsistent connector association (smooth background patch), so
+its raw axis is unusable. Two socket rim samples remain consistent. No new
+descent/insertion; see `docs/GUARDED_CARRY_CURRENT.md` for exact evidence.
+
 LATEST: episode held at1419. One model-selected camera path passed preflight
 and execution, but view is edge-on and case-rim occluded; no connector sample,
 descent, insertion or release. See `docs/GUARDED_CARRY_CURRENT.md`.
