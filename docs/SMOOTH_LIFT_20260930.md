@@ -71,3 +71,35 @@ model waits excluded, grasp assistance labeled). Current state is observation
 `13b72700c14b45ecaca1f7e32103ae78:757`, held, paused, right view occluded.
 Public receipts/images and local selected RGB-D/logs are preserved; complete
 multi-view recordings remain on the host. This is not full assembly or recovery.
+
+## Next observation action (predeclared)
+
+From observation 757, raise only the idealized camera from (0.60,-0.35,0.70)
+to (0.60,-0.35,1.15) m over 64 hold actions: 0.45 m / 4.267 seconds, below
+0.12 m/s. This tests whether a substantially elevated viewpoint clears the
+nearby surface seen at roughly 10 cm depth. It does not assert the exact
+occluder or certify the camera path. Keep fixed gaze/focal, arm pose and prior
+gripper command; inspect the image and retention before any model call or
+subsequent movement. No automatic retry, carry or insertion.
+
+Observation 821: camera raise completed, arm error 1.019 mm / 0.002540 rad.
+Right view now contains the robot and motherboard instead of the gray surface;
+left view still shows suspension. Lower motherboard is cropped. Next single
+observation action raises the same camera to (0.60,-0.35,1.55) m over 64 holds,
+0.40 m displacement, to widen coverage. Same gaze/focal/grip; no carry yet.
+
+## Latest recorded state
+
+Observation 885: second raise completed in 64 actions / 30.776 wall seconds,
+with arm error 1.017 mm / 0.002532 rad. Eye [0.60,-0.35,1.55], fixed gaze
+[0.22,-0.34,0.20]. Full motherboard is visible but small. Independent review
+returned `inspect`: the card remains suspended above the empty stand, but no
+reliable PCIe socket pixel was identified. No carry, insertion or release was
+issued. This supersedes the observation-757 state above.
+
+Review cost $0.031065; two current-episode reviews total $0.0505175. Evidence:
+`evidence/smooth_lift_20260930/camera_high.png`, `camera_overview.png` and
+`overview_review.json` in the same directory. Next obtain a closer, correctly
+aimed socket view using legal observations, not privileged geometry. Raising
+further would worsen resolution. Preserve the held episode; camera gaze changes
+are not supported by the running worker. Complete recordings remain remote.

@@ -7,20 +7,20 @@ Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRE
 - Continuous transit live-qualified in a fixed-fixture assisted lift: 693 versus
   896 actions, 46.200 versus 59.733 sim seconds, 310.724 versus 400.042 execution
   seconds. Final 2.351 mm, clear_lift review, one call $0.0194525. Subsequent
-  camera move held the arm within 1.021 mm and reached its eye target, but the
-  view is gray/occluded (median depth 10.45 cm). No carry or insertion. Current
-  episode 13b72700c14b45ecaca1f7e32103ae78:757. See `docs/SMOOTH_LIFT_20260930.md`.
+  camera raises cleared the initial gray occlusion, but the socket is still
+  unresolved at the overview scale. No carry or insertion. Last recorded
+  episode 13b72700c14b45ecaca1f7e32103ae78:885. See `docs/SMOOTH_LIFT_20260930.md`.
 
 - Added opt-in continuous transit to remove artificial holds at intermediate
   same-phase waypoints while retaining closure/final settling. Controller state
   persists across joins, actual action counts are recorded, guards remain.
-  184 tests pass; native timing/retention validation pending. Current held worker
-  unchanged. See `docs/CONTINUOUS_TRANSIT_20260930.md`.
+  184 tests pass; native timing/retention validation completed as above.
+  See `docs/CONTINUOUS_TRANSIT_20260930.md`.
 
 - Independent inspection camera is now ported into opt-in local stages, with
   arm-hold/unchanged-gripper checks and camera readback failure stops. Software
-  tests only; not loaded into the paused live episode. Next explicitly fresh
-  camera-enabled worker and held-state view qualification. No phase completed.
+  and live held-state translation tests passed; useful close socket viewing
+  remains unresolved. No assembly phase completed by camera movement.
   See `docs/INTEGRATED_INSPECTION_CAMERA_20260930.md`.
 
 - Current held-state inspection planning declined a <=5 cm non-descending hand

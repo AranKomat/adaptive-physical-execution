@@ -13,15 +13,19 @@ cached pixel templates declared. Strict final error 2.351 mm; separate review
 confirmed clear_lift, costing $0.0194525. Grasp assistance remains on. Video:
 `docs/evidence/smooth_lift_20260930/lift_1x.mp4`.
 
-The integrated camera then moved while holding the arm: eye readback passed,
-arm error 1.021 mm, but the view is gray/occluded (finite median depth 10.45 cm).
-Useful socket observation remains unresolved; no carry/insertion followed.
+The integrated camera then moved while holding the arm. The first view was
+gray/occluded; two raises cleared it and exposed the full motherboard, but the
+socket remains unresolved at this scale. Final arm error 1.017 mm. Independent
+review returned inspect, with the card still suspended; no carry/insertion.
 Current live worker session 5966, loopback port 18767 -> remote 8767; current
-episode/observation `13b72700c14b45ecaca1f7e32103ae78:757`. The prior episode was
+episode/observation `13b72700c14b45ecaca1f7e32103ae78:885`. The prior episode was
 ended explicitly to load the new worker; do not attempt to resume its IDs.
 New protocol/evidence: `docs/SMOOTH_LIFT_20260930.md`. Next improve the camera
 view in this held episode using legal geometry, without repeating the lift.
-Latest shared reserved-call count: 4,357; recheck ledger before any new call.
+Camera eye is [0.60,-0.35,1.55], with fixed gaze [0.22,-0.34,0.20]. A closer,
+properly aimed view is needed; do not carry toward a guessed socket. Latest
+review cost $0.031065; current episode's two reviews total $0.0505175.
+Latest shared reserved-call count: 4,358; recheck ledger before any new call.
 
 Repository: https://github.com/AranKomat/adaptive-physical-execution
 

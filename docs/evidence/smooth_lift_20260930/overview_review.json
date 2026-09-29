@@ -1,0 +1,14 @@
+{
+  "observation_id": "13b72700c14b45ecaca1f7e32103ae78:885",
+  "decision": "inspect",
+  "held_feature": {
+    "camera": "left",
+    "pixel_uv": [
+      149,
+      153
+    ]
+  },
+  "slot_feature": null,
+  "evidence": "The card is visibly suspended above the empty support stand, with a clear gap beneath its bottom connector edge. The motherboard is visible inside the chassis, but I cannot reliably identify a solid center pixel on the matching PCIe socket.",
+  "uncertainty": "The socket is difficult to distinguish from adjacent dark motherboard structures at this scale and angle. Obtain a closer, unobstructed motherboard view before carrying toward the slot."
+}
