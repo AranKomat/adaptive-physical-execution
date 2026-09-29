@@ -15,6 +15,10 @@ plumbing does not change the main research hypothesis.
 - [x] Install a separate Python 3.11.14 CPU environment (`.venv-cpu`).
 - [x] Reproduce all 86 tests: 86 passed in 4.30 seconds on this Mac.
 - [x] Run all three software-fixture smoke modes successfully.
+- [x] Fetch all four pinned upstream repositories and verify audited Git blobs.
+- [x] Run the supplied release verifier after source preparation.
+- [x] Compile the package, scripts, and relevant pinned Python source trees.
+- [x] Verify the public CPU CI workflow completed successfully on the first push.
 
 The system Python 3.14 environment failed during ensurepip; the separate
 Python 3.11 environment works. Generated environments and runs are ignored.
@@ -23,50 +27,63 @@ Local smoke output: `runs/local_cpu_smoke_20260929/`.
 
 ## Priority 1: source and integration review (CPU, no paid calls)
 
-- [ ] Fetch the four pinned upstream repositories using
-  `scripts/bootstrap_upstreams.py --execute`; verify commits and audited blobs
-  with `--verify-only`. Keep them in ignored `upstream/` directories.
-- [ ] Check licenses and redistribution conditions for each selected checkpoint,
-  encoder, asset and dependency. Preserve source provenance.
-- [ ] Compare the real pinned APIs with both workers: imports, constructor
-  arguments, return types, checkpoint layouts and expected config files.
-- [ ] Inspect the actual Franka URDF: root and hand frames, joint ordering,
-  joint limits, quaternion convention, gripper aperture and FK/IK mapping.
-- [ ] Confirm simulator joint-PD execution timing against FLUX's training action
-  rate and chunk semantics. Record any mismatch before interpreting behavior.
-- [ ] Verify FLUX's required image sizes, three-view ordering, preprocessing,
-  state normalization, encoder dependencies and gripper convention from source.
-- [ ] Review actor observation construction and prompt serialization for hidden
-  object poses, native success scores, scene metadata and evaluator leakage.
-- [ ] Review shutdown, request timeout, partial execution, stale observation and
-  duplicate-command handling against real worker behavior, supplementing mocks
-  where evidence reveals gaps.
+- [x] Fetch and verify the four pinned upstream repositories. Results are in
+  ignored `upstream/` directories and the exact commits are recorded in
+  `upstream.lock.json`.
+- [x] Inspect project licenses and notices. RoboICL is MIT, EmbodiedSWE is
+  Apache-2.0, and the other project code retains its upstream terms. The FLUX
+  checkpoint has a separate FLUX Kommunity License; its commercial/production
+  and robotics-use terms must be reviewed before using it beyond research.
+- [x] Compare the pinned APIs with both workers. The FLUX adapter matches the
+  pinned `FluxActionPolicy.from_pretrained` / `prepare_inference` /
+  `predict_action_chunk` interface. The simulator adapter matches the pinned
+  `load_sim` / `EvalSim` contract. Runtime imports remain GPU-environment gates.
+- [x] Inspect the pinned Franka URDF and robot source: the adapter requires the
+  seven `panda_joint1` through `panda_joint7` order, uses `panda_hand`, and
+  validates FK against the simulator at reset.
+- [x] Record the timing mismatch as an explicit experiment condition: FLUX DROID
+  data is 15 Hz and emits 32 absolute joint targets; the adapter requests the
+  simulator at 15 Hz, but this has not yet been physically qualified.
+- [x] Verify FLUX's source contract: three separate `wrist/left/right` RGB inputs
+  at `360x640`, seven joint radians plus closed gripper fraction, absolute
+  joint output, and external encoder references. The adapter converts gripper
+  closedness to the package's open-fraction convention exactly once.
+- [x] Review the actor observation and prompt boundary. Only task text, supplied
+  RGB, joints, EEF/aperture, timing, receipts, and robot-only FK enter policy
+  context; evaluator success/progress and object coordinates stay host-side.
+- [x] Review shutdown, timeout, partial-execution, stale-observation, duplicate
+  command, and ambiguous-execution handling. CPU tests cover these contracts;
+  simulator timing and process shutdown remain GPU validation gates.
 
 Stop here to fix concrete integration defects; do not use extra component tests
 as a substitute for the eventual simulator experiment.
 
 ## Priority 2: reproducibility and experiment preparation (CPU)
 
-- [ ] Record resolved CPU dependency versions and verify wheel installation in
-  a fresh environment; confirm bundled third-party license inclusion.
-- [ ] Check GitHub CI on Python 3.11, 3.12 and 3.13.
-- [ ] Exercise capture/probe/report/compare/trace CLI paths using fixtures where
-  supported, and inspect the generated HTML and video labels.
-- [ ] Dry-run a small campaign; confirm unique output directories, seeds, budgets,
-  exact model/effort settings and cleanup of owned worker processes.
-- [ ] Write the initial experiment matrix: one `pc_gpu` capture, three Direct-A
-  decisions, FLUX proposal-only probe, then a bounded Hybrid trial.
-- [ ] Predefine success via the native evaluator, maximum decisions/control
-  steps/wall time, failure categories, and recovery without a reset.
-- [ ] Specify matched task/seed/observation/control budgets for later Direct-A,
-  Direct-B and Hybrid comparisons; record unavoidable context differences.
-- [ ] Plan the memory comparison after a verified successful trace exists:
-  interaction memory versus reference demonstrations, including geometry shift.
-- [ ] Prepare the demo storyboard and report fields: simulated time, wall time,
-  model wait, calls, cached/uncached tokens, interventions and grasp assistance.
-- [ ] Define the backup manifest and resume procedure before the next rental:
-  source revision, dependency versions, configs, model identifiers/checksums,
-  run artifacts and important uncommitted changes; exclude credentials.
+- [x] Record resolved CPU dependency versions in the local 3.11 environment;
+  the wheel install and bundled RoboICL license were verified.
+- [x] Check CI coverage. Python 3.11 and 3.13 were run locally (`86 passed`);
+  the pushed GitHub workflow completed successfully and covers 3.11, 3.12, 3.13.
+- [x] Exercise fixture smoke, trace verification, HTML report regeneration,
+  comparison export, doctor, compile, and release-verification paths. Capture
+  and FLUX probe require the GPU workers by design.
+- [x] Dry-run a two-case `pc_gpu` campaign. It records two cases, medium effort,
+  seed 0, 100 maximum model decisions, and 900 seconds per case without API or
+  simulator startup.
+- [x] Record the initial experiment matrix in `RUNBOOK.md`: capture, three
+  Direct-A decisions, proposal-only FLUX, then bounded Hybrid.
+- [x] Define the initial native-evaluator success boundary, budgets, failure
+  classes, no-reset recovery requirement, and host-only evaluator reporting.
+- [x] Specify matched task/seed/observation/control budgets and context
+  differences in the runbook and task/controller configs.
+- [x] Specify the future interaction-memory versus reference-demonstration
+  comparison, including geometry shift and the requirement for a native success
+  before a trace can be reused.
+- [x] Prepare the demo fields and labels: simulated/wall time, model wait,
+  calls, cached/uncached/reasoning tokens, interventions, and grasp assistance.
+- [x] Define backup and resume requirements in the runbook and operator
+  checklist: source revisions, environment versions, configs, model IDs and
+  hashes, artifacts, and no credentials.
 
 ## Optional before GPU: live API and artifact staging
 
@@ -78,13 +95,19 @@ none requires a GPU. No paid calls have been made by this import.
 - [ ] Use retained, appropriately labelled images to inspect visual inputs and
   prompt formatting. This can assess recognition/schema behavior, not control.
 - [ ] Verify budget accounting, timeouts and provider errors against that endpoint.
-- [ ] Identify the exact FLUX DROID BF16 checkpoint and all referenced encoders;
-  estimate download/disk size and memory requirements from source/model metadata.
-- [ ] Download approved weights/assets ahead of time if storage and transfer
-  location make it worthwhile; record hashes. Loading them is still unverified.
-- [ ] Prepare separate Linux simulator and FLUX install commands or build recipes,
-  using the pinned dependency versions. Mac tests cannot validate CUDA/Isaac.
-- [ ] Prepare SSH forwarding and secret injection templates without embedded keys.
+- [x] Identify the exact FLUX DROID checkpoint and referenced encoder model from
+  the pinned docs. Hugging Face metadata reports approximately 13.9 GB for the
+  default/GD weights and 7.1 GB for the FP8r/GD-FP8r variants. The model card
+  reports the FLUX Kommunity License; no license acceptance or weight download
+  was performed.
+- [ ] Download approved weights/assets ahead of time. This is optional and
+  remains deliberately deferred until the license/use choice and target Linux
+  cache location are settled; hashes can then be recorded.
+- [x] Prepare separate Linux simulator and FLUX install commands in `RUNBOOK.md`.
+  The pinned FLUX project requires Python 3.12 and CUDA 12.8 wheels on Linux;
+  EmbodiedSWE and the orchestrator remain separate environments.
+- [x] Prepare SSH forwarding and secret-injection commands in `RUNBOOK.md`; no
+  keys or tokens are embedded in source, logs, or the public repository.
 
 ## Requires the GPU host
 
