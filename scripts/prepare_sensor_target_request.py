@@ -16,7 +16,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'feature_inventory', 'contact_recovery'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'inspection_camera', 'feature_inventory', 'contact_recovery'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     p.add_argument('--prior-carry-capture', type=Path)
@@ -175,6 +175,29 @@ def main():
             'Motion remains exploratory with unknown clearance, not safety-certified. '
             '\nRobot-only state: '+json.dumps(state)+
             '\nCurrent sensor calibration: '+json.dumps(calibrations))
+    if args.stage == 'inspection_camera':
+        calibrations = {role: json.loads((args.capture/f'{role}_calibration.json').read_text())
+                        for role in ('left','right','wrist')}
+        if any(c['observation_id'] != state['observation_id'] for c in calibrations.values()):
+            raise ValueError('Inspection camera geometry is stale')
+        prompt = (
+            'Choose ONE informative view of the held graphics card lower PCIe contact edge. '
+            'The right camera is an explicitly controllable idealized simulator camera; left and '
+            'wrist cameras remain fixed relative to their mounts. The arm and gripper will HOLD, '
+            'not translate or rotate. Current right view shows the cooler side and does not expose '
+            'the lower mating edge. Avoid another nearby cooler-side view that repeats this failure. '
+            'Use current RGB, robot pose and measured camera calibration to choose a different '
+            'line of sight. Do not use hidden object geometry or assume generic card dimensions. '
+            'Return JSON: observation_id, decision (move_camera/hold), eye_world_m, gaze_world_m '
+            '(three-number vectors or null), expected_visible_feature, evidence, uncertainty. '
+            'Allowed eye bounds: x[0,1], y[-0.7,0.7], z[0.3,1.6] meters. A straight camera path '
+            'over64 actions at15Hz must move at most0.512m, at most0.12m/s and turn at most '
+            '0.35rad/s. Keep eye at least0.1m from gaze; avoid a vertical look-at singularity. '
+            'A deterministic preflight will reject infeasible paths. This camera has no collision '
+            'body; this is not a hardware clearance claim. Choose hold if no informative feasible '
+            'view can be justified. Do not require the socket and connector in the same image. '
+            '\nRobot-only state: '+json.dumps(state)+
+            '\nCurrent legal sensor calibration: '+json.dumps(calibrations))
     content = [{'type': 'text', 'text': prompt}]
     if args.stage=='contact_recovery':
         if args.contact_receipt is None:
@@ -224,8 +247,8 @@ def main():
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
                         {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
     if args.prior_carry_capture or args.prior_carry_response:
-        if args.stage not in ('feature_inventory','correspondence') or not (args.prior_carry_capture and args.prior_carry_response):
-            raise ValueError('carry history requires feature inventory/correspondence and both prior inputs')
+        if args.stage not in ('feature_inventory','correspondence','inspection_camera') or not (args.prior_carry_capture and args.prior_carry_response):
+            raise ValueError('carry history requires feature inventory/correspondence/camera inspection and both prior inputs')
         old_state = json.loads((args.prior_carry_capture/'state.json').read_text())
         old_response = json.loads(args.prior_carry_response.read_text())
         old_episode, old_seq = old_state['observation_id'].rsplit(':', 1)

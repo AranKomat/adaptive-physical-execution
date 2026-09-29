@@ -62,7 +62,7 @@ def test_feature_inventory_separates_localization_from_alignment(tmp_path):
 
 
 @pytest.mark.parametrize('old_id,accepted',[('e:1',True),('other:1',False),('e:12',False)])
-@pytest.mark.parametrize('stage',['feature_inventory','correspondence'])
+@pytest.mark.parametrize('stage',['feature_inventory','correspondence','inspection_camera'])
 def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage):
     current, old = tmp_path/'current', tmp_path/'old'
     for path, obs in ((current,'e:12'),(old,old_id)):
@@ -70,6 +70,7 @@ def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage
         (path/'state.json').write_text(json.dumps({'observation_id':obs}))
         for role in ('left','right','wrist'):
             (path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+            (path/f'{role}_calibration.json').write_text(json.dumps({'observation_id':obs}))
     response = tmp_path/'response.json'
     response.write_text(json.dumps(dict(observation_id=old_id,decision='carry_above_slot',
                                        slot_feature=dict(camera='right',pixel_uv=[20,30]))))
@@ -82,6 +83,9 @@ def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage
     if accepted:
         content = json.loads(output.read_text())[0]['content']
         assert sum(item['type']=='image_url' for item in content)==4
+        if stage=='inspection_camera':
+            assert 'The arm and gripper will HOLD' in content[0]['text']
+            assert '0.512m' in content[0]['text']
         assert 'do not silently switch' in content[-2]['text']
         assert 'NOT a current observation' in content[-2]['text']
     else:

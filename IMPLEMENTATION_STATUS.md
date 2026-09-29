@@ -2,6 +2,10 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: episode held at1419. One model-selected camera path passed preflight
+and execution, but view is edge-on and case-rim occluded; no connector sample,
+descent, insertion or release. See `docs/GUARDED_CARRY_CURRENT.md`.
+
 NEWEST: same held episode now1355 after reviewed8cm closer-standoff attempt.
 64-action budget ended4.306mm short; no guard stop, retry, insertion or release.
 Candidate/executor duration mismatch is fixed for future reviewed standoffs;

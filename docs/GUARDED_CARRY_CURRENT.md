@@ -1,5 +1,31 @@
 # Guarded lift and carry: current continuation
 
+## Latest state: model-selected camera at1419
+
+Added an observation-only `inspection_camera` prompt: actual legal calibration,
+held-arm constraint, bounded idealized right-camera motion, same-episode carry
+history. The older `inspection_motion` prompt assumes fixed external cameras
+and must not be used to select this controllable sensor's position.
+
+First Astra medium call exhausted2048 output tokens entirely on reasoning,
+returned null content, and was rejected ($0.06774625). No proposal was recovered
+from reasoning. A separate4096-token request returned a valid proposal
+($0.0605375). The private budgeted launcher now supports this explicit visual
+output cap and rejects incomplete/null responses before JSON decoding; reserve
+accounting uses the requested cap. Existing holds remain unchanged.
+
+Model-selected eye[0.91,-0.005,0.30], gaze[0.47,0.055,0.205] passed deterministic
+translation/angular preflight.64 hold actions completed to1419, arm error
+0.829mm/0.001954rad. **Visibility failed:** current right image is nearly
+edge-on, with lower card obscured by the case rim. It does not yield a connector
+measurement or authorize descent. No insertion/release. Stop repeating nearby
+view guesses; a further action must account for this specific occlusion and the
+retained feature history, not merely ask again for a camera pose.
+
+Artifacts: `runs/guarded_full_lift_20261001_camera_choice_4096`,
+`_model_camera_execution`, `_capture1419`.227 CPU tests pass, including
+camera-request same-episode history binding. This is not task-phase completion.
+
 ## Standoff execution correction
 
 The history-based standoff planner now declares `local_stage_continuous` and
