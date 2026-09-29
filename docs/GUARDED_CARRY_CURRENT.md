@@ -1,5 +1,25 @@
 # Guarded lift and carry: current continuation
 
+## Latest1611: retained connector endpoints, socket view blocked
+
+Closer1547 correspondence review located both connector ends and reported a
+visible notch. Selected right pixels end_a[383,215], end_b[261,157] deproject to
+[0.519965,0.026042,0.177361] and [0.436830,0.026061,0.175307]m,
+83.160mm apart; depth spreads1.727/2.155mm. These are retained observations,
+not fresh1611 measurements. Socket endpoints remained null; overall decision
+inspect. No alignment correction, descent, insertion or release was authorized.
+
+One motherboard-facing camera move to eye[0.58,-0.15,0.70], gaze
+[0.478,0.028,0.038] completed64 actions, ending1611 with0.824mm/0.001938rad
+hold error. **View failed:** forearm blocks most of the board. No model call
+was spent on the obstructed image. Do not repeat target-only camera guesses;
+robot self-occlusion must inform the next view. The geometric pose-path bounds
+check motion feasibility, not visibility. Connector endpoints and historical
+socket association remain retained; physical task remains incomplete.
+
+Evidence: `_correspondence1547_review`, `_correspondence1547_measured.json`,
+`_socket_top_view`, `_capture1611`, under `runs/guarded_full_lift_20261001`.
+
 ## Latest: corrected association, closer capture1547
 
 Current-observation depth feedback led Astra to replace the bad1483 connector

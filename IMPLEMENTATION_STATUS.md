@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT1611: connector endpoints measured at1547 (83.160mm separation, notch
+reported visible), socket endpoints unresolved. Subsequent board-facing camera
+view is forearm-occluded; no model call or descent on that view. Next viewpoint
+must account for robot self-occlusion; see `docs/GUARDED_CARRY_CURRENT.md`.
+
 LATEST1547: depth feedback corrected the bad connector association at1483;
 rough axes1.095deg apart, sampled gap140.373mm. Endpoint correspondence still
 unresolved. Closer PCB-side camera capture1547 is local for the next check;
