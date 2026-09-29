@@ -8,6 +8,30 @@ from physical_exec.errors import InputRejected
 from physical_exec.backends.fixture import FixtureEnvironment
 from physical_exec.transport import EnvironmentService
 from physical_exec.contracts import ActionChunk
+from physical_exec.geometry import pose_error, quat_mul, rotvec_to_quat
+from physical_exec.osc_reference import ramped_pose_target
+
+
+def test_pose_ramp_supports_bounded_world_rotation():
+    start = np.r_[.1, -.2, .4, rotvec_to_quat([.2, -.4, .1])]
+    target = np.r_[start[:3]+[.05, 0, 0],
+                   quat_mul(rotvec_to_quat([0, .25, 0]), start[3:])]
+    previous = start.copy()
+    for step in range(1, 65):
+        current = ramped_pose_target(start, target, step, .0015, .004)
+        change = pose_error(previous, current)
+        assert np.linalg.norm(change[:3]) <= .0015+1e-12
+        assert np.linalg.norm(change[3:]) <= .004+1e-12
+        previous = current
+    assert np.linalg.norm(pose_error(previous, target)) < 1e-12
+
+
+@pytest.mark.parametrize('step,linear,angular', [(0,.0015,.004), (True,.0015,.004),
+                         (1,0,.004), (1,.0015,float('nan')), (1,.0015,.02)])
+def test_pose_ramp_rejects_invalid_rates(step, linear, angular):
+    pose = [0,0,.4,1,0,0,0]
+    with pytest.raises(ValueError):
+        ramped_pose_target(pose, pose, step, linear, angular)
 
 
 def request(obs):

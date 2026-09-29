@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+- Latest same-episode Hybrid -> RGB-D correction attempted: 74 FLUX actions,
+  then one fresh target call and a successful 5 cm local retract (1.582 mm error).
+  Rotation failed before confirmed action due to a translation-only ramp inside
+  the pose bridge. Halted without retry; no grasp. Fixed with bounded pose ramp,
+  166 CPU tests pass; fresh GPU validation is next. Nine calls cost $0.92563625.
+  See `docs/HYBRID_GROUNDED_20260930.md`. No experiment phase completed by this fix.
+
 - Native GPU simulation, robot FK, live Astra Flex calls and FLUX prediction/FK
   qualification have run. First bounded FLUX Hybrid execution now ran: three
   accepted chunks, 24 joint actions, zero rejections, no grasp/task success.

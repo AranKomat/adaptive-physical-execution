@@ -203,7 +203,7 @@ class EmbodiedSWEEnvironment:
         if self.current is None or self._poisoned:
             raise InputRejected('local stage requires an initialized, unpoisoned worker')
         from ..local_stage import validate_local_stage
-        from ..osc_reference import NativeDiffIKFeedback, ramped_target, motion_stop_reason
+        from ..osc_reference import NativeDiffIKFeedback, ramped_pose_target, motion_stop_reason
         target = validate_local_stage(value, self.current)
         import torch
         from robobench.controllers.diff_ik import DiffIKController, DiffIKControllerCfg
@@ -221,7 +221,8 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(state.eef_pose, target, state.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
-                waypoint = ramped_target(before.eef_pose, target, index+1, .0225*state.control_dt)
+                waypoint = ramped_pose_target(before.eef_pose, target, index+1,
+                                              .0225*state.control_dt, .06*state.control_dt)
                 raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
                 q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
                                                                device=self.sim.env.device)))[0]

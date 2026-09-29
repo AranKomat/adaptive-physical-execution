@@ -4,7 +4,7 @@ Simulator pilot only: these gains and native action units are not hardware-safe
 defaults. No object state, payload truth or scene-specific target is used here.
 """
 import numpy as np
-from .geometry import finite_vector, pose_error, unit_quaternion
+from .geometry import finite_vector, pose_error, unit_quaternion, quat_mul, rotvec_to_quat
 
 
 class ReferenceOSC:
@@ -74,6 +74,21 @@ def ramped_target(start_pose, target_pose, step, translation_per_action=.0015):
     result = target.copy()
     result[:3] = start[:3] + delta * min(1., step*translation_per_action/max(np.linalg.norm(delta),1e-12))
     return result
+
+
+def ramped_pose_target(start_pose, target_pose, step, translation_per_action, rotation_per_action):
+    """Rate-limit translation and shortest-path world rotation independently."""
+    start = finite_vector(start_pose, 7)
+    target = finite_vector(target_pose, 7)
+    if (type(step) is not int or step < 1
+            or not 0 < translation_per_action <= .003
+            or not 0 < rotation_per_action <= .01):
+        raise ValueError('invalid pose ramp step or rates')
+    error = pose_error(start, target)
+    position_fraction = min(1., step*translation_per_action/max(np.linalg.norm(error[:3]), 1e-12))
+    rotation_fraction = min(1., step*rotation_per_action/max(np.linalg.norm(error[3:]), 1e-12))
+    return np.r_[start[:3]+error[:3]*position_fraction,
+                 quat_mul(rotvec_to_quat(error[3:]*rotation_fraction), unit_quaternion(start[3:]))]
 
 
 def motion_stop_reason(measured_pose, target_pose, arm_joints, arm_limits):
