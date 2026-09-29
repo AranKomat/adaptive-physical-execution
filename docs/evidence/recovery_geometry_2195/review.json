@@ -1,0 +1,66 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+  "decision": "candidate",
+  "candidate_surface_pixel": {
+    "camera": "wrist",
+    "pixel_uv": [
+      300,
+      174
+    ],
+    "surface": "Visible PCB-up planar surface near the +x terminal region and toward its lower-y side; an upper-contact neighborhood, not a certified edge or contact patch."
+  },
+  "closing_axis_world_if_justified": {
+    "axis": [
+      -0.005113,
+      -0.00058,
+      0.999987
+    ],
+    "status": "Conditional sideways thickness-pinch hypothesis. The observed plane justifies this normal direction, but no opposing contact is observed. Axis sign is interchangeable."
+  },
+  "approach_direction_world_if_justified": {
+    "direction": [
+      -1,
+      0,
+      0
+    ],
+    "status": "Hypothesized inward reach from beyond the observed +x terminal boundary. This is an approach direction, not evidence of a clear approach corridor."
+  },
+  "first_bounded_step": {
+    "type": "Simulator-only, no-contact reorientation proposal; not execution authorization.",
+    "standoff_reference_world_m": [
+      0.475521,
+      0.050988,
+      0.296966
+    ],
+    "translation_m": [
+      0,
+      0,
+      0
+    ],
+    "maximum_orientation_increment_deg": 5,
+    "orientation_goal": "Make the jaw-closing axis parallel to the PCB normal and the finger insertion direction horizontal toward world -x. This requires turning the hand onto its side, not simply translating the current hand sideways.",
+    "jaw_action": "Keep the current aperture unchanged; no closure.",
+    "bounds_and_gate": "Propose only one orientation increment at the current hand origin, with no descent or terminal-edge translation. Its entire finger, hand and arm swept volume must first be supported as collision-free by legal observations and robot geometry. The supplied measurements do not establish that condition; if it cannot be established, hold position. Fixed hand-origin height alone does not guarantee finger clearance."
+  },
+  "observed_evidence": [
+    "The selected connected surface is approximately horizontal: fitted normal is nearly +z, plane center z is 0.063286 m, and plane RMS is 0.000151 m.",
+    "Pixel [300,174] measures world position [0.565748,0.066927,0.063654] m on that visible surface.",
+    "The terminal strip has observed x bounds 0.563001\u20130.584847 m and y span 0.115465 m. The y span exceeds the nominal 0.080 m maximum jaw opening.",
+    "Neither the supplied depth samples nor the images establish underside support, board/cooler separation, or a clear lower-jaw route.",
+    "The historical interior image provides qualitative motherboard/case context only, contingent on the stated static-object assumption."
+  ],
+  "inferred_geometry": [
+    "A local sideways pinch near the terminal end avoids needing to straddle the 115 mm planar width.",
+    "For a PCB-only pinch, the lower jaw must reach beneath the PCB. Where the cooler overlaps this neighborhood, that requires entry into the board/cooler gap. An exposed overhang or a sufficiently large gap is an explicit unverified assumption.",
+    "A PCB-plus-cooler pinch would instead require a reachable cooler underside and total local thickness within the jaw opening. Neither is measured.",
+    "The measured terminal-strip x extent is not a grasp thickness or proof of two opposing edges."
+  ],
+  "risks": [
+    "A lower jaw could strike the cooler, motherboard, components or case before reaching an opposing surface.",
+    "The proposed +x entry side is not certified free of case wall; no low external wall-side approach is proposed.",
+    "Avoidance requires keeping both fingers outside the case and motherboard envelopes throughout reorientation and insertion, not merely keeping the palm above the PCB. Those envelopes are insufficiently measured here.",
+    "PCB components, edge loading and unsupported board bending make even the visible upper-contact neighborhood uncertified.",
+    "Neither another 10 mm retreat nor repetition of the failed low external inspection is part of this proposal."
+  ],
+  "rejection_reason": "Not rejected as a simulator-only hypothesis. Contact and insertion remain blocked specifically by the unobserved opposing surface, unknown lower-jaw access and unverified case/motherboard clearance. A top-down full-width y straddle is rejected because the observed span already exceeds maximum opening."
+}

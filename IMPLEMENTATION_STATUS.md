@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+NEW2195 geometry: visible terminal span115mm exceeds80mm nominal jaws for a
+full-width top-down straddle. A sideways-pinch hypothesis has convergent
+robot-only IK but requires hand z64mm, below the120mm local-stage pilot floor.
+Opposing contact/access also unobserved. No gate change or motion. Next assess
+an inclined edge grasp within bounds or separately qualify a lower-hand
+workspace; no blind reorientation toward an inadmissible endpoint. Calls4397.
+See `docs/GUARDED_CARRY_CURRENT.md` for measured evidence and limitations.
+
 CURRENT2195: completed the capped10mm wrist retreat in five2mm targets with
 visual checks between stages.80actions; actual9.948mm up, no guard stop. Final
 view still does not resolve an underside grasp surface. Stop this inspection

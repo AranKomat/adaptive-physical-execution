@@ -1,0 +1,55 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+  "candidate_anchor_world_m": [
+    0.5657480379492924,
+    0.06692695111412483,
+    0.06365395232727114
+  ],
+  "hand_to_nominal_pinch_m": [
+    0,
+    0,
+    0.1034
+  ],
+  "endpoint_checks": [
+    {
+      "name": "side_orientation_at_current_origin",
+      "hand_pose_world": [
+        0.47552114725112915,
+        0.05098766088485718,
+        0.29696646332740784,
+        0.4985747311873911,
+        0.5014212175620621,
+        -0.5011319059580155,
+        -0.4988655257991744
+      ],
+      "inside_local_pilot_position_bounds": true,
+      "ik_from_current_seed": {
+        "converged": true,
+        "position_error_m": 0.00190106091756556,
+        "rotation_error_rad": 0.017375274881158656,
+        "iterations": 43
+      }
+    },
+    {
+      "name": "hypothetical_contact_pose",
+      "hand_pose_world": [
+        0.6691466864385821,
+        0.06692664442913993,
+        0.06418262093259355,
+        0.4985747311873911,
+        0.5014212175620621,
+        -0.5011319059580155,
+        -0.4988655257991744
+      ],
+      "inside_local_pilot_position_bounds": false,
+      "ik_from_current_seed": {
+        "converged": true,
+        "position_error_m": 0.0015775096758139711,
+        "rotation_error_rad": 0.0056923755399421756,
+        "iterations": 49
+      }
+    }
+  ],
+  "limitation": "Nominal pinch convention and sensor surface only; not a valid opposed contact pair. Single-seed robot-only IK is not path, self-collision or scene-clearance qualification. No commanded motion or gate change.",
+  "finding": "Horizontal side-pinch contact hypothesis requires hand z below the current 0.12m pilot workcell floor; it cannot be executed through unchanged local-stage validation. This is an implementation envelope constraint, not proof of robot physical impossibility."
+}

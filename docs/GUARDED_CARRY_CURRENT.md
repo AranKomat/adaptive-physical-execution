@@ -1,5 +1,44 @@
 # Guarded lift and carry: current continuation
 
+## Current2195: concrete side-pinch hypothesis, rejected by pilot height envelope
+
+No motion this continuation; fresh read-only capture confirmed2195. A legal
+wrist-depth audit of the visible PCB selected a4-connected near-horizontal
+surface around pixel[345,165]. Operator ROI and2mm world-z band are disclosed
+in the artifact; this is not an independently certified semantic mask.31357
+points fit normal[-0.005113,-0.000580,0.999987], RMS0.151mm. The selected
+terminal strip's observed y-span is115.465mm, exceeding the nominal80mm jaw
+opening. This rejects a full-width top-down straddle of that measured strip,
+not all possible grasps. No unseen thickness or clearance is inferred.
+
+Astra returned a concrete sideways thickness-pinch hypothesis at current
+wrist pixel[300,174], measured[0.565748,0.066927,0.063654]m. Jaw closing would
+follow the measured plane normal, with fingers entering approximately world-x
+negative. Opposing contact and lower-jaw access remain unobserved. Its proposed
+5deg reorientation also carried an unmet swept-clearance condition, so none
+was executed. Do not turn the hypothesis into contact authorization.
+
+Robot-only URDF IK from current joints converged for both the side orientation
+at current hand origin and a hypothetical side contact pose. But converting
+the visible anchor through the nominal103.4mm hand-to-pinch offset puts the
+hand at[0.669147,0.066927,0.064183]m: **below the local-stage120mm hand-z
+floor**. The unchanged pilot validator cannot execute that contact hypothesis.
+IK endpoint errors1.902mm/0.0174rad and1.578mm/0.0057rad respectively are not
+path or collision qualification. No robot/object collision state was used.
+
+This distinguishes two blockers: unseen opposing contact/access, and a
+software workspace envelope tailored to earlier top-down motions. Neither
+establishes physical impossibility. Next assess an inclined edge grasp within
+the existing envelope, or separately qualify a lower-hand workspace. Do not
+silently relax the live gate, bypass it through another action interface, or
+spend repeated small rotations on the currently inadmissible endpoint.
+
+Public [surface data](evidence/recovery_geometry_2195/guarded_full_lift_20261001_recovery2195_surface.json),
+[candidate review](evidence/recovery_geometry_2195/review.json), and
+[robot-only feasibility audit](evidence/recovery_geometry_2195/guarded_full_lift_20261001_recovery2195_feasibility.json).
+Cumulative reserved calls4397; existing holds unchanged. Recovery remains
+incomplete, scene preserved, no additional phase completed.
+
 ## Current2195: bounded wrist retreat did not resolve a recovery grasp
 
 Executed the2115 review's bounded observation experiment, not a contact or
