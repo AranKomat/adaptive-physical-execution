@@ -130,11 +130,18 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         assert env._transit_context is None
         target = env.current.eef_pose.copy()
         target[2] += .0575
-        env.step = lambda action,cid: None  # Actuator no longer follows the trajectory.
+        stalled_actions = []
+        env.step = lambda action,cid: stalled_actions.append(action)  # Actuator no longer follows trajectory.
+        stopped = env.local_stage(dict(observation_id=env.current.key,hand_pose_world=target.tolist(),
+                gripper_open=1.,max_steps=64,target_source='TEST STALL',settle_at_end=False,
+                contact_tracking_guard=True),'stall')
+        assert stopped.receipt.reason=='contact tracking guard stopped motion'
+        assert not env._poisoned and env._transit_context is None
+        assert len(stalled_actions)==7  # 1.5mm ramp/action: stop as soon as error exceeds10mm.
         with pytest.raises(AmbiguousExecution,match='never retry'):
             env.local_stage(dict(observation_id=env.current.key,hand_pose_world=target.tolist(),
-                gripper_open=1.,max_steps=64,target_source='TEST STALL',settle_at_end=False),'stall')
-        assert env._poisoned and env._transit_context is None
+                gripper_open=1.,max_steps=64,target_source='TEST UNGUARDED STALL',settle_at_end=False),'stall2')
+        assert env._poisoned
 
 
 def test_gaze_path_and_angular_limit():

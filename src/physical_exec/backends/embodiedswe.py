@@ -252,6 +252,7 @@ class EmbodiedSWEEnvironment:
             ramp_start, feedback, solver = context['target'], context['feedback'], context['solver']
         pass_through = value.get('settle_at_end') is False
         waypoint_passed = False
+        contact_stopped = False
         started = time.monotonic()
         completed = 0
         try:
@@ -275,6 +276,14 @@ class EmbodiedSWEEnvironment:
                         torch.as_tensor(gaze_path[index][None], dtype=torch.float32, device=self.sim.env.device))
                 self.step(action, f'{command_id}:{index}')
                 completed += 1
+                if value.get('contact_tracking_guard'):
+                    reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
+                    if reason:
+                        raise RuntimeError(reason)
+                    contact_error = pose_error(self.current.eef_pose, waypoint)
+                    if np.linalg.norm(contact_error[:3]) > .01 or np.linalg.norm(contact_error[3:]) > .10:
+                        contact_stopped = True
+                        break
                 if eye_path is not None:
                     hold_error = pose_error(self.current.eef_pose, target)
                     if np.linalg.norm(hold_error[:3]) > .01 or np.linalg.norm(hold_error[3:]) > .15:
@@ -306,7 +315,8 @@ class EmbodiedSWEEnvironment:
                 self._inspection_gaze = gaze_path[-1].copy()
             arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
-                'executed', ('transit waypoint passed' if waypoint_passed else
+                'executed', ('contact tracking guard stopped motion' if contact_stopped else
+                             'transit waypoint passed' if waypoint_passed else
                              'local stage arrived' if arrived else 'local stage budget ended without arrival'),
                 'sensor_local_diffik', completed*before.control_dt, time.monotonic()-started,
                 float(np.linalg.norm(error[:3])), float(np.linalg.norm(error[3:])))
@@ -314,6 +324,7 @@ class EmbodiedSWEEnvironment:
                 with (self.record_episode/'local_stages.jsonl').open('a') as stream:
                     stream.write(__import__('json').dumps({'command_id': command_id, 'request': value,
                         'receipt': receipt.to_dict(), 'unknown_clearance': True,
+                        'contact_tracking_stopped': contact_stopped,
                         'camera_path_world': None if eye_path is None else eye_path.tolist(),
                         'camera_gaze_path_world': None if eye_path is None else gaze_path.tolist(),
                         'camera_eye_error_m': None if eye_path is None else float(camera_error)})+'\n')
@@ -354,6 +365,7 @@ class EmbodiedSWEEnvironment:
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_gaze_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
+                "contact_tracking_guard_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "inspection_camera_qualification": "idealized sensor only; no collision body or hardware clearance",
                 "last_gripper_command": getattr(self, '_last_gripper_command', None),
                 "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",

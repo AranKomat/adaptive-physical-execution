@@ -1,0 +1,11 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1651",
+  "selection_source": "Operator visual selection of current gold-strip interior and projected historical socket anchor; not model correspondence approval",
+  "connector": {"status": "operator_selected_surfaces", "samples": [
+    {"camera": "right", "pixel_uv": [310, 116], "surface": "Visible gold contact-strip interior"},
+    {"camera": "right", "pixel_uv": [380, 118], "surface": "Visible gold contact-strip interior farther along strip"}
+  ]},
+  "socket": {"status": "operator_selected_surface", "samples": [
+    {"camera": "right", "pixel_uv": [320, 180], "surface": "Depth-consistent historical socket surface anchor; not verified gap centerline"}
+  ]}
+}

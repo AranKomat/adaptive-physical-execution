@@ -13,12 +13,18 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     if camera and not allow_inspection_camera:
         raise InputRejected('inspection camera not enabled')
     optional = ({'camera_eye_world'} if camera else set()) | ({'settle_at_end'} if 'settle_at_end' in fields else set())
+    if 'contact_tracking_guard' in fields:
+        optional.add('contact_tracking_guard')
     if camera and 'camera_gaze_world' in fields:
         optional.add('camera_gaze_world')
     if not isinstance(value, dict) or fields != required | optional:
         raise InputRejected('invalid local-stage fields')
     if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
         raise InputRejected('settle_at_end must be boolean')
+    if 'contact_tracking_guard' in value and type(value['contact_tracking_guard']) is not bool:
+        raise InputRejected('contact_tracking_guard must be boolean')
+    if camera and value.get('contact_tracking_guard'):
+        raise InputRejected('contact probing and inspection-camera motion must be separate')
     if camera and value.get('settle_at_end') is False:
         raise InputRejected('camera inspection requires endpoint settling')
     if value['observation_id'] != observation.key:

@@ -23,21 +23,28 @@ def main():
                         help='Current feature measurements; <=10 cm down, >=12 cm nominal standoff, no insertion')
     parser.add_argument('--near-standoff',action='store_true',
                         help='With exploratory-standoff: <=6cm down, >=6cm nominal gap, matched endpoint required')
+    parser.add_argument('--contact-hypothesis',action='store_true',
+                        help='Explicit simulator contact test to measured plane; <=8cm, no extra push/release')
     args = parser.parse_args()
     if args.near_standoff and not args.exploratory_standoff:
         parser.error('--near-standoff requires --exploratory-standoff')
+    if args.contact_hypothesis and (not args.exploratory_standoff or args.near_standoff):
+        parser.error('--contact-hypothesis requires exploratory-standoff and excludes near-standoff')
     plan = json.loads(args.plan.read_text())
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
     try:
         meta = client.call('/metadata')
+        if args.contact_hypothesis and not meta.get('contact_tracking_guard_enabled'):
+            raise ValueError('Contact tests require the per-action tracking guard; current worker is too old')
         if (meta.get('real_hardware_supported') is not False or not meta.get('local_stages_enabled')
                 or not meta.get('continuous_transit_enabled')):
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
         compiler = standoff_stages if args.exploratory_standoff else carry_stages
         stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'),
-                          **({'near':args.near_standoff} if args.exploratory_standoff else {}))
+                          **({'near':args.near_standoff,'contact':args.contact_hypothesis}
+                             if args.exploratory_standoff else {}))
         write_json(args.output/'source_plan.json', plan)
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'initial.json', obs.public_state())

@@ -76,3 +76,18 @@ def test_near_standoff_requires_matched_endpoint_and_keeps_gap():
     value['socket']['samples'][0]['measurement']['surface_point_world_m'][0]+=.02
     with pytest.raises(ValueError,match='corresponding end'):
         standoff_stages(value,'episode:5',HAND,.3,near=True)
+
+
+def test_contact_hypothesis_stops_at_surface_and_rejects_large_gap():
+    value = measurements()
+    with pytest.raises(ValueError,match='Contact hypothesis exceeds'):
+        standoff_stages(value,'episode:5',HAND,.3,contact=True)
+    for sample in value['connector']['samples']:
+        sample['measurement']['surface_point_world_m'][2]=.10
+    hand=[.3,-.3,.30,0,0,1,0]
+    stages=standoff_stages(value,'episode:5',hand,.3,contact=True)
+    assert stages[-1]['hand_pose_world'][2]==pytest.approx(.24)
+    assert all(s['gripper_open']==.3 for s in stages)
+    assert 'contact hypothesis' in stages[-1]['target_source']
+    with pytest.raises(ValueError,match='not both'):
+        standoff_stages(value,'episode:5',hand,.3,near=True,contact=True)

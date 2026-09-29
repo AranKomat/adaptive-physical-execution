@@ -7,6 +7,15 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+NEWEST state1800: sensor-surface contact hypothesis ended without arrival
+(26.291mm/10.09deg error), native evaluator read afterward success=false,
+score0.3333. No further push/release. Astra chose5cm withdrawal using only
+images/robot state/receipt, which completed at1.600mm error; card retained but
+tilted. New contact per-action tracking stop is CPU-tested only, not live-loaded;
+runner now refuses contact on the old worker. See `docs/CONTACT_HYPOTHESIS_20260930.md`.
+Same episode/worker/tunnel/camera; preserve recovered state. One call$0.01484625,
+episode$0.41671750,reserved4370;217tests. No installation or full recovery achieved.
+
 LATEST state1651: projected historical socket anchor now included in review;
 target identity is consistent. Measured corresponding side supported an explicit
 exploratory6cm near approach (84actions,1.213mm final error), not insertion.

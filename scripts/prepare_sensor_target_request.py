@@ -16,12 +16,13 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'feature_inventory'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'feature_inventory', 'contact_recovery'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     p.add_argument('--prior-carry-capture', type=Path)
     p.add_argument('--prior-carry-response', type=Path)
     p.add_argument('--project-carry-anchor',action='store_true')
+    p.add_argument('--contact-receipt',type=Path)
     args = p.parse_args()
     if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
         raise ValueError('Projected carry anchor requires historical capture and response')
@@ -175,6 +176,28 @@ def main():
             '\nRobot-only state: '+json.dumps(state)+
             '\nCurrent sensor calibration: '+json.dumps(calibrations))
     content = [{'type': 'text', 'text': prompt}]
+    if args.stage=='contact_recovery':
+        if args.contact_receipt is None:
+            raise ValueError('Contact recovery requires actual execution receipt')
+        receipt=json.loads(args.contact_receipt.read_text())
+        if receipt['resulting_observation_id']!=state['observation_id']:
+            raise ValueError('Contact receipt is stale')
+        if receipt.get('reason') not in ('local stage budget ended without arrival',
+                                        'contact tracking guard stopped motion') or receipt.get('status')!='executed':
+            raise ValueError('Recovery requires a confirmed nonarrival, not ambiguous execution')
+        content=[{'type':'text','text':(
+            'Choose one bounded simulator recovery after an exploratory downward surface approach '
+            'failed its endpoint tracking check. Do not infer actual force or contact identity from '
+            'tracking error alone. Review the current images for retention, tilt and obstruction. '
+            'Options: lift_5cm (translate the hand vertically up 5cm with CURRENT measured attitude '
+            'and previous gripper command unchanged; no lateral movement, rotation correction or '
+            'release), or hold (no action). The local controller enforces a 64-action limit and '
+            'existing hard stops. No insertion retry is available. Unknown external clearance '
+            'remains exploratory, not certified safe. Prefer hold if visible entanglement or loss '
+            'makes this specific lift inappropriate; do not select lift merely to comply. '
+            'Return JSON: observation_id, decision (lift_5cm/hold), visible_retention, '
+            'obstruction_evidence, expected_effect, uncertainty. No evaluator/hidden state is supplied. '
+            '\nCurrent robot-only state: '+json.dumps(state)+'\nActual controller receipt: '+json.dumps(receipt))}]
     if args.stage == 'feature_inventory':
         content = [{'type': 'text', 'text': (
             'Localize visible mating features independently in these CURRENT simulator images. '

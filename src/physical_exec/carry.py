@@ -46,10 +46,12 @@ def carry_stages(plan, observation_id, hand_pose, opening):
     return stages
 
 
-def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=False):
+def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=False, contact=False):
     """Exploratory approach with 12/6 cm nominal separation, not a clearance bound."""
     if measurements.get('observation_id') != observation_id:
         raise ValueError('Standoff measurements are stale')
+    if near and contact:
+        raise ValueError('Choose near approach or contact hypothesis, not both')
     hand = finite_vector(hand_pose,7)
     if isinstance(opening,bool) or not isinstance(opening,(float,int)) or not 0 <= opening <= 1:
         raise ValueError('Established gripper command required')
@@ -78,7 +80,10 @@ def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=Fa
         if not pairs or max(pairs)>.01:
             raise ValueError('Near approach requires a measured corresponding end within 10mm horizontally')
     gap = float(np.min(points['connector'][:,2])-np.max(points['socket'][:,2]))
-    floor, cap = (.06,.06) if near else (.12,.10)
+    if contact and (gap>.08 or np.linalg.norm(
+            np.mean(points['connector'],axis=0)[:2]-np.mean(points['socket'],axis=0)[:2])>.025):
+        raise ValueError('Contact hypothesis exceeds 8cm gap or 25mm sampled horizontal offset')
+    floor, cap = (0.,.08) if contact else (.06,.06) if near else (.12,.10)
     descent = min(cap,gap-floor)
     if not np.isfinite(descent) or descent<.01:
         raise ValueError('Insufficient measured standoff for this coarse approach')
@@ -90,4 +95,8 @@ def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=Fa
         stages.append(dict(hand_pose_world=pose.tolist(),gripper_open=opening,max_steps=64,
             settle_at_end=i==count,target_source='Operator-scoped measured-feature standoff; '
             f'>={floor*100:g}cm nominal vertical feature separation; unknown swept clearance; NOT insertion approval'))
+        if contact:
+            stages[-1]['contact_tracking_guard'] = True
+            stages[-1]['target_source'] = ('Operator-scoped exploratory contact hypothesis to observed '
+                'surface plane; unknown keyed geometry and clearance; no extra seating push or release')
     return stages

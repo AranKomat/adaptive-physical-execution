@@ -1,0 +1,8 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1736",
+  "decision": "lift_5cm",
+  "visible_retention": "The graphics card appears retained between the gripper fingers, with some tilt. No visible drop or separation is evident.",
+  "obstruction_evidence": "The card's lower edge is close to the motherboard slot and surrounding structures. No clear cable entanglement or overhead obstruction is visible, but the chassis and gripper obscure parts of the clearance.",
+  "expected_effect": "Translate the hand vertically upward 5 cm with its current measured attitude and previous gripper command unchanged, potentially withdrawing the retained card from the approach region without lateral movement, rotation correction, release, or insertion retry.",
+  "uncertainty": "Retention and clearance are only visually assessed. Tracking error does not establish force or contact identity. Hidden snagging remains possible; this bounded lift is exploratory, not certified safe, and remains subject to the controller's 64-action limit and existing hard stops."
+}

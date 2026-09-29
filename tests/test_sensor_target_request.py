@@ -6,6 +6,28 @@ import sys
 import pytest
 
 
+@pytest.mark.parametrize('result_id,accepted',[('e:12',True),('e:11',False)])
+def test_contact_recovery_uses_current_receipt_not_evaluator(tmp_path,result_id,accepted):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
+    for role in ('left','right','wrist'):
+        (tmp_path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+    (tmp_path/'evaluator_only.json').write_text('{"hidden":"EVALUATOR_SENTINEL"}')
+    receipt=tmp_path/'receipt.json'
+    receipt.write_text(json.dumps(dict(resulting_observation_id=result_id,status='executed',
+                                      reason='local stage budget ended without arrival')))
+    output=tmp_path/'messages.json'
+    script=Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
+    result=subprocess.run([sys.executable,str(script),'--stage','contact_recovery','--capture',str(tmp_path),
+        '--contact-receipt',str(receipt),'--output',str(output)],capture_output=True,text=True)
+    assert (result.returncode==0)==accepted
+    if accepted:
+        text=output.read_text()
+        assert 'EVALUATOR_SENTINEL' not in text
+        assert 'No insertion retry is available' in text
+    else:
+        assert not output.exists()
+
+
 def test_correspondence_review_is_observation_only(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:10'}))
     for role in ('left', 'right', 'wrist'):

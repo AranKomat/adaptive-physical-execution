@@ -4,6 +4,13 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- NEWEST held observation1800: explicit surface-contact hypothesis failed,
+  26.291mm/0.176rad final error; posthoc native success=false,score0.3333. No
+  extra push/release. Astra selected5cm withdrawal; it completed at1.600mm error,
+  card visibly retained but tilted. New per-action contact tracking guard is
+  CPU-tested, NOT loaded in current worker; contact runner now requires it.
+  217tests; one recovery call$0.01484625. See `docs/CONTACT_HYPOTHESIS_20260930.md`.
+
 - Latest held observation1651: projected sensor memory stabilizes socket identity;
   measured same-side endpoints supported an exploratory6cm near approach,84actions,
   final1.213mm. Close socket inspection still cannot resolve exact keyed endpoints.
