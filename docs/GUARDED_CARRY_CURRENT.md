@@ -1,5 +1,26 @@
 # Guarded lift and carry: current continuation
 
+## Historical socket audit: no motion, state remains1611
+
+Revisited unobstructed835 motherboard RGB-D while retaining the previously
+selected socket pixel[319,198]. First review withheld terminals because the
+bracket-side assignment was unsupported. A second, explicitly unordered housing
+termination request removed that unnecessary coupling without asserting keyed
+correspondence. It still returned both ends null: only an interior housing
+sample could be localized reliably. Do not keep re-prompting835 or fabricate
+endpoints from a generic socket length. This is a resolution/visibility limit
+of that retained frame, not proof that endpoints are globally unobservable.
+
+Both requests were explicitly historical and observation-only; no old pixels
+were dispatched as current control. State remains1611 with card held. Connector
+endpoints from1547 are retained. Next useful observation must expose the socket
+with adequate detail and account for the forearm; target-only camera placement
+has already failed. Phase completion remains unproven.
+
+Artifacts: `runs/guarded_full_lift_20261001_socket835_history_review` and
+`_socket835_unordered_review`. Reserved-call count4387; existing budget holds
+and ceiling unchanged.
+
 ## Latest1611: retained connector endpoints, socket view blocked
 
 Closer1547 correspondence review located both connector ends and reported a
