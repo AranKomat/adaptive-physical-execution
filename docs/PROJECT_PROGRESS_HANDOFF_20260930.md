@@ -7,6 +7,13 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+Recovered1800 scene-level review (minimal instruction, no source audit/evaluator
+input) recommends alignment and whole-envelope inspection before correction.
+Four selected pixels pass depth tests; sampled axes differ7.947deg, mostly yaw.
+No motion or complete pose/clearance estimate. First truncated response rejected;
+compact fresh call valid. Total$0.10638625, reserved4372,220tests. See
+`RECOVERED_CONTINUATION_20260930.md`. Next integrated correction, not more prompts.
+
 Contact guard now loaded and normal-path qualified on a separate native worker:
 30-action hold +60-action1cm upward move, final0.247mm. Worker closed after test;
 no change to held episode1800. Threshold-crossing stop remains fake-stall tested

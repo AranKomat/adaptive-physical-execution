@@ -4,6 +4,12 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Recovered1800 review with unchanged minimal instruction produced four valid
+  sensor anchors: sampled connector/rim axes differ7.947deg, mostly yaw. Full
+  pose and swept clearance remain unknown. No motion. First API output was
+  truncated/rejected; compact fresh call valid, total$0.10638625.220tests.
+  See `docs/RECOVERED_CONTINUATION_20260930.md`; stop further same-view reviews.
+
 - Isolated native guard-enabled hold and1cm upward move passed (30+60actions,
   final0.247mm). Temporary worker closed; held-card episode unchanged. This is
   normal-path qualification only; native contact-stop branch remains untested.

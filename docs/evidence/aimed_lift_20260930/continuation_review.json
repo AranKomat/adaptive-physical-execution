@@ -1,0 +1,68 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1800",
+  "visible_state": [
+    "Withdrawal arrived according to hand tracking; this is not insertion evidence.",
+    "Current right view shows the gold contact edge exposed above the PCIe socket. Its projected slope differs from the socket's long rim.",
+    "Wrist views show similar card-to-finger appearance before and after withdrawal, but aperture and images do not prove a secure grasp.",
+    "The bulky cooler, nearby motherboard surfaces, case rim and partly hidden bracket region must all be considered. The arm occludes much of the left view."
+  ],
+  "failure_hypotheses": [
+    {
+      "hypothesis": "Card attitude or lateral alignment prevented full-length connector engagement.",
+      "support": "Historical nonarrival and tilt; current connector and socket have different image slopes.",
+      "falsifier": "Aligned depth and additional views show compatible connector/socket directions, insertion axis and full-length registration; apparent slope difference is perspective."
+    },
+    {
+      "hypothesis": "Bracket, cooler or gripper contacted surrounding structure before the connector could seat.",
+      "support": "Large surrounding envelope and occluded bracket region make secondary interference plausible; contact is not directly visible.",
+      "falsifier": "Inspection establishes separated swept envelopes throughout the previously attempted approach, with card attitude stable relative to the hand."
+    }
+  ],
+  "next_stage": "Hold the withdrawn configuration and inspect alignment, grasp stability and the whole insertion envelope before selecting any correction. Do not descend again yet.",
+  "anchors": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        286,
+        91
+      ],
+      "surface": "left portion of exposed gold contact strip"
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        426,
+        109
+      ],
+      "surface": "right portion of exposed gold contact strip"
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        277,
+        172
+      ],
+      "surface": "left portion of socket metal rim"
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        407,
+        174
+      ],
+      "surface": "right portion of socket metal rim"
+    }
+  ],
+  "remaining_stages": [
+    "Inspect: sample aligned depth on these solid surfaces; obtain views of bracket, socket ends and finger/cooler surroundings.",
+    "Reorient and reposition only after establishing a clear swept envelope; verify connector registration and unchanged card-to-hand relationship.",
+    "Attempt a short visually monitored seating approach only after alignment is verified; confirm both ends seated before release."
+  ],
+  "stop_conditions": [
+    "Card slips, tilts unexpectedly or separates from the fingers.",
+    "Hand advances without corresponding card progress, or visible interference develops.",
+    "Alignment, bracket access or seating remains unobservable."
+  ],
+  "missing_evidence": "Depth samples, bracket/latch visibility, verified grasp and full-envelope clearance.",
+  "uncertainty": "Pixels are sampling candidates, not measured geometry. Thin-edge depth may mix surfaces; FK locates the hand, not the card."
+}
