@@ -20,7 +20,10 @@ def measure(capture, response):
         limitation='Surface samples only; axes are undirected, not mating endpoints, gap centerlines or clearance.')
     for name in ('connector','socket'):
         feature = response[name]
-        samples = feature['samples']
+        samples = feature.get('samples')
+        if samples is None:
+            samples = [dict(sample,correspondence_end=end) for end,sample in feature.items()
+                       if end in ('end_a','end_b') and sample is not None]
         if not isinstance(samples,list) or len(samples)>8:
             raise ValueError('Invalid sample count')
         measured = []
@@ -38,7 +41,7 @@ def measure(capture, response):
             except ValueError as exc:
                 record['rejected'] = str(exc)
             measured.append(record)
-        summary = dict(visual_status=feature['status'],samples=measured)
+        summary = dict(visual_status=feature.get('status',response.get('decision')),samples=measured)
         if len(measured)==2 and all('measurement' in m for m in measured):
             points = np.array([m['measurement']['surface_point_world_m'] for m in measured])
             vector = points[1]-points[0]

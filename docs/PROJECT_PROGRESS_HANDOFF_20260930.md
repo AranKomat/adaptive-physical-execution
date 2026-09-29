@@ -7,6 +7,17 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+LATEST state1651: projected historical socket anchor now included in review;
+target identity is consistent. Measured corresponding side supported an explicit
+exploratory6cm near approach (84actions,1.213mm final error), not insertion.
+Camera close-up eye[.472,-.14,.31], gaze[.47224,.02803,.038]. Exact endpoint/key
+review remains negative and bracket labels proved inconsistent. Five diagnostic
+depth profiles across apparent socket channel are nearly planar (~2um variation),
+not resolved gap geometry. No insertion/release. Next bounded contact hypothesis
+with fresh surface/retention checks, not repeated exact-endpoint prompts. See
+`docs/PROJECTED_CORRESPONDENCE_20260930.md`. Same held episode/worker/tunnel.
+Latest3calls$0.141445, episode$0.40187125, reserved calls4369;214tests.
+
 NEWEST state 1503: face-on view resolves two rough connector surface points;
 operator-scoped 10 cm descent leaves nominal 12.3 cm feature standoff. 98 actions,
 1.949 mm final error; suspended, no insertion/release. Camera [.6,-.35,.45],

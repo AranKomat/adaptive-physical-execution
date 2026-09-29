@@ -4,6 +4,12 @@ import argparse
 import base64
 import json
 from pathlib import Path
+import sys
+
+import numpy as np
+
+sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
+from physical_exec.depth import surface_point, project_surface_memory
 
 
 def main():
@@ -15,7 +21,10 @@ def main():
     p.add_argument('--prior-socket-response', type=Path)
     p.add_argument('--prior-carry-capture', type=Path)
     p.add_argument('--prior-carry-response', type=Path)
+    p.add_argument('--project-carry-anchor',action='store_true')
     args = p.parse_args()
+    if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
+        raise ValueError('Projected carry anchor requires historical capture and response')
     state = json.loads((args.capture / 'state.json').read_text())
     prompt = (
         'Identify the loose graphics card standing beside the computer chassis, NOT cards inside it. '
@@ -205,6 +214,27 @@ def main():
         role = old_response['slot_feature']['camera']
         if role not in ('left','right','wrist'):
             raise ValueError('invalid historical camera')
+        if args.project_carry_anchor:
+            old_calibration = json.loads((args.prior_carry_capture/f'{role}_calibration.json').read_text())
+            if old_calibration['observation_id']!=old_state['observation_id']:
+                raise ValueError('Historical calibration is stale')
+            point = surface_point(np.load(args.prior_carry_capture/f'{role}_depth.npy',allow_pickle=False),
+                old_calibration,old_response['slot_feature']['pixel_uv'],radius=1,max_spread_m=.01)
+            projections = {}
+            for current_role in ('left','right','wrist'):
+                c = json.loads((args.capture/f'{current_role}_calibration.json').read_text())
+                if c['observation_id']!=state['observation_id']:
+                    raise ValueError('Current calibration is stale')
+                projections[current_role] = project_surface_memory(point,c,
+                    np.load(args.capture/f'{current_role}_depth.npy',allow_pickle=False))
+            content.append({'type':'text','text':(
+                'PROJECTED HISTORICAL SENSOR ANCHOR, not a simulator object pose: the earlier '
+                'socket surface sample is projected into each CURRENT camera using calibration. '
+                'Use it to resolve which slot was previously selected, not to presume it was correct. '
+                'A depth-consistent point supplies a candidate visible location, not verified identity, '
+                'endpoints or clearance. An inconsistent point may be occluded or the surface may '
+                'have moved; do not treat it as a current surface. Explain any contradiction between '
+                'your visual selection and this anchor. '+json.dumps(projections))})
         encoded = base64.b64encode((args.prior_carry_capture/f'{role}.png').read_bytes()).decode()
         content.extend([
             {'type':'text','text':(

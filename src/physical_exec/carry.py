@@ -46,8 +46,8 @@ def carry_stages(plan, observation_id, hand_pose, opening):
     return stages
 
 
-def standoff_stages(measurements, observation_id, hand_pose, opening):
-    """Exploratory approach with >=12 cm nominal separation, not a clearance bound."""
+def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=False):
+    """Exploratory approach with 12/6 cm nominal separation, not a clearance bound."""
     if measurements.get('observation_id') != observation_id:
         raise ValueError('Standoff measurements are stale')
     hand = finite_vector(hand_pose,7)
@@ -64,8 +64,22 @@ def standoff_stages(measurements, observation_id, hand_pose, opening):
         points[name] = np.array([finite_vector(m['surface_point_world_m'],3) for m in accepted])
     if np.max(np.linalg.norm(points['connector']-hand[:3],axis=1))>.35:
         raise ValueError('Connector samples too far from held hand')
+    if near:
+        pairs = []
+        for end in ('end_a','end_b'):
+            matched = []
+            for name in ('connector','socket'):
+                candidates = [s['measurement']['surface_point_world_m'] for s in measurements[name]['samples']
+                              if 'measurement' in s and s.get('correspondence_end')==end]
+                if len(candidates)==1:
+                    matched.append(np.asarray(candidates[0]))
+            if len(matched)==2:
+                pairs.append(np.linalg.norm((matched[0]-matched[1])[:2]))
+        if not pairs or max(pairs)>.01:
+            raise ValueError('Near approach requires a measured corresponding end within 10mm horizontally')
     gap = float(np.min(points['connector'][:,2])-np.max(points['socket'][:,2]))
-    descent = min(.10,gap-.12)
+    floor, cap = (.06,.06) if near else (.12,.10)
+    descent = min(cap,gap-floor)
     if not np.isfinite(descent) or descent<.01:
         raise ValueError('Insufficient measured standoff for this coarse approach')
     count = math.ceil(descent/.05)
@@ -75,5 +89,5 @@ def standoff_stages(measurements, observation_id, hand_pose, opening):
         pose[2] -= descent*i/count
         stages.append(dict(hand_pose_world=pose.tolist(),gripper_open=opening,max_steps=64,
             settle_at_end=i==count,target_source='Operator-scoped measured-feature standoff; '
-            '>=12cm nominal vertical feature separation; unknown swept clearance; NOT insertion approval'))
+            f'>={floor*100:g}cm nominal vertical feature separation; unknown swept clearance; NOT insertion approval'))
     return stages

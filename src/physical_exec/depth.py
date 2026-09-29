@@ -37,3 +37,38 @@ def surface_point(depth, calibration, pixel, *, radius=2, max_spread_m=.02):
             "surface_point_world_m": world.tolist(), "optical_depth_m": z,
             "local_depth_spread_m": spread, "neighborhood_radius_pixels": radius,
             "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."}
+
+
+def project_surface_memory(measurement, calibration, depth):
+    """Project an earlier sensor sample; a depth match is not semantic identity."""
+    old_episode, old_seq = measurement['observation_id'].rsplit(':',1)
+    episode, seq = calibration['observation_id'].rsplit(':',1)
+    if old_episode!=episode or int(old_seq)>=int(seq):
+        raise ValueError('Memory must precede current observation in the same episode')
+    if calibration['depth_convention']!='camera_optical_z' or calibration['depth_units']!='meters':
+        raise ValueError('Unsupported depth convention')
+    point = finite_vector(measurement['surface_point_world_m'],3)
+    eye = finite_vector(calibration['camera_position_world'],3)
+    local = quat_to_matrix(calibration['camera_quaternion_world_wxyz_optical']).T@(point-eye)
+    k = np.asarray(calibration['intrinsic_matrix'],dtype=float)
+    d = np.asarray(depth)
+    if (d.ndim!=2 or k.shape!=(3,3) or not np.isfinite(k).all()
+            or k[0,0]<=0 or k[1,1]<=0 or not np.allclose(k[2],[0,0,1])):
+        raise ValueError('Invalid projection inputs')
+    result = dict(source_observation_id=measurement['observation_id'],
+        current_observation_id=calibration['observation_id'],
+        limitation='Assumes historical surface static; depth agreement is not identity, free space or mating geometry.')
+    if local[2]<=0:
+        return dict(result,status='behind_camera')
+    pixel = (k@local)[:2]/local[2]
+    result.update(projected_pixel_uv=pixel.tolist(),predicted_optical_depth_m=float(local[2]))
+    u,v = np.rint(pixel).astype(int)
+    if not (0<=pixel[0]<d.shape[1] and 0<=pixel[1]<d.shape[0] and 0<=u<d.shape[1] and 0<=v<d.shape[0]):
+        return dict(result,status='outside_image')
+    actual = float(d[v,u])
+    if not np.isfinite(actual) or actual<=0:
+        return dict(result,status='invalid_current_depth')
+    residual = actual-float(local[2])
+    return dict(result,status='depth_consistent' if abs(residual)<=.01 else 'depth_inconsistent',
+                sampled_pixel_uv=[int(u),int(v)],current_optical_depth_m=actual,
+                depth_residual_m=residual,depth_comparison_tolerance_m=.01)

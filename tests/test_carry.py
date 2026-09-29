@@ -63,3 +63,16 @@ def test_standoff_rejects_insufficient_evidence(change):
     if change=='spread': value['connector']['samples'][0]['measurement']['local_depth_spread_m']=.02
     with pytest.raises(ValueError):
         standoff_stages(value,'episode:5',HAND,.3)
+
+
+def test_near_standoff_requires_matched_endpoint_and_keeps_gap():
+    value = measurements()
+    with pytest.raises(ValueError,match='corresponding end'):
+        standoff_stages(value,'episode:5',HAND,.3,near=True)
+    for name in ('connector','socket'):
+        value[name]['samples'][0]['correspondence_end']='end_a'
+    stages = standoff_stages(value,'episode:5',HAND,.3,near=True)
+    assert stages[-1]['hand_pose_world'][2]==pytest.approx(.44)
+    value['socket']['samples'][0]['measurement']['surface_point_world_m'][0]+=.02
+    with pytest.raises(ValueError,match='corresponding end'):
+        standoff_stages(value,'episode:5',HAND,.3,near=True)

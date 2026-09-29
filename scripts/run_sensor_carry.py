@@ -21,7 +21,11 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--exploratory-standoff',action='store_true',
                         help='Current feature measurements; <=10 cm down, >=12 cm nominal standoff, no insertion')
+    parser.add_argument('--near-standoff',action='store_true',
+                        help='With exploratory-standoff: <=6cm down, >=6cm nominal gap, matched endpoint required')
     args = parser.parse_args()
+    if args.near_standoff and not args.exploratory_standoff:
+        parser.error('--near-standoff requires --exploratory-standoff')
     plan = json.loads(args.plan.read_text())
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
@@ -32,7 +36,8 @@ def main():
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
         compiler = standoff_stages if args.exploratory_standoff else carry_stages
-        stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'))
+        stages = compiler(plan, obs.key, obs.eef_pose, meta.get('last_gripper_command'),
+                          **({'near':args.near_standoff} if args.exploratory_standoff else {}))
         write_json(args.output/'source_plan.json', plan)
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'initial.json', obs.public_state())

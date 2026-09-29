@@ -4,6 +4,14 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Latest held observation1651: projected sensor memory stabilizes socket identity;
+  measured same-side endpoints supported an exploratory6cm near approach,84actions,
+  final1.213mm. Close socket inspection still cannot resolve exact keyed endpoints.
+  Five legal depth profiles across apparent channel are nearly planar, not a
+  measured opening. No insertion/release. Next bounded contact hypothesis, not
+  more exact-endpoint prompts on this same image.214tests; three calls$0.141445.
+  See `docs/PROJECTED_CORRESPONDENCE_20260930.md` for limitations/live state.
+
 - Newest: face-on view yielded two depth-supported connector samples without
   threshold changes. Exploratory 10 cm vertical standoff approach completed
   in 98 actions, 1.949 mm final error. Current held observation 1503; no insertion

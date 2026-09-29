@@ -1,0 +1,47 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1503",
+  "decision": "inspect",
+  "connector": {
+    "end_a": {
+      "camera": "right",
+      "pixel_uv": [
+        280,
+        208
+      ],
+      "surface": "Visible gold contact surface at the bracket-side end of the card's lower PCIe edge."
+    },
+    "end_b": {
+      "camera": "right",
+      "pixel_uv": [
+        382,
+        230
+      ],
+      "surface": "Visible gold contact surface at the opposite end of the PCIe edge, before the PCB continues beyond it."
+    }
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": {
+      "camera": "right",
+      "pixel_uv": [
+        374,
+        327
+      ],
+      "surface": "Visible solid terminal rim at the opposite-from-bracket end of the lower, silver-edged candidate PCIe socket."
+    }
+  },
+  "key_visible": false,
+  "target_identity_assessment": "The historical projection supports tracking the lower silver-edged socket through right-camera pixel [320, 316], rather than switching to a neighboring slot nearer the suspended card. This is a plausible identity match, not independent verification that the historical socket selection was correct.",
+  "evidence": [
+    "The right view exposes the gold connector edge; the metal bracket is on its left, establishing connector end_a.",
+    "The tracked socket's opposite end is exposed, but its bracket-side mating terminus is not clearly separable from the adjacent angular motherboard cover.",
+    "The right anchor is depth-consistent and falls along the tracked lower socket region. It does not establish either endpoint or mating alignment.",
+    "The left anchor is depth-inconsistent and obstructed by the robot; the wrist projection is outside the image."
+  ],
+  "uncertainty": [
+    "Both corresponding socket ends are not established, so complete endpoint correspondence is unavailable.",
+    "The connector notch and matching socket key cannot be resolved confidently at this scale.",
+    "The socket endpoint sample is conditional on the candidate socket identity; no alignment, clearance, or insertion success is inferred."
+  ],
+  "next_view": "Obtain a closer view looking down toward the motherboard, with an oblique direction that exposes the tracked socket's bracket-side terminus beside the angular cover. Keep the lower historically selected socket identifiable rather than substituting its neighbor. A separate face-on view of the gold edge is needed to resolve the key. The robot blocks the left view, and the hand/card assembly dominates the wrist view; the right view exposes the target region but does not resolve the covered socket end."
+}
