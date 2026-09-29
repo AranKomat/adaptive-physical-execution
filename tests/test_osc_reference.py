@@ -4,6 +4,20 @@ from physical_exec.osc_reference import (ReferenceOSC, validate_plan, ramped_tar
                                          NativeDiffIKFeedback, phases_at_cadence)
 
 
+def test_opt_in_rotation_integral_stays_bounded():
+    from physical_exec.geometry import rotvec_to_quat
+    current = [0,0,.3,1,0,0,0]
+    target = np.r_[0,0,.3,rotvec_to_quat([0,0,.04])]
+    enabled = NativeDiffIKFeedback(.02,.097,control_dt=1/15,rotation_integral_feedback=True)
+    default = NativeDiffIKFeedback(.02,.097,control_dt=1/15)
+    for _ in range(100):
+        action = enabled.command(current,target,.012)
+        assert np.linalg.norm(action[3:6]*.097) <= .05+1e-12
+    assert enabled.rotation_integral[2] == pytest.approx(.03)
+    assert default.command(current,target,.012)[5]*.097 == pytest.approx(.04)
+    assert np.all(default.rotation_integral == 0)
+
+
 def test_reference_units_and_integral():
     controller = ReferenceOSC()
     current = [0, 0, .3, 1, 0, 0, 0]

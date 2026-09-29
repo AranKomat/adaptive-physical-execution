@@ -27,7 +27,8 @@ class ReferenceOSC:
 
 class NativeDiffIKFeedback:
     """Absolute-target feedback for upstream's relative-delta native controller."""
-    def __init__(self, pos_scale, rot_scale, *, control_dt=1/48, integral_feedback=False):
+    def __init__(self, pos_scale, rot_scale, *, control_dt=1/48, integral_feedback=False,
+                 rotation_integral_feedback=False):
         if not np.isfinite([pos_scale,rot_scale]).all() or min(pos_scale,rot_scale) <= 0:
             raise ValueError('invalid native action scales')
         self.pos_scale, self.rot_scale = pos_scale, rot_scale
@@ -35,11 +36,16 @@ class NativeDiffIKFeedback:
             raise ValueError('invalid feedback dt')
         self.control_dt, self.integral_feedback = control_dt, integral_feedback
         self.position_integral = np.zeros(3)
+        self.rotation_integral_feedback = rotation_integral_feedback
+        self.rotation_integral = np.zeros(3)
 
     def command(self, measured_pose, target_pose, finger_position_m):
         if not np.isfinite(finger_position_m) or not 0 <= finger_position_m <= .04:
             raise ValueError('invalid per-finger command')
         error = pose_error(measured_pose, target_pose)
+        if self.rotation_integral_feedback:
+            self.rotation_integral = np.clip(self.rotation_integral + .525*self.control_dt*error[3:],-.03,.03)
+            error[3:] += self.rotation_integral
         if self.integral_feedback:
             # Same time-normalized position integral gain as the reference OSC,
             # bounded to 3 cm; no mass, COM or hidden grasp-state feedforward.

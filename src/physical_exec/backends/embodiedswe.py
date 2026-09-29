@@ -23,8 +23,9 @@ from ..trace import write_json, sha256_file
 
 class EmbodiedSWEEnvironment:
     def __init__(self, repo: str | Path, task: dict, limits: Limits, device="cuda:0", record_dir=None,
-                 record_depth=False, allow_local_stages=False):
+                 record_depth=False, allow_local_stages=False, local_stage_rotation_integral=False):
         self.allow_local_stages = allow_local_stages
+        self.local_stage_rotation_integral = local_stage_rotation_integral
         if record_depth and record_dir is None:
             raise ValueError("depth capture requires a recording directory")
         self.record_depth = record_depth
@@ -213,7 +214,8 @@ class EmbodiedSWEEnvironment:
         solver = DiffIKController(cfg)
         solver.bind(self.sim.env.robot)
         feedback = NativeDiffIKFeedback(cfg.pos_scale, cfg.rot_scale,
-                                       control_dt=self.current.control_dt, integral_feedback=True)
+                                       control_dt=self.current.control_dt, integral_feedback=True,
+                                       rotation_integral_feedback=self.local_stage_rotation_integral)
         before = self.current
         started = time.monotonic()
         completed = 0
@@ -277,6 +279,7 @@ class EmbodiedSWEEnvironment:
                 "depth_policy_input": False,
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
+                "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",
                 "real_hardware_supported": False, "camera_map": self.camera_map,
                 "grasp_weld": getattr(scfg, "grasp_weld", "not_declared"),

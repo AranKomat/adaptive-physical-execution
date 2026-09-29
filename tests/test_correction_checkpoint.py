@@ -89,3 +89,13 @@ def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, ob
     assert len(calls) == 1
     assert calls[0]['action']['max_steps'] == 64
     assert calls[0]['action']['hand_pose_world'] == observation.eef_pose.tolist()
+
+
+def test_contact_motion_bounds_do_not_require_insertion_tolerance():
+    module = load_script('probe_contact_stage')
+    receipt = dict(status='executed',executed_steps=64,requested_steps=64,
+                   tracking_position_error_m=.00235,tracking_rotation_error_rad=.041)
+    assert module.exploratory_completion(receipt)
+    for change in ({'tracking_rotation_error_rad':.16},{'tracking_position_error_m':.011},
+                   {'executed_steps':63},{'status':'rejected'},{'tracking_rotation_error_rad':float('nan')}):
+        assert not module.exploratory_completion({**receipt,**change})

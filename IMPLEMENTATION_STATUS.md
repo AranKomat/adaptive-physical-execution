@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+- Fresh contact-integral trial: 640-action approach passed; closure passed even
+  strict arrival (1.759 mm / 0.01035 rad). One 5 cm lift executed 64 actions,
+  ending at 4.714 mm / 0.03341 rad error: exploratory completion passed,
+  precision arrival did not. Images suggest upward card movement, but support
+  clearance/retention remain unverified. No retry, no paid calls, 176 CPU tests
+  passed. Operator recipe, cached target, grasp assistance on; no autonomous
+  recovery or assembly claim. See `docs/CONTACT_INTEGRAL_20260930.md`.
+
 - Wrist framing fixed in an opt-in condition: nominal closing line now 17/17
   samples in frame versus 0/17 originally. Matched 640-action open approach
   passed; visual review still inspect. Separate explicitly exploratory closure
