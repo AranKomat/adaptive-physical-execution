@@ -66,5 +66,38 @@ not qualify deprojection or prove depth accuracy. Robot-geometry reprojection,
 target selection and a depth-assisted policy episode remain outstanding.
 
 Status: receipt audit and live depth capture complete; assisted live trial not done.
+
+## Corrected wrist calibration
+
+The initial wrist calibration is INVALID for deprojection. Installed IsaacLab
+defaults `CameraCfg.update_latest_camera_pose` to false, returning initialization
+pose even for a moving link-mounted camera. Depth recording now explicitly sets
+it true. This fixes calibration metadata, not the prior RGB-only policy trials:
+those trials never consumed camera poses or depth.
+
+A fresh no-motion seed-0 capture was backed up under
+`runs/depth_pose_fixed_capture_20260929` and
+`runs/depth_pose_fixed_recordings_20260929`. Reproduce the cross-view audit with
+`scripts/audit_depth_views.py <episode-recording-directory>`.
+
+| Source to target | Old agreement within 1 cm | Corrected agreement within 1 cm |
+|---|---:|---:|
+| left to right | 1009/1954 | 1009/1954 |
+| left to wrist | 25/1667 | 480/539 |
+| right to wrist | 4/1776 | 621/660 |
+| wrist to left | 22/3207 | 1835/2857 |
+| wrist to right | 6/1454 | 2692/3572 |
+
+Denominators are positive-depth points projecting inside the destination image,
+not fixed correspondences. Different poses change this overlap. The audit samples
+every eighth pixel, uses nearest-pixel depths and distinguishes nearer observed
+surfaces (possible occlusion) from farther surfaces. It does not mask occlusions
+using simulator truth. Residual discrepancies include edges and occlusion, and
+this is consistency evidence rather than metrology or collision certification.
+
+The manually selected card surface is occluded in other views; it must not be
+declared independently triangulated. Fixed-camera data is unchanged by this fix.
+112 tests pass; no paid calls or commanded manipulation were used. Stage execution
+and task success remain outstanding.
 The overall task remains unsolved. This is a focused observation-interface test,
 not a reason to restart broad perception or reasoning-level sweeps.

@@ -51,6 +51,9 @@ class EmbodiedSWEEnvironment:
         def camera_cfg_with_depth(*args, **kwargs):
             cfg = original_camera_cfg(*args, **kwargs)
             cfg.data_types = [*cfg.data_types, "distance_to_image_plane"]
+            # Link-mounted cameras move after initialization; cached spawn poses
+            # cannot calibrate their current rendered depth.
+            cfg.update_latest_camera_pose = True
             return cfg
         if record_depth:
             replay._camera_cfg = camera_cfg_with_depth

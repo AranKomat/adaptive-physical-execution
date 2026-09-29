@@ -10,6 +10,8 @@ them with a smaller motion-only goal.
 - [x] Capture idealized RGB-D and calibrated camera poses without object-state queries.
 - [x] Add strict visible-surface deprojection, rejecting invalid/mixed neighborhoods.
 - [ ] Verify spatial agreement across views and robot geometry before control use.
+  Cross-view capture audit now passes a coarse consistency check after correcting
+  stale wrist-camera pose metadata; see `SPATIAL_GROUNDING_20260929.md`.
 - [ ] Establish robot-only finger geometry; do not mistake the hand origin for contact.
 - [ ] One sensor-grounded approach with local feedback, action/time bounds, progress
   checks and termination on rejection or unexpected changes. Keep execution receipts.
