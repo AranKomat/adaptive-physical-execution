@@ -1,5 +1,45 @@
 # Guarded lift and carry: current continuation
 
+## Current2115: free-edge inspection blocked by exterior case wall
+
+Read-only live capture confirmed2051 before execution. Astra's2051 review
+selected inspection, not a grasp: wrist pixel[350,200] aims at the exposed
+short edge, with mechanical underside and finger-entry corridor unresolved.
+Legal depth put this surface at[0.566014,0.108743,0.063660]m
+(1.201mm local spread). This is an aim anchor, not a grasp or clearance proof.
+
+One operator-selected idealized camera move to eye[0.85,0.08,0.30], aimed at
+that anchor, passed translation/angular preflight. All64 arm-hold actions
+completed2051->2115,4.267sim seconds/28.566wall seconds, zero reported position
+error. Gripper remained open; no commanded arm transit, contact or reset.
+**The resulting right image is occluded by the exterior case wall.** Passing
+camera-envelope checks does not establish a useful sightline. Do not repeat
+nearby low views or interpret this as evidence that no recovery grasp exists.
+
+Recovery remains incomplete. Next evaluate a bounded recovery proposal using
+current interior views and explicitly historical views; do not reuse upright
+grasp coordinates or require complete collision certification for a simulator
+proposal. Preserve unobserved contact surfaces and PCB-contact risks explicitly.
+Artifacts: `_recovery2051_review`, `_recovery_live_check`,
+`_recovery_free_edge_view`, `_capture2115`, under the existing run prefix.
+The2051 and earlier sections below are historical, not live state.
+
+A fresh2115 Astra review (current wrist/left/right plus labeled historical
+interior views, no evaluator) again chose inspect, no grasp pixels. It proposed
+at most10mm open-hand retreat toward the case opening, zero rotation, with
+visual checks every2mm and stops for card motion, approach to obstacles or
+view loss. **Not executed:** do not substitute a single unmonitored stage or
+silently enlarge this proposal. Another tiny retreat has uncertain information
+gain; the next experiment decision must weigh that against a different recovery
+strategy, rather than continue indefinitely accumulating inspection calls.
+No claim that the card is physically unrecoverable follows from model refusal.
+
+Public evidence: [wall-occluded view](evidence/recovery_free_edge_2115/after_right.png),
+[execution receipt](evidence/recovery_free_edge_2115/receipt.json), and
+[unexecuted recovery proposal](evidence/recovery_free_edge_2115/recovery_review.json).
+Selected2115 RGB-D is backed up locally, not the complete remote recording.
+Cumulative reserved calls4396; prior budget holds remain unchanged.
+
 ## Recovery observation2051: card lying across board, no grasp selected
 
 Fresh1987 image-only recovery request excluded the posthoc evaluator. Astra

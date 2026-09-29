@@ -1,0 +1,41 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2115",
+  "decision": "inspect",
+  "grasp_center": null,
+  "surface_samples": [],
+  "observed_contact_surfaces": [
+    {
+      "camera": "CURRENT2115 wrist",
+      "surface": "Exposed graphics-card PCB back and component-populated free-edge region. These are visible but are not selected as jaw contacts."
+    }
+  ],
+  "inferred_contact_surfaces": [
+    {
+      "surface": "Potential opposing faces of the graphics-card cooler/shroud",
+      "basis": "HISTORICAL1987 shows a substantial cooler/shroud beneath the PCB. CURRENT2115 does not resolve a reliable mechanical contact patch or its opposing face.",
+      "assumption": "The historical cooler/shroud remains attached; its accessible gripping surfaces and load-bearing suitability are unverified."
+    }
+  ],
+  "approach_description": "Use a bounded open-hand withdrawal carrying the wrist camera, rather than another external camera sweep. Seek parallax past the PCB free edge and right fingertip, which obscure the adjacent cooler/shroud region in the current wrist image. Withdraw toward the open case top with a small component away from the card into the foreground gap between the fingers. Maintain hand orientation and opening. The left view shows an open case top: the exterior wall blocks the previous low view, but does not establish that an above-rim robot-held inspection is impossible.",
+  "first_step": {
+    "action": "Bounded no-contact open-hand retreat with wrist-image reacquisition",
+    "maximum_translation_mm": 10,
+    "maximum_rotation_deg": 0,
+    "increment_mm": 2,
+    "direction_reference": "Toward the open case top and away from the visible PCB, not downward alongside the exterior wall. Determine the corresponding robot motion using the calibrated camera/robot relationship; no world target is inferred here.",
+    "stop_conditions": [
+      "Stop immediately if either finger appears to approach the PCB, cooler, motherboard, or case rim rather than separate from it.",
+      "Stop on any apparent card motion, unexpected resistance, or loss of a usable view of nearby obstacles.",
+      "Stop before moving if the withdrawal direction cannot be distinguished from a direction that crosses the card or rim.",
+      "At 10 mm total displacement, hold and reassess even if the shroud remains hidden; do not extend the retreat automatically."
+    ],
+    "contact_authorized": false
+  },
+  "visible_risks": [
+    "The right fingertip is visually close to the PCB corner; depth separation is unresolved.",
+    "PCB components and the exposed gold connector are unsuitable default pinch targets.",
+    "The cooler/shroud is largely hidden by the PCB in the current wrist view.",
+    "The case rim and motherboard constrain withdrawal; an open top alone does not certify the hand's swept clearance."
+  ],
+  "uncertainty": "This inspection addresses interior self-occlusion and fingertip occlusion, not the already-failed exterior-wall viewpoint. A short retreat may improve the edge view without revealing an opposing shroud face. Neither clearance nor object dimensions are established. Subsequent opposing-jaw geometry may use an explicitly justified hidden opposing face, but the current image does not yet provide a sufficiently identifiable mechanical contact patch."
+}

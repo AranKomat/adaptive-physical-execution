@@ -2,6 +2,15 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT2115: one depth-aimed free-edge camera inspection completed64 hold
+actions but sees the exterior case wall. No regrasp/contact/reset. Stop nearby
+low-view sweeps; use retained interior evidence for a bounded recovery proposal.
+Recovery/assembly remain incomplete. See `docs/GUARDED_CARRY_CURRENT.md`.
+Fresh2115 review proposed only a10mm wrist retreat with2mm visual checks;
+not executed. No grasp selected, no evidence of physical impossibility. Do not
+silently replace those checks with an unmonitored motion or repeat camera sweeps.
+All CURRENT entries below are historical checkpoints.
+
 CURRENT2051: failed placement remains displaced. Recovery review1987 selected
 inspect/no grasp. Opposite view2051 shows PCB-up card across board, cooler
 underneath, partially case-rim occluded. No blind regrasp or reset. Need a fresh
