@@ -1,5 +1,26 @@
 # Guarded lift and carry: current continuation
 
+## Recovery observation2051: card lying across board, no grasp selected
+
+Fresh1987 image-only recovery request excluded the posthoc evaluator. Astra
+returned inspect, no grasp pixels: exposed PCB/contact strip should not be
+mistaken for a mechanically established opposing-jaw grasp, and the cooler/edge
+contact surfaces were hidden. No reset or reuse of the original upright target.
+
+One opposite-side idealized camera move reached2051 with gripper fully open
+and arm held (64actions,0.008mm/0.000019rad hold error). Eye[0.65,0.20,0.35],
+gaze[0.478,0.028,0.10]. Image shows card lying PCB-side up across the motherboard
+region; cooler side is underneath and part of the card is behind the case rim.
+No robot transit, blind pinch or insertion retry followed. This is a displaced
+object regrasp problem now, not continuation of the old alignment target.
+
+Preserve current2051 state. Next recovery candidate must identify accessible
+card-attached mechanical contact surfaces (edge/bracket/shroud), qualify fresh
+RGB-D geometry and avoid mistaking exposed electronics or motherboard parts for
+a grasp pair. Current imagery does not establish underside finger clearance.
+Artifacts: `_recovery1987_review`, `_recovery_opposite_view`, `_capture2051`
+under `runs/guarded_full_lift_20261001`. Recovery remains incomplete.
+
 ## Latest1987: release and withdrawal revealed failed seating
 
 Astra reviewed current1893 images without evaluator truth and chose a bounded

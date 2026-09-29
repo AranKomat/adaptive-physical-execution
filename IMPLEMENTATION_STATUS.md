@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT2051: failed placement remains displaced. Recovery review1987 selected
+inspect/no grasp. Opposite view2051 shows PCB-up card across board, cooler
+underneath, partially case-rim occluded. No blind regrasp or reset. Need a fresh
+accessible mechanical edge/bracket candidate; see `docs/GUARDED_CARRY_CURRENT.md`.
+
 CURRENT1987: release + open-hand withdrawal revealed FAILED seating. Card
 tipped onto motherboard region. Posthoc native success=false, score0.33333334;
 not supplied to control. Hand tracking passed, placement did not. Preserve
