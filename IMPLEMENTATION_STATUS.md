@@ -4,6 +4,14 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Contact source audit found visual/collision geometry separation AND an
+  instruction mismatch: upstream describes bracket-through-cutout assembly;
+  our configured task only says align/seat. Exact failed contact is unproven.
+  Keep this evaluator-side; do not derive motion from hidden fixture geometry.
+  Next is an explicitly labeled instruction-contract comparison plus live guard
+  qualification, not another blind descent. No phase completed. See
+  `docs/CONTACT_OBSERVABILITY_AUDIT_20260930.md`.
+
 - NEWEST held observation1800: explicit surface-contact hypothesis failed,
   26.291mm/0.176rad final error; posthoc native success=false,score0.3333. No
   extra push/release. Astra selected5cm withdrawal; it completed at1.600mm error,

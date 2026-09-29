@@ -7,6 +7,13 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+Static contact audit: upstream collision is an invisible fixture distinct from
+the visual PC. Its task description also supplies a bracket-through-cutout
+sequence omitted by our configured instruction. This is a plausible contact
+failure explanation and a comparison confound, not a proven collision identity
+or permission to use hidden geometry for commands. See
+`CONTACT_OBSERVABILITY_AUDIT_20260930.md`. No new motion or completed phase.
+
 NEWEST state1800: sensor-surface contact hypothesis ended without arrival
 (26.291mm/10.09deg error), native evaluator read afterward success=false,
 score0.3333. No further push/release. Astra chose5cm withdrawal using only
