@@ -1,0 +1,52 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1277",
+  "connector": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          318,
+          185
+        ],
+        "surface": "Exposed narrow contact-bearing strip along the lower graphics-card PCB edge."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          338,
+          224
+        ],
+        "surface": "Another exposed portion of the same lower contact strip."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "The right image exposes a narrow gold-colored strip along the sloping lower PCB edge, distinct from the broad card body and shroud.",
+    "uncertainty": "The strip is only a few pixels wide. Samples estimate its rough visible axis, not mating endpoints. A key notch is not reliably resolved."
+  },
+  "socket": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          389,
+          315
+        ],
+        "surface": "Solid upper portion of the dark motherboard PCIe socket housing."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          407,
+          349
+        ],
+        "surface": "Solid longitudinal housing wall farther down the same partially visible socket."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "A narrow, elongated socket housing is partially visible at the lower right of the motherboard, separate from the illuminated RAM on the left.",
+    "uncertainty": "The housing is oblique, dark, and cropped by the image boundary; localization is rough. Its internal key is unresolved. Neither these samples nor the connector samples establish clearance or insertion alignment."
+  },
+  "next_view": "A closer, unobstructed view looking down into the motherboard PCIe housing and facing the card's lower contact edge is needed to resolve both key features and the currently cropped socket extent."
+}

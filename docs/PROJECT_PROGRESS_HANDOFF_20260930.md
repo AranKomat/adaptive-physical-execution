@@ -7,6 +7,17 @@ below are measured per experiment; the ten-hour description is approximate.
 
 ## Latest continuation (supersedes the older live-state section below)
 
+LATEST after aimed carry: same episode now 1341, eye [.8,-.05,.5], gaze
+[.47224,.02803,.15], held/paused. See `docs/MATING_FEATURES_20260930.md`.
+Independent feature detection likely switched to a neighboring slot while the
+original was cropped. History-aware reframing restored consistent CPU-adjacent
+socket selection, with two depth-supported housing points. Current connector
+samples fail the unchanged continuity gate; no descent/release. Two camera-only
+moves, three new reviews $0.1074575, episode total $0.17069; reserved calls 4364.
+Worker/tunnel unchanged. 201 tests pass. Existing video ends at 1213. No new
+assembly phase complete; next resolve contact-strip geometry while retaining
+socket identity, not more independent rediscovery or a repeat lift/carry.
+
 NEWEST: `docs/AIMED_LIFT_20260930.md` records the integrated aiming/carry trial.
 Fresh episode d3645c724ce046aeab7dbd48580af359 reached 1213: 693-action assisted
 lift replay, bounded aimed camera inspection, fresh RGB-D feature selection and

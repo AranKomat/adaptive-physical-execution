@@ -1,0 +1,35 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1213",
+  "connector": {
+    "status": "occluded",
+    "samples": [],
+    "key_visible": false,
+    "evidence": "The card shroud and portions of its PCB are visible, but the actual lower PCIe contact edge is not exposed clearly enough to sample.",
+    "uncertainty": "Contact-edge position, axis, and notch cannot be established from these views. No hidden contact points are inferred."
+  },
+  "socket": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          287,
+          244
+        ],
+        "surface": "Visible solid side rail of the motherboard PCIe socket housing below the CPU area."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          330,
+          226
+        ],
+        "surface": "Separated solid side-rail surface of the same PCIe socket housing."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "The right camera shows an elongated motherboard expansion socket below the CPU, distinct from the illuminated RAM sockets. Its exposed housing supports rough axis localization.",
+    "uncertainty": "Samples estimate the housing axis only; they are neither mating endpoints nor the slot-gap centerline. The internal key is not resolved. Clearance and insertion alignment remain unknown."
+  },
+  "next_view": "An unobstructed close oblique view of the card's lower PCB contact edge is needed to expose the contact surface and, if possible, its notch. A closer view into the motherboard socket would be needed to resolve its internal key."
+}

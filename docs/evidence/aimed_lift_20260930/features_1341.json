@@ -1,0 +1,59 @@
+{
+  "observation_id": "d3645c724ce046aeab7dbd48580af359:1341",
+  "connector": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          312,
+          55
+        ],
+        "surface": "Narrow exposed yellow/gold PCIe contact-edge surface beside the green PCB."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          333,
+          109
+        ],
+        "surface": "Exposed contact-edge surface farther along the same sloping lower PCB edge."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "The right image exposes a thin contact-bearing edge on the left boundary of the suspended card, distinct from its broad PCB face and cooler.",
+    "uncertainty": "The contact surface is narrow and strongly foreshortened, making pixel selection sensitive. These are rough interior surface samples, not mating endpoints. A key notch cannot be resolved reliably."
+  },
+  "socket": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          309,
+          224
+        ],
+        "surface": "Solid upper housing/latch surface of the selected PCIe socket beside the CPU area."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          319,
+          256
+        ],
+        "surface": "Solid side rail of that same socket housing, not its dark opening."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "A portion of the selected long PCIe housing remains visible immediately beside the CPU area. Its rails extend toward the foreground case wall, which hides the lower continuation.",
+    "uncertainty": "Only a partial housing axis is observable. The internal key and obscured continuation are not localized. Samples are not exact socket endpoints or a gap centerline."
+  },
+  "target_identity_assessment": {
+    "status": "consistent_with_historical_target",
+    "evidence": "The historical anchor selects the long socket immediately beside the CPU area, left of the other parallel expansion sockets. The current samples retain that board-relative identity rather than selecting a more visible neighboring socket.",
+    "uncertainty": "Tracking is based on the motherboard layout and neighboring components. This does not certify that the historical socket choice was correct, or establish clearance or insertion alignment."
+  },
+  "next_view": {
+    "description": "An unobstructed close oblique view of the same CPU-adjacent socket and the card contact edge is needed to resolve their keys and the socket portion hidden by the foreground case wall."
+  }
+}

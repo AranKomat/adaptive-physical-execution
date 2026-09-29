@@ -10,9 +10,11 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'feature_inventory'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
+    p.add_argument('--prior-carry-capture', type=Path)
+    p.add_argument('--prior-carry-response', type=Path)
     args = p.parse_args()
     state = json.loads((args.capture / 'state.json').read_text())
     prompt = (
@@ -164,10 +166,56 @@ def main():
             '\nRobot-only state: '+json.dumps(state)+
             '\nCurrent sensor calibration: '+json.dumps(calibrations))
     content = [{'type': 'text', 'text': prompt}]
+    if args.stage == 'feature_inventory':
+        content = [{'type': 'text', 'text': (
+            'Localize visible mating features independently in these CURRENT simulator images. '
+            'This is an observation-only inventory, NOT an alignment verdict or motion permission. '
+            'The task is installing a held graphics card into a motherboard. For each of connector '
+            '(actual lower PCIe contact edge, not card body/shroud) and socket '
+            '(motherboard PCIe socket housing, not RAM, heatsink or case), report separately '
+            'whether it is visible. One may be localized even if the other is hidden. '
+            'A visible key/notch is NOT required for rough surface/axis localization: report key '
+            'visibility independently. Do not infer hidden points from generic expectations. '
+            'Choose two separated interior solid-surface pixels along each visible feature to '
+            'estimate a rough axis; if only one point is reliable, return that point only. '
+            'Do not treat these points as exact mating endpoints or the gap centerline. '
+            'Each feature: status (axis_visible/point_visible/occluded/uncertain), samples '
+            '(list of {camera: left/right/wrist, pixel_uv: [u,v], surface: description}), '
+            'key_visible (boolean), evidence, uncertainty. Use ORIGINAL 640x360 integer pixels, '
+            'upper-left origin. Depth will be measured independently; do not invent world poses. '
+            'Return JSON with observation_id, connector, socket, and next_view describing only '
+            'the view needed for missing features. Never call an empty gap a solid surface. '
+            'Unseen clearance and insertion alignment remain unknown regardless of localization. '
+            '\nRobot-only state: '+json.dumps(state))}]
     for role in ('left', 'right', 'wrist'):
         encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
                         {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
+    if args.prior_carry_capture or args.prior_carry_response:
+        if args.stage != 'feature_inventory' or not (args.prior_carry_capture and args.prior_carry_response):
+            raise ValueError('carry history requires feature inventory and both prior inputs')
+        old_state = json.loads((args.prior_carry_capture/'state.json').read_text())
+        old_response = json.loads(args.prior_carry_response.read_text())
+        old_episode, old_seq = old_state['observation_id'].rsplit(':', 1)
+        episode, seq = state['observation_id'].rsplit(':', 1)
+        if (old_episode != episode or int(old_seq) >= int(seq)
+                or old_response['observation_id'] != old_state['observation_id']
+                or old_response['decision'] != 'carry_above_slot'):
+            raise ValueError('carry history must be an earlier selection in the same episode')
+        role = old_response['slot_feature']['camera']
+        if role not in ('left','right','wrist'):
+            raise ValueError('invalid historical camera')
+        encoded = base64.b64encode((args.prior_carry_capture/f'{role}.png').read_bytes()).decode()
+        content.extend([
+            {'type':'text','text':(
+                'HISTORICAL carry target, NOT a current observation or certified correct socket. '
+                'There may be several similar PCIe sockets. Track the SAME selected socket into '
+                'the current view; do not silently switch to a more visible neighboring slot. '
+                'If it is cropped or occluded, report that. If the old identification was wrong, '
+                'explain rather than preserving it blindly. Return current-image samples only, '
+                'plus target_identity_assessment. History is not clearance or insertion approval. '
+                +json.dumps(old_response))},
+            {'type':'image_url','image_url':{'url':'data:image/png;base64,'+encoded}}])
     if args.prior_socket_capture or args.prior_socket_response:
         if args.stage != 'alignment' or not (args.prior_socket_capture and args.prior_socket_response):
             raise ValueError('historical socket context requires alignment and both prior inputs')

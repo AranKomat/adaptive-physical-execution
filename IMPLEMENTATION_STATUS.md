@@ -4,6 +4,13 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Latest continuation at held observation 1341: separate feature localization
+  exposed a likely neighboring-slot switch when the original target was cropped.
+  Labeled same-episode carry history plus reframing recovered consistent socket
+  identity and two valid housing-depth samples. Connector recognized but current
+  samples fail depth continuity; no insertion geometry or descent. Three new
+  calls $0.1074575, 201 tests. See `docs/MATING_FEATURES_20260930.md`.
+
 - Latest live trial: bounded camera aiming qualified, assisted lift replay
   completed in 693 actions, fresh sensor-feature carry completed in 328 actions
   with 1.957 mm final error. Final observation
