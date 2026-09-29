@@ -152,3 +152,29 @@ snagging, constrained contact, slip or grasp-assist behavior is not resolved by
 the frame. Do not extend upward motion blindly or claim a successful recovery.
 The next decision needs current multi-view/contact evidence, not another depth
 increment. Baseline grasp assistance remains enabled; no physics gains changed.
+
+## One-call stage review
+
+`astra_stage_review_20260929` submitted the three retained step-280 RGB views,
+robot public state and the prior local-execution outcome to Astra Flex at medium
+reasoning through the authorized pinned OpenAI Flex route. No object poses,
+grader scores or privileged contact data entered the request. The explicit prompt
+included the operator's observed tilt and failed-capture context; this is a
+context-informed review, not a blind perception benchmark.
+
+One call cost $0.01565875 (1,852 total reported tokens). JSON-object output was
+requested, then strictly parsed into one of `reopen_hold`, `inspect`, or `stop`.
+The model selected `inspect`: the left view suggests a nearby support, but the
+wrist is occluded and the right view does not establish load-bearing support.
+It recommended no further lift and no release until support is established.
+No motion was issued from this recommendation. The review and raw API evidence
+are retained locally; the shared ledger retains all previous holds.
+
+This demonstrates a cheap stage-boundary review, not successful recovery,
+autonomous grasp planning or lower cost per completed task. The constrained menu
+does not test arbitrary high-level planning. Current observation lacks force or
+contact sensing; no configured Franka contact sensor was found in its robot source.
+Repeatedly asking about the same occluded images is unlikely to add evidence.
+Next work should obtain a genuinely informative legal view/contact measurement
+or evaluate the motor-policy route, rather than force/release by guesswork.
+117 CPU tests pass, including stage-output validation; task success remains open.
