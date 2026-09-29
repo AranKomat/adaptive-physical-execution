@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT2793: reviewed inclined recovery approach physically tested without
+lowering pilot bounds. Reorientation succeeded; final standoff FAILED arrival
+at2729 (9.369mm/0.0596rad error).534actions, no guard trigger, retry or closure.
+Camera-only hold restored interior view at2793. Cause unresolved; inspect fresh
+proximity evidence before any different action. New executor and234tests;
+recovery/assembly still incomplete. Calls4398. See `docs/GUARDED_CARRY_CURRENT.md`.
+
 NEW2195 geometry: visible terminal span115mm exceeds80mm nominal jaws for a
 full-width top-down straddle. A sideways-pinch hypothesis has convergent
 robot-only IK but requires hand z64mm, below the120mm local-stage pilot floor.

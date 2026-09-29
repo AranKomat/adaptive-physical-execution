@@ -1,0 +1,18 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2195",
+  "decision": "approve_standoff",
+  "candidate_index": 2,
+  "reason": "Worthwhile as one bounded simulator-only test, not a clearance-certified move. Candidate 2 combines the highest offered standoff with the shortest translation among the 60-degree candidates. Its execution target is [0.514048, 0.066927, 0.213201] m, not the contact pose. Nominal open-pad heights there are 103.7 and 143.7 mm, approximately 40 and 80 mm above the anchor. The views do not establish a definite conflict at this raised target, although they do not establish free space. Approve only the specified open-gripper, current-origin reorientation followed by translation, with all stated waypoint limits, tracking stops, no retry, and final visual review.",
+  "observed_risks": [
+    "Raised motherboard heatsinks and RAM are adjacent to the GPU; the inclined fingers or hand could encounter these before reaching the standoff.",
+    "The chassis rim and sidewall constrain access and could interfere with the hand or arm.",
+    "The current exterior view obscures much of the interior, and the historical interior view is not current clearance evidence."
+  ],
+  "unknowns": [
+    "External clearance during both current-origin rotation and translation remains unknown.",
+    "Nominal pad centers do not bound the full fingers, hand, wrist, or arm.",
+    "The supplied IK result is for the hypothetical contact pose, not the raised execution target or intermediate path.",
+    "Actual GPU surface height, protrusions, and continued validity of the historical static-object assumption are uncertain."
+  ],
+  "contact_authorized": false
+}

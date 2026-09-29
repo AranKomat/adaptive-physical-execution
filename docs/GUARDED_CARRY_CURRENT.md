@@ -1,5 +1,45 @@
 # Guarded lift and carry: current continuation
 
+## Current2793: inclined recovery standoff attempted; final nonarrival
+
+Batch-checked12 inclined endpoints (four approach azimuths,35/45/60deg down
+from horizontal). Inclination restores admissible hand height without changing
+the120mm pilot floor.10/12 contact-hypothesis IK solves converged from the
+current seed; this is not path or contact qualification. Open nominal lower
+pad heights span31--44mm, making motherboard/cooler access an explicit risk.
+
+Astra selected candidate2:60deg inclination, fingers toward+x. Approved only
+open-hand reorientation at the current origin, then translation to a60mm
+world-up standoff above its hypothetical contact pose. Target hand position
+[0.514048,0.066927,0.213201]m. External clearance remained explicitly unknown;
+no descent/closure was approved. Actual standoff and all11 waypoint IK checks
+passed before execution, as did the unchanged local-stage bounds.
+
+Execution2195->2729:534actions,35.6sim seconds,240.911execution wall seconds.
+Intermediate waypoints passed continuously, with settling only at phase ends.
+Reorientation arrived (0.394mm/0.0102rad error). The final translation used its
+64-action cap but ended9.369mm/0.0596rad from target: **nonarrival**, not a
+successful standoff. No tracking-guard trigger, retry, closure or contact claim.
+The executor stopped at that failure. A64-action idealized camera restoration
+held the actual measured pose, not the failed target, to reach2793; hold error
+0.008mm. Interior image shows card/finger/rim proximity but does not establish
+the cause of tracking error. No privileged collision diagnosis was used.
+
+Current hand[0.504916,0.064947,0.213885]m, open gripper, same displaced episode.
+Selected2729/2793 depth and final RGB are local. Public [compiled sequence](evidence/inclined_recovery_2729/declared_sequence.json),
+[review](evidence/inclined_recovery_2729/review.json),
+[all receipts](evidence/inclined_recovery_2729/summary.json), and
+[fresh interior image](evidence/inclined_recovery_2729/inspection2793_right.png).
+Next inspect current contact/proximity evidence before any different recovery
+action. Do not repeat the failed target or infer contact merely from nonarrival.
+
+Added `run_reviewed_recovery_standoff.py`: observation-bound standoff-only
+review, open-gripper requirement, all-waypoint IK/bounds preflight, continuous
+transit, tracking guard, explicit nonarrival stop, no automatic retry/closure.
+Five focused contract tests cover dry-run, dispatch, stale plan, bounds rejection
+and guard-stop termination.234tests pass; these tests do not complete a task
+phase. Calls4398, existing holds unchanged. Assembly/recovery remain incomplete.
+
 ## Current2195: concrete side-pinch hypothesis, rejected by pilot height envelope
 
 No motion this continuation; fresh read-only capture confirmed2195. A legal
