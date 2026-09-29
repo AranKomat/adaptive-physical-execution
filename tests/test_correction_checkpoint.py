@@ -99,3 +99,17 @@ def test_contact_motion_bounds_do_not_require_insertion_tolerance():
     for change in ({'tracking_rotation_error_rad':.16},{'tracking_position_error_m':.011},
                    {'executed_steps':63},{'status':'rejected'},{'tracking_rotation_error_rad':float('nan')}):
         assert not module.exploratory_completion({**receipt,**change})
+
+
+def test_lift_review_requires_contiguous_probes(tmp_path):
+    module = load_script('prepare_lift_review')
+    close, lift = tmp_path/'close', tmp_path/'lift'
+    close.mkdir()
+    lift.mkdir()
+    (close/'after.json').write_text(json.dumps({'observation_id':'episode:704'}))
+    (lift/'before.json').write_text(json.dumps({'observation_id':'episode:704'}))
+    captures = module.probe_captures(close, lift)
+    assert [entry[0] for entry in captures] == ['before_closure','after_closure','after_lift']
+    (lift/'before.json').write_text(json.dumps({'observation_id':'other:704'}))
+    with pytest.raises(ValueError, match='not contiguous'):
+        module.probe_captures(close, lift)

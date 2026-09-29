@@ -41,11 +41,41 @@ predeclared exploratory completion bounds but not precision arrival.
 No retry or further motion was issued.
 
 Before/after images suggest upward card movement with the hand, but complete
-support clearance and secure retention are not established. No independent
-review was requested and no paid calls were made. Grasp assistance remains on;
+support clearance and secure retention are not established. No paid calls were
+made during execution; a subsequent separate visual review is recorded below.
+Grasp assistance remains on;
 this is an operator-authored, cached-target replay, not autonomous recovery.
 Object tilt is not itself a grasp failure; it is distinct from hand tracking
 error. Insertion alignment and retention still require separate evidence.
 
 Local artifacts: `runs/contact_integral_20260930_{approach,close,lift}` and
 `runs/contact_integral_20260930_recordings`. CPU regression: 176 tests passed.
+
+## Subsequent review and next decision
+
+One Astra Flex medium review saw nine images: left/right/wrist before closure,
+after closure and after lift, with observation IDs but no hidden object state or
+suggested verdict. It returned `partial_contact`: upward movement is visible,
+but no continuous gap beneath the entire card; one end may remain supported.
+The result is visual evidence, not a definitive contact measurement. Cost
+$0.02803375; no further robot motion was issued.
+
+Comparison with `sensor_diffik_integral_20260930/command_1.json` exposes major
+confounds before attributing this outcome to the controller:
+
+- Successful pilot remeasured a wrist target after approaching: surface
+  (0.236337, -0.341177, 0.131959) m. This trial reused a far-view target:
+  (0.261059, -0.322917, 0.129442) m, about 30.7 mm different laterally.
+- Successful pilot lifted 23 cm over 12 simulated seconds; this trial requested
+  only 5 cm over 4.267 seconds. Partial support clearance after the shorter lift
+  cannot establish that the same grasp would fail a longer lift.
+- Native cadence, closure duration and camera conditioning also differ.
+
+Next integrated grasp qualification should refresh the grasp point after
+approach, retain calibrated RGB-D provenance, and predeclare a lift sufficient
+to test suspension with a bounded stop/review. Do not carry or insert on the
+strength of the present partial-contact images, and do not repeat controller or
+camera sweeps. No assembly/recovery phase is completed by this result.
+
+The review builder now supports separate close/lift probes and checks that their
+observation IDs are contiguous; raw precision receipts remain unmodified.

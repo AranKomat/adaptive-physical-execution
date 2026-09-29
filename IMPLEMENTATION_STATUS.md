@@ -6,7 +6,11 @@
   strict arrival (1.759 mm / 0.01035 rad). One 5 cm lift executed 64 actions,
   ending at 4.714 mm / 0.03341 rad error: exploratory completion passed,
   precision arrival did not. Images suggest upward card movement, but support
-  clearance/retention remain unverified. No retry, no paid calls, 176 CPU tests
+  clearance/retention remain unverified. Subsequent nine-image Astra review:
+  partial_contact, $0.02803375. No further motion. Earlier successful pilot used
+  a refreshed wrist target ~31 mm laterally away and a 23 cm rather than 5 cm
+  lift; these are unresolved confounds, not evidence of controller failure.
+  Next refresh close-range target and predeclare suspension test. 176 CPU tests
   passed. Operator recipe, cached target, grasp assistance on; no autonomous
   recovery or assembly claim. See `docs/CONTACT_INTEGRAL_20260930.md`.
 
