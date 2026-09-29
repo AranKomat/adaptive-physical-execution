@@ -42,3 +42,39 @@ No motion was commanded from it. The helper keeps observation identity attached.
 
 112 CPU tests pass. They establish software checks, not successful approach,
 calibration accuracy or manipulation. No additional API calls were made.
+
+## First local-feedback approach
+
+`runs/local_approach_20260929` continued the freshly captured, corrected-depth
+episode with an exact observation-ID check. The operator-selected card surface
+pixel (158,216) defined a hand target 0.30 m above that surface along world z.
+This explicit standoff is a probe parameter, not learned grasp geometry.
+The local controller preserved orientation and commanded an open gripper,
+replanning a single at-most-1-cm step from measured hand position each time.
+Existing IK, joint continuity and command limits remained active.
+
+It executed 60 actions in 37.62 wall seconds (4 simulated seconds), with zero
+GPT calls and no command rejection. Target distance decreased:
+
+| Control steps | Hand-target distance |
+|---:|---:|
+| 0 | 196.39 mm |
+| 10 | 168.37 mm |
+| 20 | 140.11 mm |
+| 30 | 111.76 mm |
+| 40 | 83.46 mm |
+| 50 | 55.16 mm |
+| 60 | 26.73 mm |
+
+Result: action-budget termination, NOT arrival (3 mm criterion), grasp or task
+success. It made steady progress without GPT per-step corrections. Target selection
+was manual, so zero calls must not be presented as an autonomous perception result.
+The result file from this first run lacks an explicit stop-reason field; 60 actions
+and the fixed cap establish termination. The script now writes that field.
+
+This exploratory simulator probe does not certify swept-volume clearance or
+detect arbitrary scene changes. Its local monitoring covers measured progress,
+execution receipts and budgets, not a general visual event detector. Do not deploy
+it on hardware or represent it as a production stage executor. Next: bounded
+arrival completion and inspection, then grasp geometry/attempt; do not restart
+long GPT-Direct loops just to finish this transit.
