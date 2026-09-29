@@ -22,7 +22,11 @@
   socket before carry. Lift/carry repeated, but hand/card occlusion remained
   afterward; a historical-context review recognized the prior socket without
   claiming present alignment. No insertion yet. See `docs/OVERHEAD_SOCKET_20260930.md`.
-- 135 CPU tests pass. They do not establish manipulation robustness.
+- Independent camera translation is now opt-in and live-tested while the arm
+  holds. A Fabric-backed pose failure was detected; the pinned USD pose route
+  passed. The idealized camera has no collision body. Applying it after carry
+  is next; see `docs/INSPECTION_CAMERA_20260930.md`.
+- 140 CPU tests pass. They do not establish manipulation robustness.
 
 See [native DiffIK evidence](docs/SENSOR_DIFFIK_PILOT_20260929.md),
 [stage sequence](docs/STAGE_EXECUTION_20260929.md), and

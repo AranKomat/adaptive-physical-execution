@@ -27,6 +27,7 @@ def main():
     p.add_argument('--max-reference-actions', type=int, default=700, help='episode cap in 15 Hz action equivalents, at most 2000')
     p.add_argument('--integral-feedback', action='store_true',help='native DiffIK bounded translation integral and 3 cm command cap')
     p.add_argument('--pause-on-arrival-failure', action='store_true',help='nonterminal timeout only; unsafe motion stops stay terminal')
+    p.add_argument('--inspection-camera', action='store_true', help='opt-in idealized right-camera positioning; no collision body')
     from isaaclab.app import AppLauncher
     AppLauncher.add_app_launcher_args(p)
     args = p.parse_args()
@@ -44,6 +45,7 @@ def main():
     from physical_exec.osc_reference import (ReferenceOSC, NativeDiffIKFeedback, validate_plan,
                                             phases_at_cadence, ramped_target, motion_stop_reason)
     from physical_exec.trace import write_json
+    from physical_exec.inspection_camera import camera_path
     repo = args.repo.resolve()
     for path in (repo, repo / 'vla/eval', repo / 'data_engine', repo / 'vla/convert'):
         sys.path.insert(0, str(path))
@@ -114,7 +116,8 @@ def main():
                   NativeDiffIKFeedback(native_cfg.pos_scale,native_cfg.rot_scale,
                                        control_dt=control_dt,integral_feedback=args.integral_feedback))
     result = dict(condition=f'sensor-target {args.controller} pilot; exploratory unknown clearance; grasp assistance enabled',
-                  model_controls_targets=True, stages=[], success_claimed=False)
+                  target_provenance='file commands; inspect target_source in each command',
+                  stages=[], success_claimed=False)
     write_json(args.output / 'metadata.json', dict(episode=episode, control_dt=control_dt,
         controller=('ported frozen Motion OSC gains' if args.controller=='osc' else 'native DiffIK with bounded absolute-target feedback'),
         native_declared_control_dt=native_cfg.dt, physics_dt=env.dt,
@@ -123,6 +126,8 @@ def main():
         action_budget=budget, reference_action_budget_15hz=args.max_reference_actions,
         frame_kind=f'sampled every {record_every} actions',
         extra_cameras=task['extra_cameras'], image_size=task['image_size'],
+        inspection_camera=args.inspection_camera,
+        camera_collision_model='none; idealized sensor-position experiment, clearance unknown',
         camera_map=task['camera_map'], initial_warmup_actions=0, privileged_control_inputs=False,
         ramp_targets=args.ramp_targets, rotation_abort_rad=.35, joint_limit_margin_rad=.005))
     started = time.monotonic()
@@ -150,6 +155,20 @@ def main():
                     phase_started = time.monotonic()
                     target = np.asarray(phase['hand_pose_world'])
                     phase_start = robot_state()['hand_pose_world']
+                    eye_path = None
+                    if 'camera_eye_world' in phase:
+                        if not args.inspection_camera:
+                            raise ValueError('inspection camera requires explicit opt-in')
+                        moving_camera = sim.sensors[task['camera_map']['right']]
+                        # Pinned IsaacLab Fabric camera writes did not persist in
+                        # the live test. Use its USD pose path for this sensor only,
+                        # so rendering and calibration query the same transform.
+                        if not hasattr(moving_camera._view, '_use_fabric'):
+                            raise RuntimeError('unsupported inspection camera transform backend')
+                        moving_camera._view._use_fabric = False
+                        moving_camera.update(0., force_recompute=True)
+                        eye_path = camera_path(array(moving_camera.data.pos_w)[0], phase['camera_eye_world'],
+                                               phase_start, target, phase['actions'], control_dt)
                     for tick in range(phase['actions']):
                         state = robot_state()
                         if not np.isfinite(state['joints'] + state['joint_velocities']).all():
@@ -159,10 +178,16 @@ def main():
                             raise RuntimeError(stop)
                         waypoint = ramped_target(phase_start,target,tick+1, .0225*control_dt) if args.ramp_targets else target
                         action = controller.command(state['hand_pose_world'], waypoint, phase['finger_position_m'])
+                        if eye_path is not None:
+                            moving_camera.set_world_poses_from_view(
+                                torch.as_tensor(eye_path[tick][None], dtype=torch.float32, device=env.device),
+                                torch.as_tensor([task['extra_cameras'][task['camera_map']['right']]['target']],
+                                                dtype=torch.float32, device=env.device))
                         env.step(torch.as_tensor(action[None], dtype=torch.float32, device=env.device))
                         seq += 1
                         state = robot_state()
-                        log.write(json.dumps(dict(phase=phase['name'], action=action.tolist(), **state))+'\n')
+                        log.write(json.dumps(dict(phase=phase['name'], action=action.tolist(),
+                            camera_eye_command=None if eye_path is None else eye_path[tick].tolist(), **state))+'\n')
                         log.flush()
                         stop = motion_stop_reason(state['hand_pose_world'],target,np.asarray(state['joints'])[sim.arm_ids],arm_limits)
                         if stop:
@@ -177,6 +202,10 @@ def main():
                                position_error_m=float(np.linalg.norm(error[:3])),
                                rotation_error_rad=float(np.linalg.norm(error[3:])))
                     row['arrival_passed'] = row['position_error_m'] <= .02 and row['rotation_error_rad'] <= .15
+                    if eye_path is not None:
+                        actual_eye = array(moving_camera.data.pos_w)[0]
+                        row['camera_position_error_m'] = float(np.linalg.norm(actual_eye-eye_path[-1]))
+                        row['arrival_passed'] = row['arrival_passed'] and row['camera_position_error_m'] <= .001
                     result['stages'].append(row)
                     print('PHASE', json.dumps(row), flush=True)
                     if not row['arrival_passed']:
