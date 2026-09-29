@@ -31,8 +31,9 @@ def main():
     parser.add_argument('--lift-height', type=float, default=.05)
     parser.add_argument('--phase-completion', action='store_true',
                         help='Use predeclared exploratory bounds for closure/lift only')
-    parser.add_argument('--continuous-transit', action='store_true',
-                        help='Pass intermediate same-phase waypoints without fixed settling holds')
+    parser.add_argument('--continuous-transit', action=argparse.BooleanOptionalAction, default=True,
+                        help='Pass intermediate same-phase waypoints without fixed settling holds (default); '
+                             '--no-continuous-transit reproduces legacy fixed holds')
     parser.add_argument('--contact-tracking-guard', action='store_true',
                         help='Require and attach the simulator contact tracking guard to stages')
     args = parser.parse_args()

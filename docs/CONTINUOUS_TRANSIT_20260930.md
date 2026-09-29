@@ -2,8 +2,10 @@
 
 `run_grounded_correction.py --continuous-transit` marks intermediate waypoints
 within the same motion phase as pass-through. Closure, phase changes and final
-lift verification retain endpoint settling. The legacy path remains available
-without this flag for reproducing previous experiments.
+lift verification retain endpoint settling. Continuous transit is now the runner
+default; the explicit flag remains accepted. Use `--no-continuous-transit` only
+to reproduce legacy fixed-hold experiments. This default change does not alter
+already-running workers or remove wall-time observation transfer overhead.
 
 The worker stops a pass-through chunk when its nominal ramp reaches the waypoint,
 instead of spending the remaining 64-action budget holding there. It preserves

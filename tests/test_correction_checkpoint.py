@@ -18,11 +18,12 @@ def load_script(name):
     return module
 
 
+@pytest.mark.parametrize('continuous', [True, False])
 @pytest.mark.parametrize('pause,terminal,grasp_only', [
     ('--pause-before-close','awaiting_preclosure_review',False),
     ('--pause-at-standoff','awaiting_close_range_target',False),
     ('--pause-before-close','awaiting_preclosure_review',True)])
-def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation, pause, terminal, grasp_only):
+def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation, pause, terminal, grasp_only, continuous):
     module = load_script('run_grounded_correction')
     initial = replace(observation, eef_pose=np.array([.18,-.34,.35,0,0,1,0]), gripper_open=1.)
     calls = []
@@ -35,7 +36,8 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
             pass
         def call(self, route, envelope=None, **kwargs):
             if route == '/metadata':
-                return {'local_stages_enabled':True, 'real_hardware_supported':False}
+                return {'local_stages_enabled':True, 'real_hardware_supported':False,
+                        'continuous_transit_enabled':True}
             if route == '/observe':
                 return self.current
             assert route == '/local-stage'
@@ -44,7 +46,9 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
             calls.append(action)
             self.current = replace(self.current, seq=self.current.seq+64,
                                    eef_pose=np.asarray(action['hand_pose_world']))
-            receipt = SimpleNamespace(reason='local stage arrived', to_dict=lambda: {'test_double':True,'executed_steps':64})
+            receipt = SimpleNamespace(reason=('transit waypoint passed' if action.get('settle_at_end') is False
+                                              else 'local stage arrived'),
+                                      to_dict=lambda: {'test_double':True,'executed_steps':64})
             return SimpleNamespace(receipt=receipt, observation=self.current)
 
     plan = tmp_path/'plan.json'
@@ -58,7 +62,8 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     monkeypatch.setenv('PHYSICAL_EXEC_SIM_TOKEN','test-only')
     monkeypatch.setattr(module.sys, 'argv', ['test','--url','http://unused','--plan',str(plan),
                                            '--output',str(output),pause]
-                        + (['--grasp-only','--lift-height','.23'] if grasp_only else []))
+                        + (['--grasp-only','--lift-height','.23'] if grasp_only else [])
+                        + ([] if continuous else ['--no-continuous-transit']))
     module.main()
     assert calls and all(action['gripper_open'] == 1 for action in calls)
     assert all(action['target_source'].startswith('cached pixel on fresh depth') for action in calls)
@@ -66,6 +71,14 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     assert result['terminal_reason'] == terminal
     assert result['actions'] == 64*len(calls)
     assert result['grasp_verified'] is False
+    stages = json.loads((output/'declared_sequence.json').read_text())
+    if continuous:
+        assert any(s['settle_at_end'] is False for s in stages)
+        for i, stage in enumerate(stages):
+            assert stage['settle_at_end'] == (i == len(stages)-1
+                or stages[i+1]['name'] != stage['name'] or stage['name'] == 'close')
+    else:
+        assert all('settle_at_end' not in s for s in stages)
     if grasp_only:
         stages = json.loads((output/'declared_sequence.json').read_text())
         assert {s['name'] for s in stages} == {'descend','close','short_lift'}
