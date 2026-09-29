@@ -29,6 +29,7 @@ class EmbodiedSWEEnvironment:
         self.local_stage_rotation_integral = local_stage_rotation_integral
         self.allow_inspection_camera = allow_inspection_camera
         self._last_gripper_command = None
+        self._transit_context = None
         if allow_inspection_camera and not (allow_local_stages and record_depth):
             raise ValueError('inspection camera requires local stages and recorded depth/calibration')
         if record_depth and record_dir is None:
@@ -164,6 +165,7 @@ class EmbodiedSWEEnvironment:
     def step(self, action: ActionChunk, command_id: str) -> StepResult:
         if self.current is None: raise InputRejected("reset first")
         if self._poisoned: raise AmbiguousExecution("worker is halted")
+        self._transit_context = None
         before = self.current; started = time.monotonic()
         command = validate_chunk(action, before, self.limits, self.kin.limits)
         targets = []
@@ -241,6 +243,14 @@ class EmbodiedSWEEnvironment:
                                        control_dt=self.current.control_dt, integral_feedback=True,
                                        rotation_integral_feedback=self.local_stage_rotation_integral)
         before = self.current
+        ramp_start = before.eef_pose
+        context = getattr(self, '_transit_context', None)
+        self._transit_context = None
+        if (context is not None and context['observation_id'] == before.key
+                and context['opening'] == value['gripper_open'] and eye_path is None):
+            ramp_start, feedback, solver = context['target'], context['feedback'], context['solver']
+        pass_through = value.get('settle_at_end') is False
+        waypoint_passed = False
         started = time.monotonic()
         completed = 0
         try:
@@ -251,7 +261,7 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(state.eef_pose, target, state.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
-                waypoint = ramped_pose_target(before.eef_pose, target, index+1,
+                waypoint = ramped_pose_target(ramp_start, target, index+1,
                                               .0225*state.control_dt, .06*state.control_dt)
                 raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
                 q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
@@ -271,6 +281,12 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
+                if pass_through and np.linalg.norm(pose_error(waypoint, target)) < 1e-9:
+                    transit_error = pose_error(self.current.eef_pose, target)
+                    if np.linalg.norm(transit_error[:3]) > .01 or np.linalg.norm(transit_error[3:]) > .15:
+                        raise RuntimeError('transit tracking error exceeded bounds')
+                    waypoint_passed = True
+                    break
                 if self._evaluation.success:
                     break
             error = pose_error(self.current.eef_pose, target)
@@ -280,7 +296,8 @@ class EmbodiedSWEEnvironment:
                     raise RuntimeError('inspection camera did not arrive; no retry')
             arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
-                'executed', 'local stage arrived' if arrived else 'local stage budget ended without arrival',
+                'executed', ('transit waypoint passed' if waypoint_passed else
+                             'local stage arrived' if arrived else 'local stage budget ended without arrival'),
                 'sensor_local_diffik', completed*before.control_dt, time.monotonic()-started,
                 float(np.linalg.norm(error[:3])), float(np.linalg.norm(error[3:])))
             if self.record_episode is not None:
@@ -289,6 +306,9 @@ class EmbodiedSWEEnvironment:
                         'receipt': receipt.to_dict(), 'unknown_clearance': True,
                         'camera_path_world': None if eye_path is None else eye_path.tolist(),
                         'camera_eye_error_m': None if eye_path is None else float(camera_error)})+'\n')
+            if waypoint_passed:
+                self._transit_context = dict(observation_id=self.current.key,target=target.copy(),
+                    feedback=feedback,solver=solver,opening=value['gripper_open'])
             return StepResult(self.current, receipt, self._evaluation)
         except Exception as exc:
             self._poisoned = True
@@ -319,6 +339,7 @@ class EmbodiedSWEEnvironment:
                 "depth_policy_input": False,
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
+                "continuous_transit_enabled": True,
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_qualification": "idealized sensor only; no collision body or hardware clearance",

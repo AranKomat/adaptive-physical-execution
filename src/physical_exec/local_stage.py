@@ -12,8 +12,13 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     camera = 'camera_eye_world' in fields
     if camera and not allow_inspection_camera:
         raise InputRejected('inspection camera not enabled')
-    if not isinstance(value, dict) or fields != required | ({'camera_eye_world'} if camera else set()):
+    optional = ({'camera_eye_world'} if camera else set()) | ({'settle_at_end'} if 'settle_at_end' in fields else set())
+    if not isinstance(value, dict) or fields != required | optional:
         raise InputRejected('invalid local-stage fields')
+    if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
+        raise InputRejected('settle_at_end must be boolean')
+    if camera and value.get('settle_at_end') is False:
+        raise InputRejected('camera inspection requires endpoint settling')
     if value['observation_id'] != observation.key:
         raise InputRejected('stale local stage')
     try:

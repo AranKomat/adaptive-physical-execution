@@ -44,7 +44,7 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
             calls.append(action)
             self.current = replace(self.current, seq=self.current.seq+64,
                                    eef_pose=np.asarray(action['hand_pose_world']))
-            receipt = SimpleNamespace(reason='local stage arrived', to_dict=lambda: {'test_double':True})
+            receipt = SimpleNamespace(reason='local stage arrived', to_dict=lambda: {'test_double':True,'executed_steps':64})
             return SimpleNamespace(receipt=receipt, observation=self.current)
 
     plan = tmp_path/'plan.json'

@@ -31,6 +31,8 @@ def main():
     parser.add_argument('--lift-height', type=float, default=.05)
     parser.add_argument('--phase-completion', action='store_true',
                         help='Use predeclared exploratory bounds for closure/lift only')
+    parser.add_argument('--continuous-transit', action='store_true',
+                        help='Pass intermediate same-phase waypoints without fixed settling holds')
     args = parser.parse_args()
     if not math.isfinite(args.lift_height) or not 0 < args.lift_height <= .23:
         raise ValueError('Lift height must be in (0, 0.23] m')
@@ -44,6 +46,8 @@ def main():
         metadata = client.call('/metadata')
         if not metadata.get('local_stages_enabled') or metadata.get('real_hardware_supported') is not False:
             raise ValueError('Requires opt-in simulator')
+        if args.continuous_transit and not metadata.get('continuous_transit_enabled'):
+            raise ValueError('Worker must be restarted with continuous-transit implementation')
         obs = decode_observation(client.call('/observe'))
         if obs.key != plan['observation_id']:
             raise ValueError('Target plan is not current; no automatic reset or retry')
@@ -77,32 +81,40 @@ def main():
             start = target.copy()
         if len(stages) > 16:
             raise ValueError('Correction exceeds 16-stage/1024-action limit')
+        if args.continuous_transit:
+            for index, stage in enumerate(stages):
+                stage['settle_at_end'] = (index == len(stages)-1
+                    or stages[index+1]['name'] != stage['name'] or stage['name'] == 'close')
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'completion_policy.json', dict(
             exploratory_contact_completion=args.phase_completion,
             lift_height_m=args.lift_height, position_bound_m=.01, rotation_bound_rad=.15,
             hard_worker_abort_checks='unchanged', grasp_verified=False))
+        executed_actions = 0
         for index, stage in enumerate(stages):
             if stage['name'] == 'descend' and args.pause_at_standoff:
-                write_json(args.output/'result.json', dict(stages=index, actions=64*index,
+                write_json(args.output/'result.json', dict(stages=index, actions=executed_actions,
                            final_observation_id=obs.key, grasp_verified=False,
                            terminal_reason='awaiting_close_range_target'))
                 print('Paused at standoff at '+obs.key, flush=True)
                 return
             if stage['name'] == 'close' and args.pause_before_close:
-                write_json(args.output/'result.json', dict(stages=index, actions=64*index,
+                write_json(args.output/'result.json', dict(stages=index, actions=executed_actions,
                            final_observation_id=obs.key, grasp_verified=False,
                            terminal_reason='awaiting_preclosure_review',
                            limitation='No closure or lift authorized by target selection alone'))
                 print('Paused before closure at '+obs.key, flush=True)
                 return
             request = {key: stage[key] for key in ('hand_pose_world', 'gripper_open')}
+            if args.continuous_transit:
+                request['settle_at_end'] = stage['settle_at_end']
             request.update(observation_id=obs.key, max_steps=64,
                            target_source=plan.get('target_source', 'unspecified target source')
                            + '; operator-defined correction; unknown clearance')
             envelope = dict(command_id=uuid4().hex, action=request)
             write_json(args.output/f'{index:02d}_request.json', envelope)
             result = decode_result(client.call('/local-stage', envelope, mutating=True))
+            executed_actions += result.receipt.to_dict()['executed_steps']
             write_json(args.output/f'{index:02d}_receipt.json', result.receipt.to_dict())
             obs = result.observation
             write_json(args.output/f'{index:02d}_observation.json', obs.public_state())
@@ -110,11 +122,13 @@ def main():
                 (args.output/f'{index:02d}_{role}.png').write_bytes(png_bytes(pixels))
             print(stage['name'], result.receipt.to_dict(), flush=True)
             contact_phase = stage['name'] in ('close', 'short_lift') and args.phase_completion
-            passed = (exploratory_completion(result.receipt.to_dict()) if contact_phase
+            passed = (result.receipt.reason == 'transit waypoint passed'
+                      if stage.get('settle_at_end') is False else
+                      exploratory_completion(result.receipt.to_dict()) if contact_phase
                       else result.receipt.reason == 'local stage arrived')
             if not passed:
                 raise RuntimeError('Nonarrival: stop without retry or subsequent stages')
-        write_json(args.output/'result.json', dict(stages=len(stages), actions=64*len(stages),
+        write_json(args.output/'result.json', dict(stages=len(stages), actions=executed_actions,
                    final_observation_id=obs.key, grasp_verified=False,
                    limitation='Endpoint arrival is not grasp or task verification; inspect final images independently'))
     finally:

@@ -4,6 +4,12 @@
 
 Project-wide handoff: [progress, results and remaining work](docs/PROJECT_PROGRESS_HANDOFF_20260930.md).
 
+- Added opt-in continuous transit to remove artificial holds at intermediate
+  same-phase waypoints while retaining closure/final settling. Controller state
+  persists across joins, actual action counts are recorded, guards remain.
+  184 tests pass; native timing/retention validation pending. Current held worker
+  unchanged. See `docs/CONTINUOUS_TRANSIT_20260930.md`.
+
 - Independent inspection camera is now ported into opt-in local stages, with
   arm-hold/unchanged-gripper checks and camera readback failure stops. Software
   tests only; not loaded into the paused live episode. Next explicitly fresh

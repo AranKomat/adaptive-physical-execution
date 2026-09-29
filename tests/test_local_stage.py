@@ -43,6 +43,7 @@ def request(obs):
     {'observation_id': 'stale'}, {'max_steps': 65}, {'max_steps': 181}, {'max_steps': True},
     {'gripper_open': float('nan')}, {'gripper_open': -1}, {'target_source': ''},
     {'hand_pose_world': [0,0,.4,0,0,0,0]},
+    {'settle_at_end':0},
 ])
 def test_stage_rejects_bad_requests(observation, change):
     obs = replace(observation, eef_pose=np.array([0,0,.4,1,0,0,0]))

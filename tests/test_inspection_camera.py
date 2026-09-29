@@ -89,3 +89,38 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         assert env._poisoned
     assert len(actions) == len(camera_calls) == 64
     assert all(action.values[0][-1] == 1. for action in actions)
+    if camera_writes_work:
+        from physical_exec.osc_reference import NativeDiffIKFeedback
+        points, controller_ids = [], []
+        original = NativeDiffIKFeedback.command
+        def traced_command(self,measured,target,finger):
+            points.append(np.asarray(target).copy())
+            controller_ids.append(id(self))
+            return original(self,measured,target,finger)
+        monkeypatch.setattr(NativeDiffIKFeedback,'command',traced_command)
+        def tracking_step(action,cid):
+            env.current = replace(env.current,seq=env.current.seq+1,eef_pose=points[-1].copy())
+        env.step = tracking_step
+        receipts = []
+        for index in range(3):
+            target = env.current.eef_pose.copy()
+            target[2] += .0575
+            command = dict(observation_id=env.current.key,hand_pose_world=target.tolist(),
+                           gripper_open=1.,max_steps=64,target_source='TEST CONTINUOUS TRANSIT',
+                           settle_at_end=index == 2)
+            receipts.append(env.local_stage(command,f'transit{index}').receipt)
+        assert [r.executed_steps for r in receipts] == [39,39,64]
+        assert [r.reason for r in receipts] == ['transit waypoint passed']*2+['local stage arrived']
+        assert len(set(controller_ids)) == 1
+        # No duplicate target / hold at either intermediate boundary.
+        increments = np.linalg.norm(np.diff(np.asarray(points)[:117,:3],axis=0),axis=1)
+        assert np.all(increments > 0)
+        assert np.max(increments) <= .0015+1e-10
+        assert env._transit_context is None
+        target = env.current.eef_pose.copy()
+        target[2] += .0575
+        env.step = lambda action,cid: None  # Actuator no longer follows the trajectory.
+        with pytest.raises(AmbiguousExecution,match='never retry'):
+            env.local_stage(dict(observation_id=env.current.key,hand_pose_world=target.tolist(),
+                gripper_open=1.,max_steps=64,target_source='TEST STALL',settle_at_end=False),'stall')
+        assert env._poisoned and env._transit_context is None
