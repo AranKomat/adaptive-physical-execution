@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+- Outcome-blind review of retained pre-closure images returned inspect: opposing
+  contacts/centering not established. Added opt-in pre-closure pause, tested to
+  issue no closing commands (167 CPU tests). No new physical success. Next use
+  a labeled oblique inspection view and stop for review before closure; do not
+  repeat the full Hybrid approach just to test visibility. Review cost $0.02369.
+
 - Corrected pose ramp now live-qualified in integrated correction: all 14 stages,
   896 actions, maximum endpoint error 1.596 mm. Card tilted/lifted at one end but
   remained partly supported; independent image review says partial_contact.

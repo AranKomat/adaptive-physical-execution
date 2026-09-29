@@ -41,7 +41,31 @@ increase lift height. Do not carry this partially supported card as if secured.
 Then expose the qualified bounded executor to model-authored recovery decisions;
 the present operator sequence is not the goal's final adaptive interface.
 
-## Evidence
+## Outcome-blind pre-closure follow-up
+
+One separate Astra review of observation 843 used ONLY the three pre-closure
+images and robot state, without the later images, result or failure description.
+It returned `inspect`: opposing pad contacts and longitudinal centering were
+unconfirmed, with the right camera hiding the target and wrist contact regions
+cropped/obscured. It did not establish a definite offset or obstruction. Cost
+$0.02369, separate from the ten-call trial total above. This is retrospective
+review evidence, not a demonstrated online prevention or successful recovery.
+
+Added `run_grounded_correction.py --pause-before-close`, which terminates after
+descent and before sending closure. A fake-client regression test checks that
+all issued stages keep fingers open. This option is required for the next
+grasp-geometry experiment; the existing default remains available for reproducing
+the previous declared sequence. 167 CPU tests pass; no new motion in this follow-up.
+
+Next condition: an explicitly augmented oblique inspection view of the loose
+card and fingers, preserving the overview/wrist roles. Select the view from legal
+observations/robot geometry, not hidden object coordinates. Pause at descent,
+review opposing contact and centering, and do not proceed on `inspect`. Camera
+placement is an experimental sensing change, not matched-baseline evidence or
+a qualified physical camera rig. Avoid another eight-call Hybrid replay just to
+test whether a new camera can see the pads.
+
+## Retained evidence
 
 Compact receipts, target plan, before/after images and independent visual review:
 `docs/evidence/hybrid_pose_ramp_20260930`. Full local run, API audits and sensor

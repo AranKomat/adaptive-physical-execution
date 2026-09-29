@@ -1,0 +1,9 @@
+{
+  "observation_id": "aaddd0e351be46148b44df9a92cc8c02:843",
+  "decision": "inspect",
+  "opposing_contact_evidence": "The left view shows the open gripper above the upright card, approximately within (125,185)-(204,265), but does not clearly resolve both inner finger surfaces on opposing card faces. The wrist view shows the cooler and thin board profile near (85,0)-(323,147), while the finger/contact regions are partly cropped or obscured. Opposing-face straddling is not established.",
+  "longitudinal_center_evidence": "The gripper overlaps the card's upper region in the left view, but the intended contact patches cannot be located reliably relative to both longitudinal ends. Reasonable longitudinal centering is unconfirmed, rather than a demonstrated offset.",
+  "interference_evidence": "A gray support is visible beneath the card near (141,237)-(191,270), and an end bracket is visible near (189,209)-(205,265) in the left view. Neither finger is clearly observed resting on these features, but the images do not exclude contact with the bracket, cooler protrusions, or an unintended edge. The right view largely hides the target behind the case.",
+  "uncertainty": "Measured full opening and the reached robot pose do not verify grasp geometry. Both finger pads, their overlap with the card faces, and local clearance are insufficiently visible. No definite interference or opposing-face grasp is established.",
+  "next_observation_or_correction": "Keep the fingers open and obtain an oblique side view showing both inner pads, both card ends, and the support and bracket together. Reframe the wrist view so the fingers are not cropped. Confirm opposing-face overlap and longitudinal centering before selecting closure; do not infer a correction direction from the current occluded geometry."
+}

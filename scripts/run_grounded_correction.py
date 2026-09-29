@@ -22,6 +22,8 @@ def main():
     parser.add_argument('--url', required=True)
     parser.add_argument('--plan', type=Path, required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--pause-before-close', action='store_true',
+                        help='Stop after descent for a separate fresh visual contact-geometry review')
     args = parser.parse_args()
     plan = json.loads(args.plan.read_text())
     surface = np.asarray(plan['measured_surface']['surface_point_world_m'], dtype=float)
@@ -64,6 +66,13 @@ def main():
             raise ValueError('Correction exceeds 16-stage/1024-action limit')
         write_json(args.output/'declared_sequence.json', stages)
         for index, stage in enumerate(stages):
+            if stage['name'] == 'close' and args.pause_before_close:
+                write_json(args.output/'result.json', dict(stages=index, actions=64*index,
+                           final_observation_id=obs.key, grasp_verified=False,
+                           terminal_reason='awaiting_preclosure_review',
+                           limitation='No closure or lift authorized by target selection alone'))
+                print('Paused before closure at '+obs.key, flush=True)
+                return
             request = {key: stage[key] for key in ('hand_pose_world', 'gripper_open')}
             request.update(observation_id=obs.key, max_steps=64,
                            target_source='fresh Astra pixel plus legal depth; operator-defined correction; unknown clearance')
