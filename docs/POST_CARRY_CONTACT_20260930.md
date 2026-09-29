@@ -81,3 +81,25 @@ Preserve historical geometry as explicitly uncertain memory. Keep hidden seat
 coordinates, object poses and grader predicates out of the control path. No
 completed insertion/release, recovery, changed-layout transfer or FLUX execution
 has yet been demonstrated. 144 CPU tests are software checks, not phase completion.
+
+## Retained-view correspondence review
+
+A subsequent observation-only Astra Flex medium call on final capture 4678
+returned `inspect`, with all four connector/socket endpoints null and key not
+visible. It received current RGB and robot state, not evaluator results. Cost
+was $0.02114625, additional to the four execution-stage calls above. The response
+is preserved as `correspondence_review.json` beside the compact evidence.
+This is a model assessment of the retained images, not new physical execution.
+
+The earlier pre-grasp socket audit also did not establish a full measured axis:
+end_a failed depth continuity. Center and end_b were on measured surfaces, but
+their heights differed by about 6.8 mm; that alone cannot establish which surface
+corresponds to the actual mating gap. At approximately 1.44 m optical depth and
+549.75 px focal length, the transverse image-plane sampling is about 2.62 mm/px.
+This is sampling scale, not a calibrated uncertainty bound. Rendering and edge
+mixing can worsen localization; their contribution has not been isolated.
+
+Next trial should acquire higher-detail socket geometry BEFORE the card occludes
+it, then corresponding connector geometry and revalidation during approach. Do
+not repeat a blind contact descent using the old single housing-center anchor.
+The movable camera remains idealized, with unknown external clearance.

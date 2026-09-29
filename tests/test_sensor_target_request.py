@@ -6,6 +6,23 @@ import sys
 import pytest
 
 
+def test_correspondence_review_is_observation_only(tmp_path):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:10'}))
+    for role in ('left', 'right', 'wrist'):
+        (tmp_path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+    # Evaluator artifacts adjacent to observations must not enter the request.
+    (tmp_path/'evaluator_only.json').write_text('{"hidden": "EVALUATOR_SENTINEL"}')
+    output = tmp_path/'messages.json'
+    script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
+    subprocess.run([sys.executable, str(script), '--stage', 'correspondence',
+                    '--capture', str(tmp_path), '--output', str(output)], check=True)
+    content = json.loads(output.read_text())[0]['content']
+    assert sum(item['type'] == 'image_url' for item in content) == 3
+    assert 'NOT motion authorization' in content[0]['text']
+    assert 'end_a' in content[0]['text'] and 'end_b' in content[0]['text']
+    assert 'EVALUATOR_SENTINEL' not in output.read_text()
+
+
 @pytest.mark.parametrize('old_id,selection_id,decision,accepted', [
     ('e:0', 'e:0', 'localized', True),
     ('other:0', 'other:0', 'localized', False),

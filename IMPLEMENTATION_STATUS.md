@@ -31,7 +31,11 @@
   passed, but the native seating predicate remained false and the card stayed
   held. Four fresh calls cost $0.08531625. Precise correspondence remains unresolved;
   see `docs/POST_CARRY_CONTACT_20260930.md`. No release or successful recovery yet.
-- 144 CPU tests pass. They do not establish manipulation robustness.
+- Retained final-view correspondence review returned inspect, with no reliable
+  paired endpoints. Earlier socket end_a had failed depth continuity; pre-grasp
+  axis qualification was incomplete. Acquire higher-detail socket geometry before
+  occlusion in the next trial. No additional motion was run in this review.
+- 145 CPU tests pass. They do not establish manipulation robustness.
 - Next: obtain corresponding connector/slot endpoints or axes from legal images
   and depth, then attempt one bounded alignment/recovery. Do not compensate for
   uncertain correspondence by pressing farther down.

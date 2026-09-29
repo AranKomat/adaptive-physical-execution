@@ -1,0 +1,25 @@
+{
+  "observation_id": "d778fec65d80489fbc1e3ecc7ca4bc4f:4678",
+  "decision": "inspect",
+  "connector": {
+    "end_a": null,
+    "end_b": null
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": null
+  },
+  "key_visible": false,
+  "evidence": [
+    "The left view is substantially blocked by the robot and case.",
+    "The right view shows motherboard components, but does not resolve both gold PCIe connector ends or both destination socket ends.",
+    "The wrist view shows the card nearly edge-on alongside the motherboard. It does not expose a complete gold contact span or the corresponding socket mating features.",
+    "The bright parallel slots are RAM slots and are not used as destination socket evidence."
+  ],
+  "uncertainty": [
+    "No reliable visible solid-surface endpoint pixels can be assigned to the actual mating features.",
+    "Bracket-side versus opposite-side endpoint association is not established.",
+    "The connector key and corresponding socket division are not resolved; alignment and insertion success cannot be inferred."
+  ],
+  "next_view": "An oblique close view from the exposed motherboard side, looking toward the card's gold contact edge and down into the destination PCIe socket, is needed. It should include the bracket reference and both ends of each mating feature. The card itself blocks the socket region, while the hand/robot also obstructs external views; a complementary view from the opposite side may be necessary. This is a viewing requirement only, not motion authorization."
+}

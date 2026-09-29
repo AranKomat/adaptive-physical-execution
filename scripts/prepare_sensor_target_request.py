@@ -10,7 +10,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'held_feature'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'held_feature', 'correspondence'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     args = p.parse_args()
@@ -98,6 +98,27 @@ def main():
             'Return JSON with observation_id, decision (target/inspect), camera (left/right/wrist), '
             'pixel_uv, evidence, uncertainty. If the lower mating edge is not reliably identifiable, '
             'choose inspect and use null for camera and pixel_uv. '
+            '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'correspondence':
+        prompt = (
+            'Inspect this retained simulator observation of a held graphics card near a motherboard. '
+            'This is an offline correspondence review, NOT motion authorization. No evaluator result '
+            'or object truth is supplied. Determine whether BOTH ends of the actual gold PCIe '
+            'connector and BOTH corresponding ends of its destination socket can be identified. '
+            'Do not substitute the whole card length, RAM slots, heatsink, or a socket housing center '
+            'for mating features. End a must correspond to the bracket side and end b to the opposite '
+            'side; if this association is uncertain, say so instead of assigning arbitrary endpoints. '
+            'For each of connector and socket return end_a and end_b, each either null or '
+            '{camera: left/right/wrist, pixel_uv: [u,v], surface: description}. Use ORIGINAL '
+            '640x360 integer pixels with upper-left origin. These must be visible solid-surface '
+            'pixels suitable for later measured depth, NOT guessed points in occluded space or gaps. '
+            'Return only JSON: observation_id, decision (correspondence_visible/inspect/stop), '
+            'connector, socket, key_visible (boolean), evidence, uncertainty, next_view. '
+            'Choose correspondence_visible only when matching endpoints are actually visible. '
+            'Describe in next_view the camera viewing direction needed to resolve missing evidence '
+            'and whether the hand/card itself blocks it. Do not invent a calibrated camera position, '
+            'world coordinates, seating depth, or clearance. One feature pixel alone does not '
+            'establish center alignment or insertion success. '
             '\nRobot-only state: ' + json.dumps(state))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):
