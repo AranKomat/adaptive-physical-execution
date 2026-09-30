@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+USER DIRECTION: GPU-first; suspend RAM experiments. Qualify reliable faster local
+motion, then GPU manipulation and matched enhanced Direct-A/Direct-B/Hybrid.
+See `docs/GPU_FAST_EXECUTION_PLAN.md`. Keep native FLUX joint execution distinct
+from GPT/local EEF fallback. No matched comparison or speed qualification yet.
+
 Noncontact anti-windup qualification runner prepared (max256actions), not run.
 265tests. All six workers still occupy nearly both GPUs. Baseline726 full2.3GB
 recordings backed up locally, checksum dry-run matches. Awaiting scene-retention
