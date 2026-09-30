@@ -84,6 +84,17 @@ def test_double_speed_ramp_halves_time_to_same_target():
     np.testing.assert_allclose(fast,target,atol=1e-12)
 
 
+@pytest.mark.parametrize('profile', ['elevated_open_5x','elevated_open_10x'])
+def test_smooth_stage_requires_whole_move_and_settling_budget(observation,profile):
+    obs = replace(observation,eef_pose=np.array([0,0,.4,1,0,0,0]),gripper_open=1.,control_dt=1/15)
+    value = {**request(obs),'motion_profile':profile,'contact_tracking_guard':True,
+             'max_steps':64,'hand_pose_world':[0,0,.52,1,0,0,0]}
+    validate_local_stage(value,obs)
+    for change in ({'settle_at_end':False},{'max_steps':4}):
+        with pytest.raises(InputRejected):
+            validate_local_stage({**value,**change},obs)
+
+
 def test_camera_stage_is_opt_in_and_preserves_commanded_grip(observation):
     value = {**request(observation), 'camera_eye_world':[.6,-.35,.7],
              'camera_gaze_world':[.45,.03,.035]}

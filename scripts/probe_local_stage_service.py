@@ -21,7 +21,8 @@ def main():
                         help='qualify guard-enabled free-space execution; does not test a contact stall')
     parser.add_argument('--ramp-return-qualification', action='store_true',
                         help='Fresh worker only: guarded 12cm upward excursion and return; 256 actions maximum')
-    parser.add_argument('--motion-profile', choices=['conservative', 'elevated_open_2x'], default='conservative')
+    parser.add_argument('--motion-profile', choices=['conservative', 'elevated_open_2x',
+                        'elevated_open_5x', 'elevated_open_10x'], default='conservative')
     args = parser.parse_args()
     if args.motion_profile != 'conservative' and not args.ramp_return_qualification:
         raise ValueError('experimental speed requires explicit ramp-return qualification')
@@ -50,6 +51,8 @@ def main():
                 raise ValueError('requires fresh open-hand state')
             phases = [('up_transit',64,.06), ('up_arrive',64,.12),
                       ('down_transit',64,.06), ('down_arrive',64,0.)]
+            if args.motion_profile in ('elevated_open_5x', 'elevated_open_10x'):
+                phases = [('up_arrive',64,.12), ('down_arrive',64,0.)]
             kin = URDFKinematics.from_urdf(Path(__file__).resolve().parents[1]/
                 'upstream/EmbodiedSWE/robobench/robots/assets/franka/panda_kinematics.urdf')
             base = matrix_pose(pose_matrix(origin) @ np.linalg.inv(pose_matrix(kin.fk(obs.joints))))

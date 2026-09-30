@@ -128,6 +128,18 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         assert np.all(increments > 0)
         assert np.max(increments) <= .0015+1e-10
         assert env._transit_context is None
+        # Smooth fast transit uses one complete path and exits after stable arrival.
+        env.current = replace(env.current, gripper_open=1.)
+        fast_origin = env.current.eef_pose.copy()
+        fast_target = fast_origin.copy()
+        fast_target[2] += .06
+        result = env.local_stage(dict(observation_id=env.current.key,
+            hand_pose_world=fast_target.tolist(), gripper_open=1.,max_steps=64,
+            target_source='TEST SMOOTH',motion_profile='elevated_open_10x',
+            contact_tracking_guard=True),'smooth')
+        assert result.receipt.reason == 'local stage arrived'
+        assert result.receipt.executed_steps < 64
+        assert env._transit_context is None
         target = env.current.eef_pose.copy()
         target[2] += .0575
         stalled_actions = []

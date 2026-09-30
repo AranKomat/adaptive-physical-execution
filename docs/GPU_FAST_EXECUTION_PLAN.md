@@ -16,6 +16,19 @@ Preserve historical trials as historical evidence, not matched comparisons.
 
 ## Immediate sequence
 
+5x LIVE TEST NEGATIVE: integrated whole-move quintic profiles5x/10x with
+four-sample stable arrival termination;276tests pass. Fresh worker85321/8774,
+episode76c94f90d92e476f827641d75829d382:11. First12cm upward move stopped by
+unchanged10mm tracking guard after11actions,0.733sim/4.904wall seconds.
+Actual upward displacement20.302mm; moving-waypoint lag11.093mm. Receipt's
+99.699mm position error is distance to FINAL target, not the guard error.
+No return/retry/contact/10x test. Retain11. Previous qualification worker84047
+retired after recorded success; original five recovery/comparison workers untouched.
+[Receipt](evidence/gpu_fast5_11/0_receipt.json).
+Next diagnose tracking bandwidth/feedforward for the fast trajectory, not widen
+the guard or claim5x qualified. Current motion feedback is insufficient for this
+tested path; this does not establish a robot hardware speed limit.
+
 - Conservative anti-windup qualification COMPLETED on fresh GPU-task worker84047,
   remote8774/local18774, episode20e8a36447af44088fa373cf8782e9ca:209.
   Open-hand12cm up/return:40+64+41+64=209actions,13.933sim seconds,

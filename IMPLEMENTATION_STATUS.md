@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+5x smooth-transit native trial stopped at11actions:11.093mm moving-target lag
+exceeded10mm guard.20.302mm upward progress; no return/retry/10x. Worker85321/8774
+holds episode76c94f90d92e476f827641d75829d382:11. Prior unloaded conservative
+qualification preserved as evidence; its worker84047 retired. Fast controller
+integration now exists (276tests), but5x NOT qualified. Next bandwidth/feedforward
+diagnosis. Other original five scenes preserved. See GPU_FAST_EXECUTION_PLAN.
+
 NEW physical evidence: GPU-condition anti-windup unloaded12cm up/return PASSED.
 Worker84047/8774(local18774), episode20e8a36447af44088fa373cf8782e9ca:209.
 209actions,13.933sim/89.271execution wall seconds. Endpoint errors0.080/0.074mm,

@@ -22,7 +22,7 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     if not isinstance(value, dict) or fields != required | optional:
         raise InputRejected('invalid local-stage fields')
     profile = value.get('motion_profile', 'conservative')
-    if profile not in ('conservative', 'elevated_open_2x'):
+    if profile not in ('conservative', 'elevated_open_2x', 'elevated_open_5x', 'elevated_open_10x'):
         raise InputRejected('unknown motion profile')
     if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
         raise InputRejected('settle_at_end must be boolean')
@@ -49,12 +49,20 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     opening = value['gripper_open']
     if isinstance(opening, bool) or not isinstance(opening, (float, int)) or not np.isfinite(opening) or not 0 <= opening <= 1:
         raise InputRejected('invalid gripper opening')
-    if profile == 'elevated_open_2x':
+    if profile != 'conservative':
         if (camera or value.get('contact_tracking_guard') is not True
                 or observation.gripper_open < .999 or opening != 1.
                 or min(observation.eef_pose[2], pose[2]) < .3
                 or observation.control_dt > 1/15+1e-10):
-            raise InputRejected('2x qualification requires elevated open hand, guard and <=1/15 cadence')
+            raise InputRejected('fast qualification requires elevated open hand, guard and <=1/15 cadence')
+    if profile in ('elevated_open_5x', 'elevated_open_10x'):
+        if value.get('settle_at_end') is False:
+            raise InputRejected('smooth transit spans one whole move; endpoint settling required')
+        from .transit_trajectory import transit_trajectory
+        path = transit_trajectory(observation.eef_pose, pose,
+            speed_scale=5 if profile == 'elevated_open_5x' else 10, dt=observation.control_dt)
+        if path['steps']+4 > value['max_steps']:
+            raise InputRejected('smooth trajectory plus settling exceeds action budget')
     if not isinstance(value['target_source'], str) or not 1 <= len(value['target_source']) <= 2000:
         raise InputRejected('explicit target provenance required')
     if camera:

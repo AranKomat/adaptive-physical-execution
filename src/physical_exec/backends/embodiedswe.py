@@ -244,11 +244,18 @@ class EmbodiedSWEEnvironment:
                                        control_dt=self.current.control_dt, integral_feedback=True,
                                        rotation_integral_feedback=self.local_stage_rotation_integral)
         before = self.current
+        smooth_path = None
+        if value.get('motion_profile') in ('elevated_open_5x', 'elevated_open_10x'):
+            from ..transit_trajectory import transit_trajectory
+            smooth_path = transit_trajectory(before.eef_pose, target,
+                speed_scale=5 if value['motion_profile'] == 'elevated_open_5x' else 10,
+                dt=before.control_dt)['poses']
+        stable_steps = 0
         ramp_start = before.eef_pose
         context = getattr(self, '_transit_context', None)
         self._transit_context = None
         if (context is not None and context['observation_id'] == before.key
-                and context['opening'] == value['gripper_open'] and eye_path is None):
+                and context['opening'] == value['gripper_open'] and eye_path is None and smooth_path is None):
             ramp_start, feedback, solver = context['target'], context['feedback'], context['solver']
         pass_through = value.get('settle_at_end') is False
         waypoint_passed = False
@@ -263,9 +270,10 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(state.eef_pose, target, state.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
-                waypoint = ramped_pose_target(ramp_start, target, index+1,
+                waypoint = (smooth_path[min(index+1,len(smooth_path)-1)] if smooth_path is not None else
+                            ramped_pose_target(ramp_start, target, index+1,
                                               (.045 if value.get('motion_profile') == 'elevated_open_2x' else .0225)*state.control_dt,
-                                              (.12 if value.get('motion_profile') == 'elevated_open_2x' else .06)*state.control_dt)
+                                              (.12 if value.get('motion_profile') == 'elevated_open_2x' else .06)*state.control_dt))
                 raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
                 q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
                                                                device=self.sim.env.device)))[0]
@@ -292,6 +300,16 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
+                if smooth_path is not None and index+1 >= len(smooth_path)-1:
+                    endpoint_error = pose_error(self.current.eef_pose, target)
+                    motion = pose_error(state.eef_pose, self.current.eef_pose)
+                    stable = (np.linalg.norm(endpoint_error[:3]) <= .003
+                              and np.linalg.norm(endpoint_error[3:]) <= .03
+                              and np.linalg.norm(motion[:3]) <= .0005
+                              and np.linalg.norm(motion[3:]) <= .002)
+                    stable_steps = stable_steps+1 if stable else 0
+                    if stable_steps >= 4:
+                        break
                 if pass_through and np.linalg.norm(pose_error(waypoint, target)) < 1e-9:
                     transit_error = pose_error(self.current.eef_pose, target)
                     if np.linalg.norm(transit_error[:3]) > .01 or np.linalg.norm(transit_error[3:]) > .15:
@@ -314,7 +332,8 @@ class EmbodiedSWEEnvironment:
                     if np.linalg.norm(forward-desired) > .001:
                         raise RuntimeError('inspection camera aim readback failed; no retry')
                 self._inspection_gaze = gaze_path[-1].copy()
-            arrived = np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
+            arrived = (np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
+                       and (smooth_path is None or stable_steps >= 4))
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
                 'executed', ('contact tracking guard stopped motion' if contact_stopped else
                              'transit waypoint passed' if waypoint_passed else
@@ -366,7 +385,9 @@ class EmbodiedSWEEnvironment:
                 "position_integral_antiwindup": "opposing_axis_reset_above_1mm",
                 "local_motion_profiles": {"conservative": {"linear_m_s": .0225, "angular_rad_s": .06},
                     "elevated_open_2x": {"linear_m_s": .045, "angular_rad_s": .12,
-                                         "qualification": "experimental; not contact or payload qualified"}},
+                                         "qualification": "experimental; not contact or payload qualified"},
+                    "elevated_open_5x": {"linear_m_s": .1125, "angular_rad_s": .30, "trajectory": "quintic_rest_to_rest", "qualification": "experimental"},
+                    "elevated_open_10x": {"linear_m_s": .225, "angular_rad_s": .60, "trajectory": "quintic_rest_to_rest", "qualification": "experimental"}},
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_gaze_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
