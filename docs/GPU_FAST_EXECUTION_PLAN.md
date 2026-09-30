@@ -1,5 +1,48 @@
 # GPU-first efficient execution and matched comparison
 
+## Current Decision After External Review (September 30)
+
+This section is authoritative; the chronological notes below retain earlier
+states and must not be read as current instructions.
+
+- Shared local execution IS connected to Direct-A/B and Hybrid EEF fallback
+  (`c17093c`); explicit fast-profile selection is implemented (`a13a3c9`). The
+  external review's claim that integration is absent is stale.
+- Make `--local-eef-execution --fast-open-transit` the standard configuration
+  for the next enhanced GPU task trial and matched enhanced comparisons. This
+  is an experiment default, not a change to legacy baseline semantics. The
+  private launcher still needs to expose these flags and proper action budgets.
+- Keep the current automatic eligibility restrictions and conservative fallback:
+  fast motion requires open measured/commanded grip and both hand endpoints
+  >=0.30 m. This is NOT clearance certification or blanket qualification of
+  lateral/rotational paths. Only unloaded vertical up/return has passed so far.
+- Do not chase 10x or repeat generic speed sweeps. Finish launcher support and
+  explicit enhanced destination limits (currently only3cm), then run the actual
+  GPU approach/grasp loop. Qualify new motion dimensions as needed in that task.
+- Next physical milestones: secure grasp, retained carry, correct insertion
+  approach, seated placement. Verify each separately. Fast loaded carry remains
+  a specific open item; the open-hand default does not fix slow payload transport.
+- Follow useful integrated behavior with matched A/B/Hybrid, then predefined
+  same-episode recovery and execution-memory reuse. Preserve native FLUX joint
+  timing; do not call local-IK success FLUX success.
+- Track calls per meaningful phase and simulated/wall time, not commit/test
+  count. No additional physical success is claimed by this planning update.
+
+Post-training suggestion: worthwhile as a separate research hypothesis, not yet
+an authorized/started training run or a proven fix. First identify the exact
+tau0/UnifoLM release, license, embodiment/action compatibility, usable task data,
+training/evaluation recipe, held-out conditions and compute requirements. Do not
+divert the occupied GPUs or mix task-trained results into the no-task-training
+comparison. Current failures do not isolate policy distribution as their cause;
+a negative training result would not isolate perception/contact as the cause.
+Active camera inspection remains useful when observations are ambiguous; no new
+camera architecture is needed before the integrated task trial.
+
+Latest self-contained report:
+[shared-execution handoff](RESEARCH_HANDOFF_LOCAL_EXECUTION_20260930.md).
+
+## Historical Implementation and Experiment Notes
+
 Speed target updated by user:5--10x free-space transit, not2x as the final goal.
 Offline `transit_trajectory.py` now produces synchronized rest-to-rest quintic
 translation/rotation, using5x/10x peak speed caps and explicit acceleration caps

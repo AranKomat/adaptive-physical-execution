@@ -9,6 +9,13 @@ recorded experiment snapshot `18c0ea9`. The previous report was committed as
 `d0ea6e1`; shared execution was subsequently committed as `c17093c`.
 This report accompanies the following opt-in fast-profile integration.
 
+Subsequent planning decision after external feedback: use the implemented fast
+option as the standard configuration for eligible transit in the next enhanced
+GPU trials, rather than repeatedly choosing the slow profile. The generic CLI
+remains opt-in; launcher wiring is pending. Contact and closed-grip transport
+remain conservative until separately tested. See the authoritative top section
+of [the experiment plan](GPU_FAST_EXECUTION_PLAN.md). No new physical results.
+
 ## Bottom Line
 
 Since the previous report, progress is **software integration, not a new physical

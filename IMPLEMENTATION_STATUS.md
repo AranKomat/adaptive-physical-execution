@@ -2,6 +2,18 @@
 
 ## Current experiment status (September 30 JST)
 
+Authoritative next sequence: `docs/GPU_FAST_EXECUTION_PLAN.md`, Current Decision
+After External Review. Shared local execution AND opt-in fast-profile selection
+are implemented;306tests pass. Use both flags as the standard next enhanced GPU
+experiment configuration once the private launcher and larger explicit target
+limits are ready. The generic CLI remains opt-in; no runtime default was changed
+by this documentation update. No new physical trial since the5x vertical pass
+and10x guard stop. Loaded carry, lateral/rotation, installation and recovery
+remain unqualified or unsuccessful. Post-training is a proposed separately scoped
+investigation, not running. See `docs/RESEARCH_HANDOFF_LOCAL_EXECUTION_20260930.md`.
+
+## Historical Updates (Newest First; Superseded Where Noted Above)
+
 Enhanced shared policy EEF execution now connected via --local-eef-execution:
 one destination/local feedback, actual budget accounting and memory receipts,
 stop-without-retry, native FLUX joints unchanged. Conservative profile only in
