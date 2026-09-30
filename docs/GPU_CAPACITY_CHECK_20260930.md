@@ -105,3 +105,14 @@ planned. Confirm whether the unrelated CPU workload still runs before selecting
 a coordinated driver repair/reboot, or move new experiments to a coherent fresh
 instance. Existing host, live states, global driver configuration and CPU
 workload were not rebooted or modified. Keep the original task goal open.
+
+## Host decision
+
+User reported the CPU workload still active, then delegated the choice under
+uncertainty. Decision: preserve this host and all remaining live scenes rather
+than reboot or modify global graphics libraries. Use a fresh1x4090 environment
+for the immediate sensing/local-IK trial; simultaneous FLUX+simulator capacity
+must be qualified separately. The prior single-GPU endpoint184.148.224.206:42477
+returned connection refused. No Vast provisioning connector or CLI is available
+in this session. Fresh SSH details are requested; the experiment goal is not
+complete. Do not loop more loader attempts while awaiting a coherent GPU host.
