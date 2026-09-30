@@ -1,0 +1,24 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1754",
+  "decision": "inspect",
+  "connector": {
+    "end_a": null,
+    "end_b": null
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": null
+  },
+  "key_visible": false,
+  "evidence": [
+    "The right view shows a narrow gold-colored edge below the held card and an elongated socket-like feature on the motherboard below it.",
+    "The images do not establish both gold-contact boundaries and their bracket-side association confidently enough to assign corresponding endpoint pixels.",
+    "The left view is substantially obstructed by the robot and chassis. The wrist view mainly shows the gripper, card body, and heatsink rather than the mating interface."
+  ],
+  "uncertainty": [
+    "The bracket-side versus opposite-side endpoint association is unresolved.",
+    "The apparent socket end structures cannot be confidently distinguished as the corresponding mating ends rather than housing or latch surfaces.",
+    "The connector notch and matching socket key are not clearly resolved. No alignment or insertion conclusion follows."
+  ],
+  "next_view": "Obtain an oblique view looking toward the card's gold-contact edge and down into the destination socket, with the card's metal bracket also visible to establish end a. The view must expose both contact-strip terminations and both socket mating ends. The hand and card obstruct the current wrist sightline; use a viewing direction from an exposed side rather than through the gripper or card body."
+}

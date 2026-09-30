@@ -1,0 +1,69 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1754",
+  "visible_state": "GPU remains gripped above the motherboard. The right view exposes its contact edge and the reinforced socket immediately beside the CPU area, with broadly similar projected long-axis directions and substantial longitudinal overlap. This supports coarse approach planning, not notch/key registration. The socket's internal key and insertion corridor remain unresolved. A second, more occluded parallel slot must not be substituted merely because it projects nearer the card.",
+  "next_stage": {
+    "type": "closer approach",
+    "proposal": "Propose a 2 cm world-down translation only, retaining orientation and aperture 0.3. This is a noncontact approach proposal, not insertion or an assertion of swept-volume clearance. Do not add longitudinal or lateral correction from this image."
+  },
+  "proposed_delta_world_m": [
+    0.0,
+    0.0,
+    -0.02
+  ],
+  "proposed_rotation_world_rad": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "anchors": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        292,
+        156
+      ],
+      "surface": "Visible gold contact-strip surface; rough connector reference, not endpoint."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        340,
+        156
+      ],
+      "surface": "Separated visible gold contact-strip surface."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        290,
+        210
+      ],
+      "surface": "Solid reinforcement rim of the CPU-adjacent socket; rough socket reference, not gap centerline."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        350,
+        210
+      ],
+      "surface": "Separated solid rim surface on that same socket."
+    }
+  ],
+  "assumptions": [
+    "Historical socket surfaces establish an approximately horizontal motherboard plane, supporting world -Z as approach direction; their heights do not establish current clearance.",
+    "The grasp has remained stable as reported. Current visual separation supports a staged approach but supplies no metric clearance guarantee.",
+    "CPU adjacency supports target identity; exact historical surface correspondence is not assumed."
+  ],
+  "expected_effect": "Reduce standoff without attempting premature mating alignment. Precise opposing rails and internal-key localization are unnecessary for this coarse stage, but remain necessary to resolve before contact.",
+  "stop_conditions": [
+    "Updated views or depth show that the apparent separation is projection-only or insufficient for the proposed displacement.",
+    "Card, bracket, gripper or cables approach an obstruction, or the card shifts in the grasp.",
+    "CPU-relative layout contradicts the selected socket identity."
+  ],
+  "remaining_stages": [
+    "Resolve notch/key placement, lateral alignment and bracket clearance at reduced standoff.",
+    "Propose controlled contact and insertion only after alignment is supported.",
+    "Verify seating and retention before release."
+  ],
+  "uncertainty": "Current depth, hidden clearance, exact mating endpoints and contact state are unavailable. The 2 cm displacement is a bounded estimate, not a measured safe travel distance."
+}

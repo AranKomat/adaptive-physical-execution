@@ -8,6 +8,14 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+LATEST: live state revalidated1690; one held-arm camera move arrived1754,
+0.781mm hold error. Four fresh gold/rim depth samples passed;90.071mm sampled
+gap. Astra proposed2cm approach, NOT executed: would fall below existing8cm
+coarse floor; corresponding ends/key remain unresolved in explicit review.
+Held103000/8772 at5fc1330e1fb9410e9cc56d5c948ee0af:1754. Three calls$0.13325125,
+shared count4513, no contact/insertion/release or phase completion. Stop nearby
+camera/wording sweeps. See docs/KEYED_PLACEMENT_20260930.md.
+
 LATEST: held1690 on103000/8772. Reviewed current-depth4cm approach passed
 1.704mm error; then inferred channel-plane line + ONE valid gold-strip point
 supported a reviewed12.616mm lateral correction, passed0.696mm error. Second

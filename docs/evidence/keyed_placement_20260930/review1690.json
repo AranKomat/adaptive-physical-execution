@@ -1,0 +1,61 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1690",
+  "visible_state": {
+    "retention": "Wrist view shows the card between gripper components, with a pad overlapping its PCB face. Retention appears maintained, but a single frame cannot establish grip security or exclude slip.",
+    "placement": "Right view exposes the gold connector above a reinforced motherboard socket. Their projected directions are broadly similar; longitudinal registration and connector-notch/socket-key correspondence are not established.",
+    "target_identity": "The visible socket is plausibly the CPU-adjacent target. Occlusion and the neighboring parallel slot leave possible misassociation; historical sample coordinates do not resolve it."
+  },
+  "next_stage": "Inspection: keep the hand stationary and aperture at 0.3. Obtain a closer oblique/top-down observation resolving the connector's short section and notch against the selected socket's key/end housing, while checking pad-to-card retention. Do not lower or translate along the socket yet.",
+  "proposed_delta_world_m": null,
+  "proposed_rotation_world_rad": null,
+  "anchors": [
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        240,
+        165
+      ],
+      "surface": "Visible black gripper pad face adjacent to the PCB; retention reference."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        239,
+        143
+      ],
+      "surface": "Gold connector strip; approximate solid-surface reference, not a notch boundary."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        349,
+        82
+      ],
+      "surface": "Separated gold-strip surface reference, not a mating endpoint."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        299,
+        190
+      ],
+      "surface": "Light reinforced socket rim; rough socket reference only, not the gap or contact centerline."
+    }
+  ],
+  "assumptions": [
+    "Anchor pixels are approximate current-image selections.",
+    "Opposing rails are unnecessary for this inspection or a rough noncontact approach; historical depths nevertheless cannot certify today's separation or hidden clearance."
+  ],
+  "expected_effect": "Resolve retention and keyed longitudinal placement before choosing a meaningful alignment or approach displacement, rather than repeating transverse rim alignment.",
+  "stop_conditions": [
+    "Card movement relative to the pads or loss of visible engagement.",
+    "Inspection identifies a different parallel socket than the intended CPU-adjacent target.",
+    "Notch/key mismatch, nearby obstruction, or unresolved geometry prevents a justified movement proposal."
+  ],
+  "remaining_stages": [
+    "Bounded noncontact alignment and approach.",
+    "Contact/insertion proposal after keyed placement and accessible clearance checks.",
+    "Verify seating and retention before release."
+  ],
+  "uncertainty": "No current metric connector-to-socket transform, reliable internal-key location, hidden-space clearance, contact state, or seating depth is available."
+}
