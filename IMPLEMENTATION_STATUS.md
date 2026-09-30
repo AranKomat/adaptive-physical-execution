@@ -8,6 +8,12 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+RESOURCE CHECK: held8772 freshly observes1754; critical RGB-D checksum matches.
+Default NVML driver/library mismatch; isolated extracted580.95.05 library restores
+diagnostic only, no system install/reboot. Free GPU memory848/1918MiB with six
+workers, so no separate1920 worker launched. Resource choice pending; no episode
+retired. See docs/GPU_CAPACITY_CHECK_20260930.md. No new physical phase complete.
+
 PREPARED, NOT PHYSICAL RESULT: native-resolution-aware targeting with bounded
 overviews/crops and explicit1920x1080 sensor config. Only sensor image_size
 changes among nonmetadata fields. No worker launched/reset, paid call or motion.
