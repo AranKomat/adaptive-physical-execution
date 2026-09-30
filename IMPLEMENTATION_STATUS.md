@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+RAM726 closure BLOCKED by visibility: current-only and history+current-depth
+reviews both say inspect. History supports nominal centering, not pad/holder
+clearance. No closure/lift/reset. Current worker lacks movable-camera flag;
+do not guess hand motion or reset preserved episode to enable it. See
+`docs/RAM_FIRST_TRIAL.md`. Prepared guarded aperture-specific closure remains
+unexecuted;250tests are software evidence only. FLUX still intentionally unloaded.
+
 LIVE RAM726: measured-axis reorientation and reviewed open-hand preclosure
 placement completed510 actions,2.474mm final error, no guard stop/closure/lift.
 Module remains upright; opposing contact not yet verified. Same RAM worker78152;

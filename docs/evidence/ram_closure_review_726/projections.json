@@ -1,0 +1,170 @@
+{
+  "observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+  "projections": {
+    "left": [
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          170.00640206930947,
+          233.9474209108039
+        ],
+        "predicted_optical_depth_m": 1.249771401098654,
+        "status": "depth_consistent",
+        "sampled_pixel_uv": [
+          170,
+          234
+        ],
+        "current_optical_depth_m": 1.2483183145523071,
+        "depth_residual_m": -0.0014530865463469045,
+        "depth_comparison_tolerance_m": 0.01
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          180.8599595765929,
+          227.7568583872672
+        ],
+        "predicted_optical_depth_m": 1.2709277680517692,
+        "status": "depth_inconsistent",
+        "sampled_pixel_uv": [
+          181,
+          228
+        ],
+        "current_optical_depth_m": 1.169923186302185,
+        "depth_residual_m": -0.10100458174958415,
+        "depth_comparison_tolerance_m": 0.01
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          158.7791140026488,
+          240.35117746557043
+        ],
+        "predicted_optical_depth_m": 1.2286151507025707,
+        "status": "depth_consistent",
+        "sampled_pixel_uv": [
+          159,
+          240
+        ],
+        "current_optical_depth_m": 1.2281315326690674,
+        "depth_residual_m": -0.0004836180335032747,
+        "depth_comparison_tolerance_m": 0.01
+      }
+    ],
+    "right": [
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          411.89839706999544,
+          123.70991380335384
+        ],
+        "predicted_optical_depth_m": 1.504591013870757,
+        "status": "depth_inconsistent",
+        "sampled_pixel_uv": [
+          412,
+          124
+        ],
+        "current_optical_depth_m": 1.3306806087493896,
+        "depth_residual_m": -0.17391040512136735,
+        "depth_comparison_tolerance_m": 0.01
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          409.88139853525036,
+          129.4396286775964
+        ],
+        "predicted_optical_depth_m": 1.480862117855819,
+        "status": "depth_inconsistent",
+        "sampled_pixel_uv": [
+          410,
+          129
+        ],
+        "current_optical_depth_m": 1.3404006958007812,
+        "depth_residual_m": -0.14046142205503775,
+        "depth_comparison_tolerance_m": 0.01
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          413.8527471226667,
+          118.15816175967124
+        ],
+        "predicted_optical_depth_m": 1.5283198431351421,
+        "status": "depth_inconsistent",
+        "sampled_pixel_uv": [
+          414,
+          118
+        ],
+        "current_optical_depth_m": 1.3195302486419678,
+        "depth_residual_m": -0.20878959449317436,
+        "depth_comparison_tolerance_m": 0.01
+      }
+    ],
+    "wrist": [
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          214.5180816882432,
+          -68.79340143449305
+        ],
+        "predicted_optical_depth_m": 0.059936437197181745,
+        "status": "outside_image"
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          214.5184482735588,
+          -235.49338489242254
+        ],
+        "predicted_optical_depth_m": 0.05993423541544934,
+        "status": "outside_image"
+      },
+      {
+        "source_observation_id": "83ce804cdf06479ab757f513ab84185c:216",
+        "current_observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+        "limitation": "Assumes historical surface static; depth agreement is not identity, free space or mating geometry.",
+        "projected_pixel_uv": [
+          214.51789952269004,
+          97.89367072308639
+        ],
+        "predicted_optical_depth_m": 0.059938698574458445,
+        "status": "depth_consistent",
+        "sampled_pixel_uv": [
+          215,
+          98
+        ],
+        "current_optical_depth_m": 0.059938251972198486,
+        "depth_residual_m": -4.466022599583508e-07,
+        "depth_comparison_tolerance_m": 0.01
+      }
+    ]
+  },
+  "nominal_pinch_world_m": [
+    0.2997441583097124,
+    -0.3603388317448088,
+    0.06068707913572245
+  ],
+  "pinch_minus_historical_top_m": [
+    -0.00029026420491523597,
+    1.6374205519253948e-07,
+    -0.007463420137731561
+  ],
+  "limitation": "Historical static module assumption checked at samples only. Robot nominal pinch is not actual contact. Neither projections nor depth agreement certify opposing faces or holder clearance."
+}

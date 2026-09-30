@@ -1,0 +1,22 @@
+{
+  "observation_id": "83ce804cdf06479ab757f513ab84185c:726",
+  "decision": "inspect",
+  "opposing_contact_evidence": {
+    "assessment": "Opposing housing-face straddling is not visibly established.",
+    "details": "The left view places the open gripper near the rear loose module around (170, 234), but the hand obscures the intended bite region and both inner finger surfaces cannot be resolved against opposing housing faces. In the wrist view, the module occupies approximately x=190\u2013260 and extends beyond the upper image boundary; the finger contact regions are not sufficiently visible. The right view is occluded by the case. The colored strip alone does not establish a structural gripping surface."
+  },
+  "longitudinal_center_evidence": {
+    "assessment": "Reasonable nominal centering is supported, but current visual centering is not fully verified.",
+    "details": "The historical marked center projects to left (170, 234) with depth agreement, and one historical axis sample agrees at left (159, 240) and wrist (215, 98). Together with the supplied nominal pinch offset, these support targeting near the marked longitudinal center under the static-module assumption. The other left axis sample is depth-inconsistent, and the wrist center projection is outside the image; neither validates a currently visible center or endpoint. Wrist clipping is therefore not evidence of an end-biased grasp."
+  },
+  "interference_evidence": {
+    "assessment": "Support or wrong-edge contact remains unknown, not observed misalignment.",
+    "details": "The gray support is visible immediately alongside the housing, particularly around wrist x=260\u2013299 and the lower end near y=280. Neither finger's bite and closing path can be distinguished clearly enough to exclude this support, a housing protrusion, or an unintended edge. No finger is conclusively shown resting on a bracket or support. The nominal pinch is about 7.46 mm below the historical top, deeper than the planned 5 mm bite, but that does not establish actual contact depth or interference."
+  },
+  "uncertainty": [
+    "Depth agreement at sparse surface samples supports location consistency, not opposing-contact geometry or free space.",
+    "Finger-pad overlap with structural housing and clearance from the gray support are unresolved.",
+    "Measured open aperture, reached hand pose, and simulator grasp assistance do not verify a grasp."
+  ],
+  "next_observation_or_correction": "Keep the jaws open; do not execute the proposed closure or lift yet. Obtain a closer oblique side view exposing both inner finger pads, the housing beneath the colored strip, and the gray support boundary at the bite location. Include enough of both module ends to compare the pinch location with its midpoint. Use an external viewpoint if possible rather than moving the hand blindly. Reposition only if that view establishes a specific support overlap, wrong-edge placement, or off-center bite."
+}

@@ -110,7 +110,8 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
         assert stages[-1]['hand_pose_world'][2] == pytest.approx(.13+.1034-.015+.23)
 
 
-def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, observation):
+@pytest.mark.parametrize('reviewed', [False, True])
+def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, observation, reviewed):
     module = load_script('probe_contact_stage')
     calls = []
     class Client:
@@ -120,7 +121,8 @@ def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, ob
             pass
         def call(self, route, envelope=None, **kwargs):
             if route == '/metadata':
-                return {'local_stages_enabled':True, 'real_hardware_supported':False}
+                return {'local_stages_enabled':True, 'real_hardware_supported':False,
+                        'contact_tracking_guard_enabled':True}
             if route == '/observe':
                 return observation
             calls.append(envelope)
@@ -131,13 +133,19 @@ def test_exploratory_contact_nonarrival_does_not_retry(monkeypatch, tmp_path, ob
     monkeypatch.setattr(module,'decode_observation',lambda value:value)
     monkeypatch.setattr(module,'decode_result',lambda value:value)
     monkeypatch.setenv('PHYSICAL_EXEC_SIM_TOKEN','test-only')
+    review = tmp_path/'close_review.json'
+    review.write_text(json.dumps({'observation_id':observation.key, 'decision':'close_candidate'}))
     monkeypatch.setattr(module.sys,'argv',['test','--url','http://unused','--observation-id',observation.key,
-                         '--mode','close','--output',str(tmp_path/'contact')])
+                         '--mode','close','--output',str(tmp_path/'contact')]
+                        + (['--opening','.05','--contact-tracking-guard','--review',str(review)] if reviewed else []))
     with pytest.raises(RuntimeError,match='no retry'):
         module.main()
     assert len(calls) == 1
     assert calls[0]['action']['max_steps'] == 64
     assert calls[0]['action']['hand_pose_world'] == observation.eef_pose.tolist()
+    assert calls[0]['action']['gripper_open'] == (.05 if reviewed else .3)
+    if reviewed:
+        assert calls[0]['action']['contact_tracking_guard'] is True
 
 
 def test_contact_motion_bounds_do_not_require_insertion_tolerance():

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """One explicitly exploratory simulator contact stage; not visual-gate approval or autonomous recovery."""
 import argparse
+import json
 import math
 import os
 from pathlib import Path
@@ -29,15 +30,27 @@ def main():
     parser.add_argument('--observation-id', required=True)
     parser.add_argument('--mode', choices=['close','lift_5cm'], required=True)
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--opening', type=float, default=.3, help='Explicit normalized aperture setpoint')
+    parser.add_argument('--contact-tracking-guard', action='store_true')
+    parser.add_argument('--review', type=Path, help='Matching close-candidate review; close mode only')
     parser.add_argument('--phase-completion', action='store_true',
                         help='Declare 10 mm / 0.15 rad exploratory motion bounds; not grasp success')
     args = parser.parse_args()
+    if not math.isfinite(args.opening) or not 0 <= args.opening <= 1:
+        raise ValueError('Opening must be finite in [0,1]')
+    if args.review:
+        review = json.loads(args.review.read_text())
+        if (args.mode != 'close' or review.get('observation_id') != args.observation_id
+                or review.get('decision') != 'close_candidate'):
+            raise ValueError('Requires matching close-candidate review')
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
     try:
         metadata = client.call('/metadata')
         if metadata.get('real_hardware_supported') is not False or not metadata.get('local_stages_enabled'):
             raise ValueError('Requires opt-in simulator')
+        if args.contact_tracking_guard and not metadata.get('contact_tracking_guard_enabled'):
+            raise ValueError('Worker lacks contact tracking guard')
         obs = decode_observation(client.call('/observe'))
         if obs.key != args.observation_id:
             raise ValueError('Observation changed; no automatic retry')
@@ -52,8 +65,13 @@ def main():
         if args.mode == 'lift_5cm':
             target[2] += .05
         envelope = dict(command_id=uuid4().hex, action=dict(observation_id=obs.key,
-            hand_pose_world=target.tolist(),gripper_open=.3,max_steps=64,
+            hand_pose_world=target.tolist(),gripper_open=args.opening,max_steps=64,
             target_source='Operator-scoped exploratory contact probe; unknown clearance; NOT visual-gate approval'))
+        if args.contact_tracking_guard:
+            envelope['action']['contact_tracking_guard'] = True
+        if args.review:
+            write_json(args.output/'review.json', review)
+            envelope['action']['target_source'] = 'Reviewed visual close hypothesis; operator-scoped aperture; unknown clearance'
         write_json(args.output/'request.json', envelope)
         result = decode_result(client.call('/local-stage',envelope,mutating=True))
         write_json(args.output/'receipt.json',result.receipt.to_dict())

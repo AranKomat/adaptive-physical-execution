@@ -1,5 +1,40 @@
 # RAM: next independent assembly experiment
 
+## Closure review at726: visibility blocked, no closure
+
+Fresh public read confirms726. Current-only Astra review returns inspect: both
+inner pads and their relationship to the support are not resolved. A second
+review adds genuinely new evidence: historical216 center/axis measurements,
+current calibrated depth comparisons, robot-nominal pinch location and the
+historical wrist image. This resolves some nominal-centering uncertainty but
+still returns inspect. No contact, closure, lift or reset occurred.
+
+Current nominal pinch is[.299744,-.360339,.060687]m, about0.29mm lateral from
+the historical marked center and7.46mm below its top (planned bite5mm). One
+historical axis point agrees with current wrist depth within0.001mm; center is
+outside the wrist image but agrees within1.45mm in the left image. Other samples
+are occluded/inconsistent. These are sparse consistency checks, not whole-object
+stasis, structural contact, or holder-clearance certification.
+
+The follow-up preserved the distinction between inferred centering and actual
+contact visibility. This is a qualitative memory-use example, NOT a controlled
+memory benefit or physical completion. Do not repeat unchanged-image reviews.
+Evidence: [current only](evidence/ram_closure_review_726/current_only.json),
+[with history](evidence/ram_closure_review_726/with_history.json),
+[legal projections](evidence/ram_closure_review_726/projections.json).
+
+The requested next observation is an oblique external view of both inner pads,
+housing and support at the bite. Current RAM worker metadata has
+`inspection_camera_enabled=false`: existing camera-motion API is unavailable in
+this process. Preserve726; do not send unsupported camera commands, reset it to
+enable a flag, blindly reposition, or silently treat inspect as closure approval.
+Any new camera-enabled episode is a separate trial, not continued recovery.
+
+Prepared but NOT exercised: explicit aperture and per-action tracking-guard
+options in the contact probe, plus matching close-candidate review validation.
+Proposed nominal4mm aperture/64-action hold was reviewed but NOT executed.
+Existing GPU default remains unchanged.250tests pass; no grasp achieved.
+
 ## Live update: reviewed open-hand placement reached726
 
 Current same episode `83ce804cdf06479ab757f513ab84185c:726`; RAM worker78152,
