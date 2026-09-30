@@ -14,12 +14,38 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from physical_exec.depth import surface_point, project_surface_memory
 
 
+def capture_dimensions(capture):
+    sizes = []
+    for role in ('left', 'right', 'wrist'):
+        with Image.open(capture / f'{role}.png') as source:
+            sizes.append(source.size)
+    if len(set(sizes)) != 1:
+        raise ValueError('Targeting requires matching camera image dimensions')
+    return sizes[0]
+
+
+def overview_content(capture, role):
+    with Image.open(capture / f'{role}.png') as source:
+        original = source.size
+        shown = source.copy()
+        shown.thumbnail((640, 640), Image.Resampling.LANCZOS)
+        data = io.BytesIO()
+        shown.save(data, format='PNG')
+    return [{'type': 'text', 'text': (
+        f'Current camera: {role}. Original sensor size {original[0]}x{original[1]}; '
+        f'displayed overview {shown.width}x{shown.height}. '
+        'Return ORIGINAL sensor pixels, not overview pixels. '
+        f'Original u = displayed u * {original[0]/shown.width}; '
+        f'original v = displayed v * {original[1]/shown.height}.')},
+        {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,'+
+                                         base64.b64encode(data.getvalue()).decode()}}]
+
+
 def closeup_content(capture, role, box):
     with Image.open(capture / f'{role}.png') as source:
-        if source.size != (640, 360):
-            raise ValueError('Close-up requires original640x360 sensor image')
+        width, height = source.size
         x0, y0, x1, y1 = box
-        if not (0 <= x0 < x1 <= 640 and 0 <= y0 < y1 <= 360):
+        if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
             raise ValueError('Invalid original-frame crop bounds')
         scale = min(640 / (x1-x0), 640 / (y1-y0))
         size = (round((x1-x0)*scale), round((y1-y0)*scale))
@@ -105,6 +131,7 @@ def main():
     if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
         raise ValueError('Projected carry anchor requires historical capture and response')
     state = json.loads((args.capture / 'state.json').read_text())
+    width, height = capture_dimensions(args.capture)
     prompt = (
         'Identify the loose graphics card standing beside the computer chassis, NOT cards inside it. '
         'We are planning a simulator-only top-down parallel-jaw grasp with RGB-D. '
@@ -388,10 +415,11 @@ def main():
             'supports them, or report insufficient evidence. Do not choose pixels merely to match '
             'an expected depth or edit the measurements. These are not object poses or clearance. '
             + json.dumps(measurements))})
+    for part in content:
+        if part['type'] == 'text':
+            part['text'] = part['text'].replace('640x360', f'{width}x{height}')
     for role in ('left', 'right', 'wrist'):
-        encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()
-        content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
-                        {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
+        content.extend(overview_content(args.capture, role))
     if args.closeup_right:
         content.extend(closeup_content(args.capture, 'right', args.closeup_right))
     if args.prior_carry_capture or args.prior_carry_response:

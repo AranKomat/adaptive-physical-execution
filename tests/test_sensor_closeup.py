@@ -1,7 +1,10 @@
 import base64
 import importlib.util
 import io
+import json
 from pathlib import Path
+import subprocess
+import sys
 
 from PIL import Image
 import pytest
@@ -28,3 +31,40 @@ def test_closeup_rejects_invalid_bounds(tmp_path, box):
     Image.new('RGB', (640, 360)).save(tmp_path / 'right.png')
     with pytest.raises(ValueError, match='crop bounds'):
         module.closeup_content(tmp_path, 'right', box)
+
+
+def test_high_resolution_overview_and_crop_use_original_coordinates(tmp_path):
+    for role in ('left', 'right', 'wrist'):
+        Image.new('RGB', (1920, 1080), (12, 34, 56)).save(tmp_path / f'{role}.png')
+    assert module.capture_dimensions(tmp_path) == (1920, 1080)
+    overview = module.overview_content(tmp_path, 'right')
+    assert 'Original sensor size 1920x1080' in overview[0]['text']
+    assert 'displayed overview 640x360' in overview[0]['text']
+    assert 'Original u = displayed u * 3.0' in overview[0]['text']
+    crop = module.closeup_content(tmp_path, 'right', [540, 360, 1230, 720])
+    assert '"original_box_xyxy": [540, 360, 1230, 720]' in crop[0]['text']
+
+
+def test_mismatched_sensor_dimensions_rejected(tmp_path):
+    for role in ('left', 'right', 'wrist'):
+        Image.new('RGB', (640, 360) if role != 'right' else (1920, 1080)).save(
+            tmp_path / f'{role}.png')
+    with pytest.raises(ValueError, match='matching camera'):
+        module.capture_dimensions(tmp_path)
+
+
+def test_high_resolution_correspondence_prompt_and_bounded_inputs(tmp_path):
+    for role in ('left', 'right', 'wrist'):
+        Image.new('RGB', (1920, 1080)).save(tmp_path / f'{role}.png')
+    (tmp_path / 'state.json').write_text(json.dumps({'observation_id': 'test:0'}))
+    output = tmp_path / 'messages.json'
+    subprocess.run([sys.executable, str(Path(module.__file__)), '--capture', str(tmp_path),
+                    '--stage', 'correspondence', '--closeup-right', '540', '360', '1230',
+                    '720', '--output', str(output)], check=True)
+    content = json.loads(output.read_text())[0]['content']
+    assert '1920x1080 integer pixels' in content[0]['text']
+    for part in content:
+        if part['type'] == 'image_url':
+            encoded = part['image_url']['url'].split(',', 1)[1]
+            with Image.open(io.BytesIO(base64.b64decode(encoded))) as shown:
+                assert max(shown.size) <= 640

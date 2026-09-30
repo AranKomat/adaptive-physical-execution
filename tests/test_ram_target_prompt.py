@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+from PIL import Image
 
 
 SCRIPT = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
@@ -10,7 +11,7 @@ SCRIPT = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_requ
 def test_ram_prompt_is_explicit_and_does_not_reuse_gpu_target(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'ram:0'}))
     for role in ('left', 'right', 'wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'test-image')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     output = tmp_path/'messages.json'
     subprocess.run([sys.executable, str(SCRIPT), '--capture', str(tmp_path),
                     '--output', str(output), '--stage', 'approach',

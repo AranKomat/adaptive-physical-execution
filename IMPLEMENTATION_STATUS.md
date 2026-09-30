@@ -8,6 +8,11 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+PREPARED, NOT PHYSICAL RESULT: native-resolution-aware targeting with bounded
+overviews/crops and explicit1920x1080 sensor config. Only sensor image_size
+changes among nonmetadata fields. No worker launched/reset, paid call or motion.
+See docs/HIGH_RESOLUTION_SENSING_PLAN_20260930.md for separate-episode protocol.
+
 LATEST: final same-view scale check at1754 added nearest-neighbor sensor crop
 with original-coordinate mapping. Astra still declined endpoint/key association;
 no arm/camera action or insertion. Four focused crop tests passed. End same-view

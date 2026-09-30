@@ -1,0 +1,30 @@
+{
+  "schema": "physical-exec-task/v1",
+  "id": "pc_gpu",
+  "requires_local_eef_execution": true,
+  "preset": "assembly.pc_gpu.franka.joint",
+  "instruction": "Install the loose graphics card into the computer case's PCIe slot. Use visual feedback to align and seat it.",
+  "control_hz": 15,
+  "image_size": [1920, 1080],
+  "camera_map": {"wrist": "wrist", "left": "external_left", "right": "external_right"},
+  "extra_cameras": {
+    "external_left": {"eye": [1.2, -0.95, 0.8], "target": [0.45, 0.0, 0.1], "focal": 18.0},
+    "external_right": {"eye": [0.55, -0.65, 0.4], "target": [0.22, -0.34, 0.2], "focal": 18.0}
+  },
+  "limits": {
+    "max_translation_m": 0.2,
+    "max_rotation_rad": 0.3,
+    "max_joint_step_rad": 0.15,
+    "max_chunk": 32
+  },
+  "default_horizons": {"direct_roboicl": 1, "direct_reference": 1, "hybrid": 8},
+  "wrist_target_hand": [0, 0, 0.1034],
+  "notes": [
+    "Observation-resolution diagnostic: same installation/physics/limits as pc_gpu_enhanced, only sensor image_size changed.",
+    "A separate fresh worker is required. Do not reset or replace the held 8772 episode to apply this configuration.",
+    "Use original1920x1080 coordinates with matching depth/calibration. Overview resizing adds no detail; localized sensor crops preserve available detail.",
+    "No motion or FLUX requalification is implied by this configuration. Compare methods only under explicitly matched sensing conditions.",
+    "Assistance ON and idealized inspection-camera condition remain disclosed; this is not a hardware claim."
+  ],
+  "source": "https://github.com/EmbodiedSWE/EmbodiedSWE/blob/d34837e99e5016525f0e9b6bb84791eb3d4b8162/robobench/suites/assembly/configs/envs.py"
+}

@@ -4,13 +4,14 @@ import subprocess
 import sys
 
 import pytest
+from PIL import Image
 
 
 @pytest.mark.parametrize('stage,accepted', [('socket_gap', True), ('grasp', False)])
 def test_single_pixel_rails_are_explicit_and_observation_only(tmp_path, stage, accepted):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
     for role in ('left', 'right', 'wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     output = tmp_path/'messages.json'
     script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
     result = subprocess.run([sys.executable, str(script), '--stage', stage,
@@ -29,7 +30,7 @@ def test_single_pixel_rails_are_explicit_and_observation_only(tmp_path, stage, a
 def test_inspection_camera_does_not_assert_a_fixed_occluder(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
     for role in ('left', 'right', 'wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
         (tmp_path/f'{role}_calibration.json').write_text(json.dumps({'observation_id': 'e:12'}))
     output = tmp_path/'messages.json'
     script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
@@ -44,7 +45,7 @@ def test_inspection_camera_does_not_assert_a_fixed_occluder(tmp_path):
 def test_inspection_translation_budget_is_explicit_and_bounded(tmp_path, limit, accepted):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
     for role in ('left','right','wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
         (tmp_path/f'{role}_calibration.json').write_text(json.dumps({'observation_id':'e:12'}))
     output = tmp_path/'messages.json'
     script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
@@ -64,7 +65,7 @@ def test_inspection_translation_budget_is_explicit_and_bounded(tmp_path, limit, 
 def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted,stage):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     measurements=tmp_path/'measurements.json'
     measurements.write_text(json.dumps({'observation_id':measurement_id,'connector':{'samples':[]}}))
     output=tmp_path/'messages.json'
@@ -83,7 +84,7 @@ def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,
 def test_contact_recovery_uses_current_receipt_not_evaluator(tmp_path,result_id,accepted):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     (tmp_path/'evaluator_only.json').write_text('{"hidden":"EVALUATOR_SENTINEL"}')
     receipt=tmp_path/'receipt.json'
     receipt.write_text(json.dumps(dict(resulting_observation_id=result_id,status='executed',
@@ -104,7 +105,7 @@ def test_contact_recovery_uses_current_receipt_not_evaluator(tmp_path,result_id,
 def test_correspondence_review_is_observation_only(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:10'}))
     for role in ('left', 'right', 'wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     # Evaluator artifacts adjacent to observations must not enter the request.
     (tmp_path/'evaluator_only.json').write_text('{"hidden": "EVALUATOR_SENTINEL"}')
     output = tmp_path/'messages.json'
@@ -121,7 +122,7 @@ def test_correspondence_review_is_observation_only(tmp_path):
 def test_feature_inventory_separates_localization_from_alignment(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):
-        (tmp_path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+        Image.new('RGB', (640, 360)).save(tmp_path/f'{role}.png')
     output = tmp_path/'messages.json'
     script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
     subprocess.run([sys.executable,str(script),'--stage','feature_inventory',
@@ -142,7 +143,7 @@ def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage
         path.mkdir()
         (path/'state.json').write_text(json.dumps({'observation_id':obs}))
         for role in ('left','right','wrist'):
-            (path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+            Image.new('RGB', (640, 360)).save(path/f'{role}.png')
             (path/f'{role}_calibration.json').write_text(json.dumps({'observation_id':obs}))
     response = tmp_path/'response.json'
     response.write_text(json.dumps(dict(observation_id=old_id,decision='carry_above_slot',
@@ -178,7 +179,7 @@ def test_historical_socket_context_is_bound_and_labeled(tmp_path, old_id, select
         path.mkdir()
         (path/'state.json').write_text(json.dumps({'observation_id': obs}))
         for role in ('left', 'right', 'wrist'):
-            (path/f'{role}.png').write_bytes(b'fixture-only-no-model-call')
+            Image.new('RGB', (640, 360)).save(path/f'{role}.png')
     response = tmp_path/'response.json'
     response.write_text(json.dumps({'observation_id': selection_id, 'decision': decision,
                                     'center': {'camera': 'right', 'pixel_uv': [10, 20]}}))
