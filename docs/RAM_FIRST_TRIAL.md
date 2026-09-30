@@ -1,5 +1,32 @@
 # RAM: next independent assembly experiment
 
+## Camera-enabled live220: model-selected noncontact approach
+
+Current episode `febb2e8b8f8c4b6ab1a7dd160701fbde:220`, worker79506,
+remote8772/local18772. Fresh Astra Flex medium selected wrist[282,42] on the
+upper loose module in its initial view. Legal depth sample[.296041,-.363292,
+.056656]m passed the existing3x3 spread gate (9.610mm). This is a visible housing
+anchor, NOT verified top/grasp geometry despite the model's top-strip wording.
+It is sufficient here only for the explicit22cm world-up noncontact hand target;
+do not derive bite depth from this sample in the next phase.
+
+The open-hand attitude-preserving approach executed39+39+39+39+64=220 actions,
+14.667 sim seconds, endpoint2.699mm/0.000255rad, no guard stop or retry.
+No operator pixel substitution in this run. The phase/controller recipe remains
+operator-defined; this is not an end-to-end autonomous grasp or assembly result.
+The aimed wrist now shows both fingers at this standoff. Their visibility at the
+lower bite pose and actual pad/support clearance remain untested.
+
+Evidence: [wrist](evidence/ram_aimed_approach_220/04_wrist.png),
+[left](evidence/ram_aimed_approach_220/04_left.png),
+[model selection](evidence/ram_aimed_approach_220/target_review.json),
+[receipt](evidence/ram_aimed_approach_220/04_receipt.json).
+Current capture `runs/ram_aimed_capture220`, selected calibrated depth under
+`runs/ram_aimed_recordings`. Next current-view top/axis measurement and reviewed
+preclosure placement, then inspection using enabled camera controls if needed.
+Original baseline-camera episode remains726; do not reset either worker.
+No closure, lift or RAM task phase complete. No source/evaluator control inputs.
+
 ## New camera-enabled condition, original726 preserved
 
 New separate live episode `febb2e8b8f8c4b6ab1a7dd160701fbde:0`, worker79506,

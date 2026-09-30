@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE camera-enabled RAM220: fresh model-selected housing anchor + legal depth
+produced220-action open-hand standoff,2.699mm error, no guard stop. No operator
+pixel correction in this approach, but recipe remains operator-defined. Both
+fingers visible at standoff; bite-pose visibility untested. Same worker79506;
+old RAM726 preserved. Next top/axis measurement and reviewed preclosure, not
+grasping from this coarse surface anchor. See `docs/RAM_FIRST_TRIAL.md`.
+
 NEW camera-enabled RAM: episodefebb2e8b8f8c4b6ab1a7dd160701fbde:0,
 worker79506 remote8772/local18772, initial capture done. Wrist pinch aiming and
 inspection/gaze controls confirmed enabled. Original RAM726 preserved on8771;

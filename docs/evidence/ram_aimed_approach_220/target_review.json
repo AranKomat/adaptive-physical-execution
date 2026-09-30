@@ -1,0 +1,28 @@
+{
+  "observation_id": "febb2e8b8f8c4b6ab1a7dd160701fbde:0",
+  "decision": "target",
+  "camera": "wrist",
+  "pixel_uv": [
+    282,
+    42
+  ],
+  "axis_samples": [
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        258,
+        32
+      ]
+    },
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        306,
+        52
+      ]
+    }
+  ],
+  "module_identity": "Upper of the two loose RAM modules in the wrist view, standing in a gray support beside the chassis. Its exposed black housing borders a green-to-cyan illuminated strip.",
+  "evidence": "The wrist view resolves a narrow solid top housing strip immediately above the illuminated diffuser and distinct from the broader gray holder. The target is near its length center and centered across the visible strip thickness. Both heading samples lie along that same strip, away from its visible ends. The left view corroborates two separate supported modules outside the chassis; the right view does not resolve their tops.",
+  "uncertainty": "The housing lip is a plausible gripping feature, but its load-bearing suitability is unverified; illumination alone provides no contact evidence. This target anchors only a NONCONTACT open-hand standoff. Depth, contact suitability, and approach clearance remain unknown. No descent or closure is authorized."
+}
