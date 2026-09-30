@@ -178,6 +178,10 @@ class ControllerPort:
                 'per conservative destination; remaining run budget may reduce this. '
                 'A farther destination is rejected before motion. Fast eligibility is not '
                 'permission to skip slower near-contact staging.')
+            prompt += (' When a grasp is unverified, make the first lift check a short '
+                'vertical test of at most0.005m, then inspect whether the object follows. '
+                'Do not request a20mm or larger loaded lift as the first verification; '
+                'larger transport belongs only after a verified grasp.')
             if getattr(self,'fast_open_transit',False):
                 prompt += (' Elevated open-hand destinations use experimental smooth5x transit when both '
                     'hand endpoint heights are at least0.30m; other destinations use conservative motion. '
