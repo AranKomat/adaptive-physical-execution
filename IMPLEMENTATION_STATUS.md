@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+Latest recovery: model-reviewed open-in-place at533 completed30guarded actions,
+now563,2.427mm endpoint error, measured aperture99.59%. Card appears supported;
+no grasp/lift. Distinct operator-scoped recovery, not Direct success. Current
+worker88111/8774. Target patch remains occluded; next supported view/retreat and
+depth-grounded target, no blind reclosure. See GPU_FAST_EXECUTION_PLAN.
+
 Latest physical state: enhanced Direct-A episode8838a36a428c40c38aa6270f759398e4:533
 held after stationary closure hit contact tracking guard (10.991mm error).
 10calls total,$0.71696875,533actions; no verified grasp/native success. Earlier

@@ -5,6 +5,24 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+RECOVERY UPDATE:533 legal-depth centerline audit found left9depth-edge/8occluded,
+right17occluded, wrist4edge/10occluded/3surface-consistent samples (17per view).
+These nominal centerline samples do not identify pad contact or object identity.
+Fresh grasp localization review returned inspect: central top patch obscured.
+Separate Astra visual review supported bounded open-in-place, not lift/closure.
+Executed exactly30conservative guarded actions at CURRENT measured hand pose;
+arrived563,2.427mm/.00590rad error,2sim/14.174wall seconds, aperture0.995887.
+Image shows card still apparently supported. No verified grasp/recovery success.
+This is a distinct operator-scoped model-reviewed release, NOT autonomous Direct
+continuation or native FLUX behavior. Current worker88111/8774 holds563. No lift,
+retreat or reset. Next obtain a less-occluded legal view or supported retreat
+before selecting a depth-grounded grasp point; do not repeat vertical closure.
+Scripts prepare_release_review.py/run_reviewed_release.py record this bounded
+path, requiring exact review/current observation match and no automatic retry.
+Evidence: docs/evidence/gpu_enhanced_release. Full sensor capture and audit remain
+in runs/gpu_enhanced_533_sensor and runs/gpu_enhanced_533_visibility.json.
+Two additional settled visual review calls; shared reserved count4424.
+
 CONTACT CONTINUATION RESULT (supersedes current120 below): same episode now533,
 worker88111/8774, STOPPED by contact tracking guard. Do not automatically retry,
 reset or lift. Across four bounded segments:10GPT calls,533actions,35.533sim
