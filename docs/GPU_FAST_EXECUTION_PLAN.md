@@ -5,6 +5,17 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+LATEST APERTURE REFERENCE:0.3 closure passed; card visibly lifted off support.
+Final23cm target missed strict arrival (4.573mm error after64 actions), so stop
+without retry. The0.0 comparison is not authorized by a passing reference and
+was not executed. This is positive operator-directed assisted retention, NOT
+autonomous installation or causal aperture evidence. Preserve93658/8772 at575
+and92546/8774 at196. See GRASP_COMMAND_COMPARISON_20260930.md for evidence and
+current-code/historical-replay differences. No new paid calls or phase completion.
+User-approved shared budget is$85, holds retained; verified RAM backup/retirement
+is complete. Next: assess the final tracking residual from retained telemetry
+before defining any fresh experiment; no tolerance relaxation or forced lift.
+
 NEW READ-ONLY FINDING: successful guarded recipe used0.3 opening, whereas
 recent Direct closures used0.0 at materially different positions. Do not infer
 perception or controller causality from those unmatched failures. Next is a

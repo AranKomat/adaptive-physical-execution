@@ -2,6 +2,16 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: no-API0.3-aperture reference visibly held/lifted the card clear of its
+support. Closure passed (0.589mm error); three lift waypoints passed; final
+waypoint exhausted64 actions at4.573mm error, above3mm arrival tolerance.
+Stopped with no retry at be30df64d12349588c2bfb0d0cad3fd1:575 on93658/8772.
+The0.0 condition was NOT run: strict reference reproduction failed, despite
+positive visual retention. Assistance ON, operator-defined, not autonomous or
+installation success. Evidence: docs/evidence/aperture_reference_20260930/.
+No phase completed. Budget is approved at$85 with holds retained; RAM backup
+and retirement are complete. Older pending-approval notes below are historical.
+
 User approved$85 shared ceiling (holds retained) and RAM8772 retirement.
 All6,494 RAM recording files were copied locally and SHA-256 verified before
 exact PID79506 retirement. Remote files retained; GPU1 now had9295MiB free.

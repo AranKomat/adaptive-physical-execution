@@ -1,5 +1,36 @@
 # Retained grasp comparison and next experiment
 
+## Latest Reference Result
+
+The no-API reference run reached episode
+`be30df64d12349588c2bfb0d0cad3fd1:575` on worker93658/8772.
+Fresh legal depth at the cached pixel reproduced the reference surface point.
+The guarded approach arrived at step330 (0.214mm position error). Visual review
+supported an operator-scoped closure hypothesis, not a certified grasp.
+Closure at0.3 arrived after64 actions (0.589mm error).
+
+The upward trajectory passed three intermediate waypoints (39 actions each).
+The last waypoint exhausted64 actions with4.573mm position error, exceeding
+the unchanged3mm arrival threshold. Execution stopped without retry. Final
+hand z was0.458636m versus target0.463198m. Both external images clearly show
+the card held above the now-empty support. Thus visible assisted retention and
+substantial lift occurred, but strict endpoint reproduction FAILED. No insertion
+or autonomous success is claimed, and the0.0 condition was NOT run, as required
+by the predeclared stop rule. Aperture causality remains untested.
+
+Implementation detail: the existing carry compiler was reused for this upward
+diagnostic; its internal `elevated_carry_*` name is not verification of capture.
+It interpolates four waypoints from measured post-closure FK to the refreshed
+reference endpoint, rather than replaying historical intermediate coordinates.
+The current approach also includes updated open-hand settling. This is a
+reference-style reproduction under current code, not a bitwise historical replay.
+Any future matched pair must use this same compiler and approach in both arms.
+
+Public receipts, source plans and before/after images:
+`evidence/aperture_reference_20260930/`. Local run directories use the same
+names. Live final state is preserved. No paid requests were made; the shared
+$85 ceiling and all unresolved holds remain unchanged.
+
 ## Finding
 
 The successful guarded fixed-fixture recipe and recent Direct-A trials do not
@@ -99,5 +130,7 @@ comparison with SHA-256 source fingerprints. It refuses to overwrite output and
 contains no simulator/API client. Public numeric evidence:
 `evidence/depth_contact_20260930/grasp_command_comparison.json`.
 
-No paid calls or robot commands were made for this comparison. The shared$75
-reservation ceiling remains unchanged; current paid episode remains stopped.
+The retained-command analysis itself made no paid calls or robot commands.
+The subsequent operator diagnostic is tracked above. The user-approved shared
+reservation ceiling is now $85, with unresolved holds retained; the prior paid
+episode remains stopped.
