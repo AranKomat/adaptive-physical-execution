@@ -83,3 +83,25 @@ must qualify the full Isaac/Vulkan driver stack, not infer it from a PyTorch
 check. A reboot would lose remaining live simulator states and could interrupt
 the separate CPU workload; it must not happen silently. A process-local matching
 graphics-library condition or a coordinated restart are distinct options.
+
+## Full process-local graphics attempt
+
+Downloaded148MB `libnvidia-gl-580=580.95.05-0ubuntu1` and extracted it into the
+same isolated tree, without a system package installation. Selected a private
+Vulkan ICD descriptor pointing directly at that tree's `libGLX_nvidia.so.0`.
+The fresh launch also preloaded matching NVML and CUDA libraries, retaining
+the same high-resolution config, GPU0, and four-thread OpenMP bound.
+
+New PID337393/8780 had no NVML mismatch messages in its captured startup log,
+but still reported Vulkan `ERROR_INCOMPATIBLE_DRIVER`, no GPU Foundation device,
+and PhysX software fallback. Stopped that exact new worker; process inspection
+confirmed it absent and held PID103000 present. No reset/control request or
+qualified observation was produced. No model call or phase completion.
+Local log: `runs/gpu_sensor1920_fullcompat_failure_20260930.log`.
+
+This is a failed startup after a changed dependency condition, not a retry of
+an ambiguous physical command. No further speculative loader/startup sweep is
+planned. Confirm whether the unrelated CPU workload still runs before selecting
+a coordinated driver repair/reboot, or move new experiments to a coherent fresh
+instance. Existing host, live states, global driver configuration and CPU
+workload were not rebooted or modified. Keep the original task goal open.

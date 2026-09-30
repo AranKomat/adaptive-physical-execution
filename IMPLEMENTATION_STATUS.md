@@ -8,6 +8,12 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+DRIVER FOLLOW-UP: isolated matching graphics libs/private Vulkan ICD plus CUDA/
+NVML preload removed Kit NVML error but Vulkan still incompatible. New337393
+stopped before reset/control requests; held103000 preserved. No further loader
+sweep. Need coherent fresh-host environment or coordinated repair respecting
+CPU workload/live states; question outstanding. No high-resolution task result.
+
 BASELINE8765 RETIRED after authorized full backup/checksum verification:
 2531files/916199598bytes, remote files retained. Held8772 preserved. GPU0 freed
 to8203MiB. Separate1920 Isaac launch FAILED NVML/Vulkan/GPU initialization and
