@@ -5,6 +5,18 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+Launcher/target-limit continuation: private `run_adaptive_direct_trial.py` now
+supports `--enhanced-gpu` and port18774. This selects the enhanced task, both local
+execution/fast-transit flags, Direct horizon1 and64actions per decision (actual
+actions counted). Hybrid accepted joint horizon stays8/32. Shared paid ledger,
+holds, route and per-trial caps are unchanged. Enhanced config matches aimed-wrist
+camera geometry and allows20cm/0.30rad EEF destinations while keeping joint limits
+unchanged; CLI rejects this config without local execution.307tests pass; launcher
+help/import verified. No paid call or simulator motion yet. Host process inventory
+still shows all six retained workers. Next preserve temporary qualification
+evidence, retire only that worker, and launch a fresh enhanced GPU episode.
+This supersedes the launcher/3cm pending statements below.
+
 - Shared local execution IS connected to Direct-A/B and Hybrid EEF fallback
   (`c17093c`); explicit fast-profile selection is implemented (`a13a3c9`). The
   external review's claim that integration is absent is stale.

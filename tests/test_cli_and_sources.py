@@ -29,6 +29,21 @@ def test_paid_run_requires_explicit_opt_in(tmp_path):
     assert not (tmp_path/'no').exists()
 
 
+def test_enhanced_task_bounds_and_camera_parity(tmp_path):
+    enhanced,limits=load_task(ROOT/'configs/tasks/pc_gpu_enhanced.json')
+    original,baseline=load_task(ROOT/'configs/tasks/pc_gpu_grasp_wrist_aim.json')
+    for key in ('preset','camera_map','extra_cameras','wrist_target_hand','control_hz','image_size'):
+        assert enhanced[key]==original[key]
+    assert limits.max_translation_m==.2 and limits.max_rotation_rad==.3
+    assert limits.max_joint_step_rad==baseline.max_joint_step_rad
+    assert enhanced['requires_local_eef_execution'] is True
+    assert main(['run','--task',str(ROOT/'configs/tasks/pc_gpu_enhanced.json'),
+                 '--mode','direct_roboicl','--model','test','--allow-paid',
+                 '--endpoint','https://example.com/v1/responses',
+                 '--output',str(tmp_path/'no')])==2
+    assert not (tmp_path/'no').exists()
+
+
 def test_upstream_bootstrap_is_plan_only_by_default(tmp_path):
     completed=subprocess.run([sys.executable,str(ROOT/'scripts/bootstrap_upstreams.py'),'--destination',str(tmp_path/'upstream')],
                              capture_output=True,text=True,check=True)

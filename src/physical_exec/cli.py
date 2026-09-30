@@ -140,6 +140,8 @@ def main(argv=None):
                 raise ValueError("Hybrid requires --ack-experimental-flux after sensor/FK/action qualification")
             task,limits=load_task(args.task)
             from .providers.responses import ProviderConfig, ResponsesProvider
+            if task.get('requires_local_eef_execution') and not args.local_eef_execution:
+                raise ValueError('enhanced task requires --local-eef-execution')
             cfg=ProviderConfig(args.model,args.endpoint,args.key_env,args.reasoning,args.request_timeout,
                                args.max_output_tokens,args.max_decisions,args.max_total_tokens,
                                service_tier=args.service_tier,provider_only=args.provider_only)

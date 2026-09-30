@@ -17,8 +17,11 @@ def read_json(path):
 def load_task(path):
     obj = read_json(path)
     allowed = {"schema", "id", "preset", "instruction", "control_hz", "image_size", "camera_map",
-               "extra_cameras", "limits", "default_horizons", "notes", "source", "wrist_target_hand"}
+               "extra_cameras", "limits", "default_horizons", "notes", "source", "wrist_target_hand",
+               "requires_local_eef_execution"}
     if set(obj)-allowed: raise ValueError(f"unknown task fields: {set(obj)-allowed}")
+    if type(obj.get('requires_local_eef_execution', False)) is not bool:
+        raise ValueError('requires_local_eef_execution must be boolean')
     if obj.get("schema") != "physical-exec-task/v1" or obj.get("id") not in TASKS:
         raise ValueError("unknown task/schema")
     if obj.get("preset") != f"assembly.{obj['id']}.franka.joint":

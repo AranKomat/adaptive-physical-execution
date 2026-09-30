@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+Latest: enhanced GPU launcher and explicit20cm/0.30rad EEF task config prepared;
+307tests pass. Direct horizon1,64actual-action budget per decision, fast eligible
+transit standard in --enhanced-gpu mode. Native joint limits/timing unchanged.
+No new physical/model trial. Fresh GPU inventory confirms six retained workers;
+next archive temporary qualification evidence and launch fresh task episode.
+Private launcher is outside public Git; public config/guard/tests are versioned.
+
 Authoritative next sequence: `docs/GPU_FAST_EXECUTION_PLAN.md`, Current Decision
 After External Review. Shared local execution AND opt-in fast-profile selection
 are implemented;306tests pass. Use both flags as the standard next enhanced GPU
