@@ -5,7 +5,9 @@ one bounded plane-contact attempt stopped at the unchanged tracking guard1283.
 Separate reviewed3cm withdrawal passed at1347; card remains visibly held.
 Posthoc native success=false, score0.3333 (grasp credit, not seating). This
 condition is CLOSED as negative, not pending another nearby camera/endpoint
-sweep. Next is a separately labeled qualitative instruction-assisted condition.
+sweep. The qualitative instruction-assisted condition also ended without a
+supported insertion stage at1411; the focused geometry branch is now closed.
+Next is a separately labeled observable-fixture diagnostic, not yet executed.
 Installation/release, task recovery and matched methods remain incomplete.
 See `NATIVE_CONTACT_NEGATIVE_20260930.md` for exact receipts and limitations.
 

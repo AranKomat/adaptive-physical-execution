@@ -1,0 +1,27 @@
+{
+  "date_jst": "2026-09-30",
+  "scope": "Important native-resolution branch evidence subset, not full instance backup",
+  "local_archive": "runs/gpu1920_branch_closed_20260930.tar.gz",
+  "remote_archive": "/tmp/gpu1920_branch_closed_20260930.tar.gz",
+  "sha256": "6b94aa7a6ec1bd0f9497594d35db76a58d401abab74807f94dbffed09b4d0af2",
+  "remote_local_sha256_match": true,
+  "archive_bytes": 416777646,
+  "files": 465,
+  "uncompressed_file_bytes": 552438720,
+  "archive_inventory_verified": true,
+  "critical_artifacts_present": [
+    "gpu1920_bracket1411_flat_20260930",
+    "gpu1920_contact1283_flat_20260930",
+    "gpu1920_withdraw1347_flat_20260930",
+    "gpu1920_branch_close_capture_20260930",
+    "local_stages.jsonl",
+    "native_commands.jsonl",
+    "recording.json"
+  ],
+  "fresh_read_only_observation": "28eee6eaefa546529c9118f2aff58e25:1411",
+  "local_planner_artifacts": "Existing runs/gpu1920* messages, responses and measurements remain local and gitignored",
+  "not_downloaded": "Approximately38GB complete native per-frame recording remains remote",
+  "live_physics_checkpoint_available": false,
+  "workers_retired_or_reset": false,
+  "instance_stopped": false
+}

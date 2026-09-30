@@ -19,6 +19,8 @@ the bounded stopping rule. No more nearby geometry/prompt/aperture sweeps.
 
 Next is a separately labeled observable-fixture diagnostic, not an original
 benchmark success. See docs/VISIBLE_FIXTURE_DIAGNOSTIC_PLAN_20260930.md.
+Consolidated branch-closure report for external agents:
+docs/RESEARCH_HANDOFF_BRANCH_CLOSURE_20260930.md.
 Installation/release, task recovery and matched Direct/FLUX trials remain open.
 The driver failure notes below are historical: process-local matching gpucomp
 subsequently enabled the native1920 worker without reboot/system driver changes.
