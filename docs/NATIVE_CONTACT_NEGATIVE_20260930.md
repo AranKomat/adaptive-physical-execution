@@ -64,6 +64,24 @@ scores were supplied to this contact/recovery planner.
 
 ## Next Condition
 
+### Instruction-Assisted Outcome: Branch Closed
+
+The continuation below was performed, not left pending. At1347 Astra declined
+motion and selected uncertain solid-surface anchors. One exterior oblique camera
+hold completed64actions to1411, with0.715mm position and0.001572rad attitude
+error. Arm and grip were retained. At1411 Astra again returned hold: actual I/O
+bracket, matching expansion opening and passage were not established. No slide,
+release, seating retry or further camera move followed.
+
+Current legal surface samples put a sampled chassis rim44.877mm above a sampled
+PCB reference. This is not full-object clearance or bracket identification.
+The proposed12cm lift-to-expose was never executed and is cancelled: the bounded
+focused geometry attempt is exhausted. These two assessment calls cost
+$0.11904875 combined. The original benchmark remains incomplete, not impossible.
+
+Next: [separate observable-fixture diagnostic](VISIBLE_FIXTURE_DIAGNOSTIC_PLAN_20260930.md).
+The following instruction text records the completed changed-information condition.
+
 Choose a separately labeled **qualitative instruction-assisted** continuation,
 with this static instruction difference recorded:
 
@@ -79,12 +97,9 @@ to the planner. Legal current RGB-D, robot FK and receipts remain its observatio
 The added qualitative instruction is an explicit changed information contract,
 NOT an unchanged minimal-input run or a matched causal resolution comparison.
 
-Start at the recovered held1347 state with a fresh capture, propose one materially
-different bounded stage, and execute only if its visible/metric evidence supports
-it. If the cutout cannot be established, record that limitation rather than
-inventing a source-informed rearward target. A plan-only response does not advance
-a physical phase. An observable-fixture variant would be a different experiment,
-not a silent benchmark repair.
+The condition started from recovered1347 and ended held at1411. No supported
+physical insertion stage emerged. An observable-fixture variant is a different
+experiment, not a silent benchmark repair.
 
 Full installation/release, task recovery and matched enhanced Direct/FLUX
 comparisons remain incomplete. The protected original8772 episode and unrelated

@@ -3,6 +3,7 @@
 import argparse
 import base64
 import json
+import math
 import sys
 from pathlib import Path
 
@@ -15,9 +16,12 @@ from prepare_sensor_target_request import (
 
 
 def build_messages(capture, historical_capture, measurements, inventory, episode_note,
-                   closeup_right=None):
+                   closeup_right=None, max_translation_m=.05):
     if not isinstance(episode_note, str) or not episode_note.strip() or len(episode_note) > 2000:
         raise ValueError('Explicit bounded operator episode note required')
+    if (isinstance(max_translation_m, bool) or not isinstance(max_translation_m, (int, float))
+            or not math.isfinite(max_translation_m) or not .01 <= max_translation_m <= .20):
+        raise ValueError('Explicit translation proposal bound must be 0.01..0.20m')
     state = json.loads((capture/'state.json').read_text())
     old = json.loads((historical_capture/'state.json').read_text())
     current_episode, current_step = state['observation_id'].rsplit(':', 1)
@@ -42,7 +46,7 @@ def build_messages(capture, historical_capture, measurements, inventory, episode
         'collision truth, seating depth or evaluator is available. '
         'Recommend one bounded stage: alignment, closer approach, contact proposal, '
         'inspection or hold. If recommending physical movement, limit the proposed hand '
-        'translation to5cm and rotation to0.15rad, preserving gripper aperture. These are '
+        f'translation to{max_translation_m*100:g}cm and rotation to0.15rad, preserving gripper aperture. These are '
         'proposal limits, not permission or proof of safety. Explain useful progress and '
         'what evidence would falsify the proposal. Do not invent target coordinates. '
         'You may specify a relative delta in world coordinates only if justified by '
@@ -83,10 +87,13 @@ if __name__ == '__main__':
     p.add_argument('--episode-note', required=True)
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--closeup-right', type=int, nargs=4)
+    p.add_argument('--max-translation-m', type=float, default=.05,
+                   help='Explicit advisory proposal bound up to0.20m; does not authorize execution')
     a = p.parse_args()
     messages = build_messages(a.capture, a.historical_capture,
                               json.loads(a.measurements.read_text()),
-                              json.loads(a.inventory.read_text()), a.episode_note, a.closeup_right)
+                              json.loads(a.inventory.read_text()), a.episode_note,
+                              a.closeup_right, a.max_translation_m)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     with a.output.open('x') as stream:
         json.dump(messages, stream)

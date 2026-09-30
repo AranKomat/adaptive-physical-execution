@@ -8,6 +8,23 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+AUTHORITATIVE UPDATE: the focused mating-geometry branch is CLOSED. Worker8780
+last captured `28eee6eaefa546529c9118f2aff58e25:1411`; original8772 remains
+protected at1754. Native assisted grasp/lift/carry worked; the42-action contact
+probe stopped on tracking error and the64-action withdrawal passed. Installation
+did not succeed. Qualitative assembly instructions plus one exterior camera view
+still did not establish bracket/cutout passage; no lateral slide or release was
+executed. The proposed12cm staging lift was NOT executed and is cancelled under
+the bounded stopping rule. No more nearby geometry/prompt/aperture sweeps.
+
+Next is a separately labeled observable-fixture diagnostic, not an original
+benchmark success. See docs/VISIBLE_FIXTURE_DIAGNOSTIC_PLAN_20260930.md.
+Installation/release, task recovery and matched Direct/FLUX trials remain open.
+The driver failure notes below are historical: process-local matching gpucomp
+subsequently enabled the native1920 worker without reboot/system driver changes.
+
+### Chronological Notes
+
 DRIVER FOLLOW-UP: isolated matching graphics libs/private Vulkan ICD plus CUDA/
 NVML preload removed Kit NVML error but Vulkan still incompatible. New337393
 stopped before reset/control requests; held103000 preserved. No further loader

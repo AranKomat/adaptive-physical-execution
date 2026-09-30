@@ -49,3 +49,13 @@ def test_native_manipulation_review_uses_current_pixel_coordinates_and_crop(tmp_
     assert '640x360 integer pixel_uv' not in content[0]['text']
     assert sum(p['type'] == 'image_url' for p in content) == 5
     assert any('970 + displayed_u' in p.get('text', '') for p in content)
+    bounded = build(current, old, {'observation_id': 'e:1'}, {'observation_id': 'e:1'},
+                    'One explicit12cm staging proposal only.', max_translation_m=.12)
+    assert 'translation to12cm' in bounded[0]['content'][0]['text']
+    assert 'translation to5cm' not in bounded[0]['content'][0]['text']
+
+
+@pytest.mark.parametrize('bound', [.001, .21, float('nan'), float('inf'), True])
+def test_review_rejects_invalid_explicit_translation_bound(tmp_path, bound):
+    with pytest.raises(ValueError, match='translation proposal bound'):
+        build(tmp_path, tmp_path, {}, {}, 'Bounded advisory request.', max_translation_m=bound)
