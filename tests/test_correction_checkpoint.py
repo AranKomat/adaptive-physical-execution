@@ -22,10 +22,13 @@ def load_script(name):
 @pytest.mark.parametrize('pause,terminal,grasp_only', [
     ('--pause-before-close','awaiting_preclosure_review',False),
     ('--pause-at-standoff','awaiting_close_range_target',False),
-    ('--pause-before-close','awaiting_preclosure_review',True)])
+    ('--pause-before-close','awaiting_preclosure_review',True),
+    ('--approach-only',None,False)])
 def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation, pause, terminal, grasp_only, continuous):
     module = load_script('run_grounded_correction')
     initial = replace(observation, eef_pose=np.array([.18,-.34,.35,0,0,1,0]), gripper_open=1.)
+    if pause == '--approach-only':
+        initial = replace(initial, eef_pose=np.array([.18,-.34,.5,0,1,0,0]))
     calls = []
 
     class Client:
@@ -37,7 +40,7 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
         def call(self, route, envelope=None, **kwargs):
             if route == '/metadata':
                 return {'local_stages_enabled':True, 'real_hardware_supported':False,
-                        'continuous_transit_enabled':True}
+                        'continuous_transit_enabled':True, 'contact_tracking_guard_enabled':True}
             if route == '/observe':
                 return self.current
             assert route == '/local-stage'
@@ -63,15 +66,22 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     monkeypatch.setattr(module.sys, 'argv', ['test','--url','http://unused','--plan',str(plan),
                                            '--output',str(output),pause]
                         + (['--grasp-only','--lift-height','.23'] if grasp_only else [])
+                        + (['--contact-tracking-guard'] if pause == '--approach-only' else [])
                         + ([] if continuous else ['--no-continuous-transit']))
     module.main()
     assert calls and all(action['gripper_open'] == 1 for action in calls)
     assert all(action['target_source'].startswith('cached pixel on fresh depth') for action in calls)
     result = json.loads((output/'result.json').read_text())
-    assert result['terminal_reason'] == terminal
+    if terminal is not None:
+        assert result['terminal_reason'] == terminal
     assert result['actions'] == 64*len(calls)
     assert result['grasp_verified'] is False
     stages = json.loads((output/'declared_sequence.json').read_text())
+    if pause == '--approach-only':
+        assert len(calls) <= 8
+        assert {s['name'] for s in stages} == {'standoff'}
+        assert all(np.allclose(s['hand_pose_world'][3:], initial.eef_pose[3:]) for s in stages)
+        assert all(action['contact_tracking_guard'] for action in calls)
     if continuous:
         assert any(s['settle_at_end'] is False for s in stages)
         for i, stage in enumerate(stages):

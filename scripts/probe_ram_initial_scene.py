@@ -6,6 +6,7 @@ from pathlib import Path
 import signal
 import socket
 import subprocess
+import tempfile
 import time
 import urllib.request
 
@@ -36,6 +37,8 @@ def main():
     parser.add_argument('--flux-pid', required=True, type=int)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--port', type=int, default=8769)
+    parser.add_argument('--retain-worker', action='store_true',
+                        help='Keep successful fresh episode live; FLUX remains unloaded, private restart state saved')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=False)
     proc = Path('/proc')/str(args.flux_pid)
@@ -65,6 +68,7 @@ def main():
     python = 'upstream/EmbodiedSWE/.venv/bin/python'
     child = None
     stopped = False
+    retained = False
     try:
         os.kill(args.flux_pid, signal.SIGTERM)
         stopped = True
@@ -88,15 +92,25 @@ def main():
             f'http://127.0.0.1:{args.port}', '--reset', '--output', str(args.output/'capture')],
             cwd=cwd, env=sim_env, check=True, timeout=180)
         print('RAM initial capture complete; no control actions issued', flush=True)
+        if args.retain_worker:
+            # The exact environment can contain tokens: keep it outside artifacts, mode0600.
+            fd, filename = tempfile.mkstemp(prefix='physical_exec_flux_restore_', suffix='.json')
+            with os.fdopen(fd, 'w') as stream:
+                json.dump({'command': command, 'cwd': str(cwd), 'env': env}, stream)
+            (args.output/'retained_worker.json').write_text(json.dumps({
+                'ram_pid': child.pid, 'port': args.port, 'flux_unloaded': True,
+                'private_flux_restore_path': filename, 'ram_control_actions': 0}))
+            retained = True
+            print('RAM retained: '+str(child.pid)+'; FLUX intentionally unloaded', flush=True)
     finally:
-        if child is not None and child.poll() is None:
+        if not retained and child is not None and child.poll() is None:
             child.send_signal(signal.SIGINT)
             try:
                 child.wait(timeout=30)
             except subprocess.TimeoutExpired:
                 child.kill()
                 child.wait(timeout=30)
-        if stopped:
+        if stopped and not retained:
             with (args.output/'flux_restore.log').open('w') as log:
                 restored = subprocess.Popen(command, cwd=cwd, env=env, stdout=log,
                     stderr=subprocess.STDOUT, start_new_session=True)

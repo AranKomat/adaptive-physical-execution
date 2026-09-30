@@ -20,8 +20,12 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--reuse-pixel-template', action='store_true',
                         help='Explicit fixed-fixture replay of prior pixel choice on fresh depth; not a fresh model decision')
+    parser.add_argument('--operator-selected', action='store_true',
+                        help='Label a current operator pixel selection, not a model decision')
     parser.add_argument('--pause-after-grasp', action='store_true',help='leave the episode paused for visual review and a separate command')
     args = parser.parse_args()
+    if args.operator_selected and args.reuse_pixel_template:
+        raise ValueError('Operator selection and cached model replay are distinct conditions')
     response = json.loads(args.response.read_text())
     state = json.loads((args.capture/'state.json').read_text())
     if response['decision'] != 'target' or (not args.reuse_pixel_template and response['observation_id'] != state['observation_id']):
@@ -65,6 +69,7 @@ def main():
     value = dict(observation_id=state['observation_id'], phases=phases,
                  reference_control_dt=1/15,finish=args.stage=='grasp' and not args.pause_after_grasp,
                  target_source=('cached Astra pixel template on fresh depth; fixed-fixture replay' if args.reuse_pixel_template
+                                else 'current operator-selected image pixel plus legal measured depth; not autonomous targeting' if args.operator_selected
                                 else 'fresh Astra image pixel plus legal measured depth; operator-defined phase sequence'),
                  selector_observation_id=response['observation_id'],
                  requested_pixel=pixel.tolist(), measured_surface=point, camera=camera,

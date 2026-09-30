@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE RAM216: operator-corrected legal-depth standoff completed216 actions,
+2.574mm final error, no guard stop/closure. Fresh model pixel was rejected as
+support ledge; this is not autonomous targeting. Worker78152 remote8771/local18771;
+FLUX intentionally unloaded, private restart state retained. Other GPU episodes
+untouched.247tests. Next current-view heading/contact qualification then grasp,
+not reset/startup repetition. Details/evidence in `docs/RAM_FIRST_TRIAL.md`.
+
 LATEST RAM offline selector: fixed GPU-hardcoded prompt with explicit RAM option.
 Astra located a module, but exact center/one axis sample fail10mm depth spread;
 no target or action admitted. Diagnostic heading differs from fixed GPU recipe.

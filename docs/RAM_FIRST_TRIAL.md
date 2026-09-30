@@ -1,5 +1,41 @@
 # RAM: next independent assembly experiment
 
+## Live update: operator-assisted standoff reached216
+
+New live episode `83ce804cdf06479ab757f513ab84185c:216`, worker PID78152,
+remote8771/local18771. Previous observation-only episode remains closed.
+FLUX is intentionally unloaded to retain this RAM scene; exact private restore
+state is recorded outside artifacts at the path in the local run's
+`retained_worker.json`. Do not launch FLUX alongside RAM without a memory check.
+Other GPU episodes remain untouched. Do not reset the RAM episode.
+
+Fresh Astra selected wrist[320,86], a lower ledge at z48mm rather than the
+module's visible top at z68mm. That semantic selection was NOT executed or
+counted as autonomous success. Previous[320,94] was a sloping/vertical side,
+not merely a depth discontinuity: fitted normal is nearly horizontal. The
+10mm spread gate alone cannot classify top surfaces or object identity.
+
+Explicit operator correction selected current wrist[320,89], a visible solid
+top strip. Its3x3 depth spread is0.068mm; point[.300545,-.360013,.068217]m.
+The noncontact hand target is22cm world-up from that surface. Load-bearing
+suitability remains unknown. No source object coordinates or evaluator were used.
+
+New `--approach-only` mode preserves current hand attitude, requires an open
+hand and tracking guard, excludes closure/descent/lift, and caps at512 actions.
+This trial declared5 segments/320 maximum actions, executed38+38+38+38+64=216.
+Final endpoint error2.574mm/0.000270rad,14.4 simulated seconds and93.93 execution
+wall seconds. No guard stop, retry or closure. Intermediate stages did not settle;
+only the final endpoint did. The module is better resolved in the final wrist
+view. No grasp, installation, recovery or task phase completed.
+
+Evidence: [wrist](evidence/ram_approach_216/04_wrist.png),
+[left](evidence/ram_approach_216/04_left.png),
+[receipt](evidence/ram_approach_216/04_receipt.json),
+[source and operator label](evidence/ram_approach_216/source_plan.json).
+Next: measure heading and contact patches from216, then bounded reorientation
+and preclosure approach if justified. Do not use the GPU fixed heading.247tests
+pass, including approach-only preservation/no-closure behavior; not task success.
+
 Status: native RAM observation-only launch/capture completed. Zero commanded
 control actions and zero model calls. No grasp, insertion or phase completion.
 

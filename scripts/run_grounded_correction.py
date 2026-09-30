@@ -28,6 +28,8 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument('--pause-at-standoff', action='store_true')
     mode.add_argument('--grasp-only', action='store_true', help='Resume from a fresh close-range target')
+    mode.add_argument('--approach-only', action='store_true',
+                      help='Open-hand standoff only, preserve current attitude; no grasp recipe or closure')
     parser.add_argument('--lift-height', type=float, default=.05)
     parser.add_argument('--phase-completion', action='store_true',
                         help='Use predeclared exploratory bounds for closure/lift only')
@@ -72,6 +74,10 @@ def main():
                      ('short_lift', np.r_[hand+[0,0,args.lift_height], top], .3)]
         if args.grasp_only:
             endpoints = endpoints[3:]
+        if args.approach_only:
+            if obs.gripper_open < .95 or not args.contact_tracking_guard:
+                raise ValueError('Approach-only requires measured open hand and tracking guard')
+            endpoints = [('standoff', np.r_[surface+[0,0,.22], obs.eef_pose[3:]], 1.)]
         # Predeclare the entire bounded sequence before the first mutation.
         stages = []
         start = obs.eef_pose.copy()
@@ -86,6 +92,8 @@ def main():
             start = target.copy()
         if len(stages) > 16:
             raise ValueError('Correction exceeds 16-stage/1024-action limit')
+        if args.approach_only and len(stages) > 8:
+            raise ValueError('Approach-only exceeds 512-action limit')
         if args.continuous_transit:
             for index, stage in enumerate(stages):
                 stage['settle_at_end'] = (index == len(stages)-1
