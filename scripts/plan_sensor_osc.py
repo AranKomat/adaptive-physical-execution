@@ -2,14 +2,28 @@
 """Convert a visual target into an explicit, inspectable pilot plan; does not execute."""
 import argparse
 import json
-from pathlib import Path
 import sys
+from pathlib import Path
+
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from physical_exec.depth import surface_point, surface_patch
+from physical_exec.depth import surface_patch, surface_point
 from physical_exec.osc_reference import validate_plan
 from physical_exec.trace import write_json
+
+
+def refinement_offsets(image_width, reference_width=640):
+    """Preserve the old search footprint for a resized, same-FOV image."""
+    if type(image_width) is not int or image_width < 1 or reference_width != 640:
+        raise ValueError('Expected positive image width and 640px reference')
+    radius = max(1, int(np.ceil(2 * image_width / reference_width)))
+    if radius > 6:
+        raise ValueError('Refinement qualified only up to 1920px width')
+    return radius, sorted([(dx, dy) for dx in range(-radius, radius+1)
+                          for dy in range(-radius, radius+1)
+                          if dx*dx+dy*dy <= radius*radius],
+                         key=lambda d: (d[0]**2+d[1]**2, d))
 
 
 def main():
@@ -42,10 +56,8 @@ def main():
     pixel = np.asarray(response['pixel_uv'])
     if pixel.shape != (2,) or not np.isfinite(pixel).all() or not np.equal(pixel,np.floor(pixel)).all():
         raise ValueError('Pixel must contain two finite integers')
-    # A narrow top surface may be under five pixels wide. Search at most two
-    # pixels, with a 3x3 footprint and a tighter 10 mm discontinuity threshold.
-    candidates = sorted([(dx,dy) for dx in range(-2,3) for dy in range(-2,3)
-                         if dx*dx+dy*dy <= 4], key=lambda d:(d[0]**2+d[1]**2,d))
+    # Resize-aware search; each candidate still needs its own measured 3x3 patch.
+    refinement_radius, candidates = refinement_offsets(int(depth.shape[1]))
     point = None
     for delta in candidates:
         try:
@@ -80,9 +92,12 @@ def main():
                                 else 'fresh Astra image pixel plus legal measured depth; operator-defined phase sequence'),
                  selector_observation_id=response['observation_id'],
                  requested_pixel=pixel.tolist(), measured_surface=point, camera=camera,
+                 refinement_radius_pixels=refinement_radius,
+                 refinement_reference_width_pixels=640,
                  surface_orientation_check=('local plane within45deg of up and1mm RMS' if args.require_upward_surface else 'not requested'),
                  limitations='Not a full object pose, certified clearance, or autonomous grasp planner. '
-                 'At most 2px refinement; top-down attitude and bite depth are declared pilot assumptions.')
+                 f'At most {refinement_radius}px refinement (2px at640 same-FOV reference); '
+                 'top-down attitude and bite depth are declared pilot assumptions.')
     validate_plan(value,state['observation_id'],700)
     write_json(args.output,value)
     print(json.dumps(value,indent=2))

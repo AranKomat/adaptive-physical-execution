@@ -106,7 +106,7 @@ a coordinated driver repair/reboot, or move new experiments to a coherent fresh
 instance. Existing host, live states, global driver configuration and CPU
 workload were not rebooted or modified. Keep the original task goal open.
 
-## Host decision
+## Earlier host decision (superseded)
 
 User reported the CPU workload still active, then delegated the choice under
 uncertainty. Decision: preserve this host and all remaining live scenes rather
@@ -116,3 +116,39 @@ must be qualified separately. The prior single-GPU endpoint184.148.224.206:42477
 returned connection refused. No Vast provisioning connector or CLI is available
 in this session. Fresh SSH details are requested; the experiment goal is not
 complete. Do not loop more loader attempts while awaiting a coherent GPU host.
+
+## Existing-host recovery after user direction
+
+User subsequently requested continued work on the existing 2x4090 host. A
+standalone Vulkan probe identified the missing matching dependency:
+`libnvidia-gpucomp.so.580.95.05`. Extracting the vendor gpucomp package into the
+private compatibility tree fixed Vulkan instance creation (return code 0).
+No reboot, global package installation or driver change occurred.
+
+New worker PID338829 on8780 initialized GPU0 rendering using matching process-local
+CUDA/NVML/GL/gpucomp libraries and a private Vulkan ICD. Native legal captures
+contain three1920x1080 PNGs and matching depth arrays. Startup still emitted
+CUDA-state/NVML-handle warnings; this is not a claim of a warning-free stack.
+No Vulkan fatal error or PhysX software fallback was found in this launch.
+GPU0 had962MiB free and GPU1 had1918MiB free: do not add another worker.
+Held PID103000/8772 and the unrelated CPU workload remain preserved.
+
+Fresh Astra selected right[1095,771]. The original fixed2px refinement rejected
+the edge. Measured top-plane pixels exist just beyond that radius. The planner
+now preserves the2px-at640 same-FOV search footprint (maximum6px at1920), retaining
+the3x3 measured patch,10mm depth-spread,45deg normal and1mm RMS requirements.
+It selected[1096,769], upward cosine0.998935 and RMS3.06e-8m. This is sensor
+refinement, not privileged object localization or clearance certification.
+An operator-defined open-hand standoff sequence was submitted on8780, with no
+closure authorized. Results are recorded separately from startup qualification.
+Full CPU suite:392 passed. New task completion is not established by these checks.
+
+The bounded approach completed seven local stages/235 actions and paused at
+`28eee6eaefa546529c9118f2aff58e25:235`. Final hand tracking error0.0645mm and
+rotation error0.000894rad met strict standoff arrival. No descent, closure, lift,
+insertion or release was executed. This is endpoint tracking evidence only.
+Stage wall times total about350.2s for15.67s of simulation. Local receipts and
+review images: `runs/gpu1920_standoff_20260930`; final legal RGB-D:
+`runs/gpu1920_standoff_flat_20260930`. Existing held8772 remains preserved.
+Focused new-file lint passes; planner lint still has its pre-existing executable
+bit and dict-constructor style findings. All392 CPU tests passed.

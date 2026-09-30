@@ -846,6 +846,13 @@ benchmark sweeps, download every dataset, or port to another GPU software stack 
 
 ## Validation interpretation
 
+September30 existing-host continuation: process-local matching gpucomp completed
+the Vulkan compatibility stack, enabling a new1920x1080 RGB-D worker on8780
+without rebooting or touching the held8772 episode. Native-scale surface target
+refinement now preserves its640px reference footprint with unchanged plane/depth
+checks.392 CPU tests pass. See `docs/GPU_CAPACITY_CHECK_20260930.md`; sensing
+startup and an approach command do not establish grasp/insertion success.
+
 A CPU fixture pass means the software loop is internally consistent. It says nothing about
 whether the visual model recognizes the component, whether the motor policy generalizes, or
 whether contact dynamics permit the task. Keep `examples/cpu_fixture` out of investor robot

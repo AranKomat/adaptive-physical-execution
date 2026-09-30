@@ -53,3 +53,26 @@ bounded image sizes, crop mapping, mismatched-size rejection, and existing
 targeting/history behavior. Former placeholder image bytes in prompt tests were
 replaced by valid PNG fixtures because the builder now validates image dimensions.
 These tests do not establish that higher resolution resolves the physical task.
+
+## Execution update
+
+The existing host now runs a qualified native1920x1080 capture worker on8780,
+using process-local matching Vulkan dependencies (see capacity report). The
+original held8772 episode remains unchanged. One fresh Astra Flex medium target
+call cost$0.0359025. Its edge pixel failed the fixed2px search; resizing the
+bounded search to6px recovered a measured upward plane without loosening the
+spread/normal/RMS checks. An open-hand standoff trial is underway, with an
+explicit pause before descent/closure. This is fresh image/depth targeting plus
+an operator-defined recipe, not FLUX or an autonomous grasp planner.
+
+Native-resolution rendering and recording are expensive:39 actions represented
+2.6 simulated seconds but58.2 wall seconds;117 actions generated3.4GB of sensor
+recordings. Keep this branch bounded. Future throughput work should distinguish
+native decision-boundary captures from every-step recording; do not sacrifice
+fresh monitoring or silently change comparison conditions.392 CPU tests pass.
+
+Approach outcome: seven stages/235 actions reached standoff and paused before
+descent at sequence235. Final position error0.0645mm; rotation0.000894rad.
+About350.2s wall time versus15.67s simulated time. No grasp/contact or assembly
+success follows from endpoint arrival. Preserve the final native RGB-D for the
+next close-range geometry decision rather than reuse the initial target blindly.
