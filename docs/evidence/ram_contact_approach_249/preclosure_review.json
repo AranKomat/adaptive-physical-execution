@@ -1,0 +1,18 @@
+{
+  "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+  "decision": "approve_preclosure",
+  "contact_authorized": false,
+  "evidence": [
+    "Current right-view pixels remain consistent with the historically selected rear module's top strip and long axis; no visible identity contradiction or target occlusion.",
+    "The module stands upright with black housing exposed above its gray support. Open fingers appear able to straddle this exposed portion; no obvious obstruction to the proposed placement is visible.",
+    "The proposed heading aligns hand x with the measured module long axis, so jaw closure would be perpendicular. Rotation is proposed at the current elevated position before descent.",
+    "Nominal pinch height is 0.06353 m and nominal finger-end height is 0.05403 m. Current marked holder surfaces are at 0.04832\u20130.04837 m, giving approximately 5.7 mm nominal vertical separation from those sampled surfaces only.",
+    "Approval is limited to exploratory open-hand rotation and descent, with settling after rotation and final arrival. No closure, lift, insertion, or retry; stop on nonarrival or a tracking guard."
+  ],
+  "uncertainty": [
+    "Minimum clearance remains unestablished: holder samples do not bound its maximum height, hidden geometry, or the hand's swept volume.",
+    "The approximately 5.7 mm sampled separation is smaller than the 10 mm translational tracking-guard threshold; the guards are not collision certification.",
+    "Historical pixel correspondence is visually plausible, not independently verified. Local depth spread is not calibrated uncertainty.",
+    "Pinch and finger-end offsets are nominal. The illuminated strip does not establish load-bearing suitability, opposing contacts, or grasp success."
+  ]
+}

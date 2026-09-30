@@ -1,0 +1,152 @@
+{
+  "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+  "measured_surface": {
+    "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+    "pixel_uv": [
+      425,
+      146
+    ],
+    "surface_point_world_m": [
+      0.4196074124732342,
+      -0.3634201131274904,
+      0.0685325516709373
+    ],
+    "optical_depth_m": 0.4554731845855713,
+    "local_depth_spread_m": 0.0028298497200012207,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  },
+  "heading_world_quaternion": [
+    0.0,
+    -0.7010704382542375,
+    0.7130920281464458,
+    0.0
+  ],
+  "bite_depth_m": 0.005,
+  "target_hand_pose_world": [
+    0.4196074124732342,
+    -0.3634201131274904,
+    0.1669325516709373,
+    0.0,
+    -0.7010704382542375,
+    0.7130920281464458,
+    0.0
+  ],
+  "axis_measurements": [
+    {
+      "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+      "pixel_uv": [
+        391,
+        132
+      ],
+      "surface_point_world_m": [
+        0.4183642446433856,
+        -0.3284396809170504,
+        0.06850903774301384
+      ],
+      "optical_depth_m": 0.47525954246520996,
+      "local_depth_spread_m": 0.0029376745223999023,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    {
+      "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+      "pixel_uv": [
+        462,
+        162
+      ],
+      "surface_point_world_m": [
+        0.4171405746658429,
+        -0.4004078281231776,
+        0.07041485975550024
+      ],
+      "optical_depth_m": 0.43129605054855347,
+      "local_depth_spread_m": 0.006087303161621094,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    }
+  ],
+  "target_source": "Historical model pixels on CURRENT legal depth; static scene/feature identity assumption; not a fresh selection",
+  "contact_authorized": false,
+  "limitation": "Nominal robot pinch offset and5mm bite assumption; not opposing-contact, support-clearance or swept-volume certification.",
+  "camera": "right",
+  "holder_measurements": [
+    {
+      "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+      "pixel_uv": [
+        370,
+        151
+      ],
+      "surface_point_world_m": [
+        0.40752443366626334,
+        -0.31523286919270554,
+        0.048367779281744794
+      ],
+      "optical_depth_m": 0.48791491985321045,
+      "local_depth_spread_m": 0.0026772022247314453,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    {
+      "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+      "pixel_uv": [
+        420,
+        174
+      ],
+      "surface_point_world_m": [
+        0.40875486096271463,
+        -0.3688627661085345,
+        0.048344639625926444
+      ],
+      "optical_depth_m": 0.45721685886383057,
+      "local_depth_spread_m": 0.002501547336578369,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    },
+    {
+      "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:249",
+      "pixel_uv": [
+        470,
+        197
+      ],
+      "surface_point_world_m": [
+        0.409839636938686,
+        -0.41614366831749794,
+        0.048324229360721394
+      ],
+      "optical_depth_m": 0.4301530122756958,
+      "local_depth_spread_m": 0.0022142529487609863,
+      "neighborhood_radius_pixels": 1,
+      "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+    }
+  ],
+  "holder_measurement_limit": "Operator-marked visible surfaces only; not maximum holder height, hidden geometry, minimum clearance, or collision certification.",
+  "historical_selection": {
+    "observation_id": "bbd50fc209d44f9a84b12ee63827f0ff:0",
+    "decision": "target",
+    "camera": "right",
+    "pixel_uv": [
+      425,
+      146
+    ],
+    "axis_samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          391,
+          132
+        ]
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          462,
+          162
+        ]
+      }
+    ],
+    "module_identity": "Rear/upper-right loose RAM module in the right view, standing in its own gray support beside the chassis. Its exposed black housing has a cyan-to-green top strip; it is separate from the foreground module and installed components.",
+    "evidence": "The right view resolves its narrow top strip most clearly. The target is near the strip's length center and centered across its visible thickness, not on the broad vertical face or gray holder. Both heading samples lie along the same visible top strip, away from the ends. The other views corroborate two separately supported loose modules. Housing beneath the illuminated strip is a plausible gripping feature, but illumination alone does not establish load-bearing suitability.",
+    "uncertainty": "The narrow top strip supports only a NONCONTACT open-hand standoff target. Load-bearing strength, contact suitability, depth, and hand clearance remain unknown. No world coordinates are inferred, and descent or closure is not authorized."
+  }
+}

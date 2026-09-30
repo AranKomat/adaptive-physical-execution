@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE contact-view RAM753: episodebbd50fc209d44f9a84b12ee63827f0ff, worker81115
+remote8773/local18773. Rear-module model selection and249-action approach passed.
+Reviewed504-action preclosure ended4.323mm from target: strict nonarrival, no
+closure/lift/retry. Other scenes preserved. Current legal holder samples replaced
+an unsupported inherited prompt estimate before motion. Historical-pixel binding
+and explicit holder sampling added;259tests pass. No RAM task phase completed.
+See `docs/RAM_FIRST_TRIAL.md` for evidence and next-action constraints.
+
 LIVE aimed RAM720:500-action measured-axis preclosure passed,2.128mm error;
 both pads now visible but closure review still inspect. External camera FIRST
 request rejected before action: initial y=.95 outside inspection envelope; chosen

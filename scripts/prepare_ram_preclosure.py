@@ -19,12 +19,27 @@ def main():
     p.add_argument('--center', nargs=2, required=True, type=int)
     p.add_argument('--axis-a', nargs=2, required=True, type=int)
     p.add_argument('--axis-b', nargs=2, required=True, type=int)
+    p.add_argument('--camera', choices=['left','right','wrist'], default='wrist')
+    p.add_argument('--holder-pixel', nargs=2, type=int, action='append', default=[],
+                   help='Operator-marked visible support sample in the selected current camera')
+    p.add_argument('--selection-history', type=Path,
+                   help='Earlier same-episode model selection, explicitly refreshed with current depth')
     args = p.parse_args()
     state = json.loads((args.capture/'state.json').read_text())
-    c = json.loads((args.capture/'wrist_calibration.json').read_text())
+    history = None
+    if args.selection_history:
+        history = json.loads(args.selection_history.read_text())
+        episode, step = state['observation_id'].rsplit(':',1)
+        old_episode, old_step = history['observation_id'].rsplit(':',1)
+        expected = [{'camera':args.camera,'pixel_uv':pixel} for pixel in (args.axis_a,args.axis_b)]
+        if (episode != old_episode or int(old_step) >= int(step)
+                or history.get('decision') != 'target' or history.get('camera') != args.camera
+                or history.get('pixel_uv') != args.center or history.get('axis_samples') != expected):
+            raise ValueError('Historical selection must match pixels/camera in an earlier same-episode observation')
+    c = json.loads((args.capture/f'{args.camera}_calibration.json').read_text())
     if c['observation_id'] != state['observation_id']:
         raise ValueError('Detached calibration')
-    d = np.load(args.capture/'wrist_depth.npy', allow_pickle=False)
+    d = np.load(args.capture/f'{args.camera}_depth.npy', allow_pickle=False)
     measurements = [surface_point(d, c, pixel, radius=1, max_spread_m=.01)
                     for pixel in (args.center, args.axis_a, args.axis_b)]
     points = np.array([m['surface_point_world_m'] for m in measurements])
@@ -48,15 +63,27 @@ def main():
         target_source='Operator-marked current RGB-D top strip and long axis; not autonomous targeting',
         contact_authorized=False, limitation='Nominal robot pinch offset and5mm bite assumption; '
         'not opposing-contact, support-clearance or swept-volume certification.')
+    plan['camera'] = args.camera
+    plan['holder_measurements'] = [surface_point(d, c, pixel, radius=1, max_spread_m=.01)
+                                   for pixel in args.holder_pixel]
+    plan['holder_measurement_limit'] = ('Operator-marked visible surfaces only; not maximum holder '
+        'height, hidden geometry, minimum clearance, or collision certification.')
+    if history is not None:
+        plan['target_source'] = 'Historical model pixels on CURRENT legal depth; static scene/feature identity assumption; not a fresh selection'
+        plan['historical_selection'] = history
     prompt = ('Review this simulator-only RAM PRE-CLOSURE proposal using current images and legal '
         'depth measurements. Module is upright in a holder; hand is open at a standoff. '
-        'Earlier automated pixels confused holder/side with top; operator marked the visible colored '
-        'top strip and its axis. These are surface measurements, NOT privileged object poses. '
+        'Read target_source and any historical_selection below for how these pixels were selected. '
+        'Historical pixel reuse assumes the camera and feature correspondence remained valid; '
+        'reject visible contradiction or occlusion rather than trusting depth continuity alone. '
+        'These are surface measurements, NOT privileged object poses. '
         'Proposal: rotate open hand at its CURRENT elevated position so hand x follows module long '
         'axis (jaws close perpendicular), then descend to nominal pinch center5mm below selected top. '
         'No closure, lift or insertion. Nominal hand-to-pinch103.4mm; nominal finger end112.9mm. '
-        'A nearby visible holder ledge was measured around world z=.048m, but the entire holder '
-        'shape is NOT certified. Assess whether the fingers appear able to straddle this module '
+        'Use only any current holder_measurements supplied below, with their limitations. '
+        'Absent samples, holder height is unknown. Minimum clearance remains unestablished. '
+        'Do not import holder measurements from earlier modules or episodes. '
+        'Assess whether the fingers appear able to straddle this module '
         'without entering its support; do not confuse light strip with load-bearing evidence. '
         'Unknown clearance stays exploratory. Tracking guards stop on10mm/.10rad ramp error, '
         'but are not collision certification. Up to16*64 actions,15Hz, continuous segments, '

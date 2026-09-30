@@ -1,5 +1,48 @@
 # RAM: next independent assembly experiment
 
+## Contact-view condition: rear-module approach and current support evidence
+
+Separate worker81115 (remote8773/local18773), episode
+`bbd50fc209d44f9a84b12ee63827f0ff`, uses the legal-start contact-view camera.
+Fresh Astra selected the rear module, unlike earlier trials; this is not a
+matched camera A/B. Its top pixel[425,146] deprojects to
+[.419607,-.363420,.068533]m, with2.830mm local depth spread.
+Open-hand approach completed249actions,2.516mm endpoint error, no guard stop.
+Continuous intermediate transit used37actions per segment rather than64;
+the final segment retained settling. No closure or RAM success at249.
+
+Current249 images show the same historical pixels unoccluded. The extended
+preclosure helper binds history to the earlier same-episode camera/pixels and
+samples CURRENT depth; correspondence remains an explicit static-feature
+assumption, not tracking. Seven rejection tests cover detached histories.
+
+An initial review improperly inherited a hardcoded holder-height estimate from
+earlier trials. That review was NOT executed. Removing the unsupported number
+changed approval to inspect. Three newly operator-marked CURRENT support pixels
+[370,151],[420,174],[470,197] measure48.32--48.37mm height. With these supplied
+explicitly, review approves exploratory open-hand placement only: nominal
+finger-end separation5.7mm from sampled surfaces, NOT minimum clearance or a
+bound on hidden holder geometry. The prompt no longer hardcodes holder height.
+These distinctions matter: review conclusions are sensitive to asserted evidence.
+
+Reviewed preclosure rotation/descent executed504actions to observation753.
+Rotation arrived; first descent waypoint passed. Final descent exhausted64actions
+with4.323mm position error and0.001375rad rotation error, outside the unchanged
+3mm arrival threshold. No tracking guard triggered, but runner stopped on
+nonarrival: NO closure, lift, retry, or threshold relaxation. Cause is not yet
+established; do not label this obstruction or merely insufficient settling.
+Preserve worker81115 at753. Current right/wrist images show the module and pads
+more clearly, but improved visibility is not task success. Next assess actual
+endpoint/trace and a distinct supported action, not blind repetition of this goal.
+See [current right view](evidence/ram_contact_preclosure_753/08_right.png),
+[wrist](evidence/ram_contact_preclosure_753/08_wrist.png), and
+[nonarrival receipt](evidence/ram_contact_preclosure_753/08_receipt.json).
+Evidence: [view](evidence/ram_contact_approach_249/05_right.png),
+[approach receipt](evidence/ram_contact_approach_249/05_receipt.json),
+[measured plan](evidence/ram_contact_approach_249/plan.json).
+Local run: `runs/ram_contact_preclosure_execution`; reviews retained under
+`runs/ram_contact_preclosure_*review`.259tests pass, not phase completion.
+
 ## Live aimed720: placement passed, closure deferred, camera command rejected
 
 Current episode `febb2e8b8f8c4b6ab1a7dd160701fbde:720`, worker79506/8772.
