@@ -1,5 +1,15 @@
 # Guarded lift and carry: current continuation
 
+## Current2813: strategy review stops contact recovery
+
+Fresh public read confirmed2813 unchanged. Astra Flex medium received current
+RGB/proprioception and the rejected-proposal screen, and returned stop. A local
+edge-thickness pinch is conceptually different but lacks observed opposing
+contacts and entry clearance; no bounded push/pivot is justified either.
+No motion/reset. See `GRASPGENX_RECOVERY_PROPOSALS.md`. This does not prove
+physical impossibility and does not complete recovery. Do not repeat reviews
+without new evidence or a changed sensing/manipulation capability.
+
 ## Offline2813 screen supersedes the lower-workspace suggestion
 
 Nominal gripper bodies at all eight proposals extend32--43mm below z=0;

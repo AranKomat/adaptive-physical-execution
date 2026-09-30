@@ -109,3 +109,24 @@ Next requires a materially different accessible grasp/contact strategy grounded
 in the current scene, not another batch on the same partial plane. Preserve2813;
 do not replay the failed inclined standoff or relax the workspace limit. No new
 motion, model inference, or task-phase completion came from this offline screen.
+
+## Subsequent Astra strategy review
+
+Live public observation was read again and remained2813, with an open gripper.
+One Astra Flex medium review received the three current views, proprioception,
+failed-approach/retreat history and the nominal surface screen. No evaluator
+information was included. It returned **stop**, not an executable recovery.
+See [full structured review](evidence/graspgenx_recovery_2813/strategy_review.json).
+
+Its alternative concept is a local edge-thickness pinch rather than a115mm
+straddle. Neither an opposing contact pair nor finger-entry gap is established.
+A push/pivot also lacks observed support and a bounded useful displacement path.
+These are hypotheses, not evidence that the task is impossible. No motion was
+sent, no reset performed, and no new phase completed. Do not request another
+review of unchanged images hoping for an approval.
+
+Unlock: establish one mechanically suitable contact pair and approach/extraction
+envelope from permitted sensing, or explicitly change the sensing/manipulation
+capability. Preserve this failed recovery as evidence. A separate new episode
+would test prevention or a different initial configuration, NOT recovery success
+for this episode. Do not silently substitute that easier claim.

@@ -1,0 +1,58 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+  "decision": "stop",
+  "strategy": "Suspend contact recovery. The best materially different recovery concept is a localized edge-thickness pinch on a structurally suitable GPU feature, rather than straddling the 115 mm span. However, the current evidence does not establish opposing accessible contact patches or finger clearance for such a pinch. No executable grasp or bounded nonprehensile repositioning is supported. All presently identifiable alternatives require unseen contact or support geometry.",
+  "visible_contact_evidence": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        366,
+        99
+      ],
+      "visible": "Exposed component-patterned PCB face.",
+      "inferred_or_unknown": "An accessible opposing face, safe pressure-bearing patch, and clearance beneath this region are not established.",
+      "role": "Object-face anchor, not a qualified grasp contact."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        319,
+        166
+      ],
+      "visible": "A PCB corner or boundary adjacent to the bright case rim.",
+      "inferred_or_unknown": "The boundary does not demonstrate a finger-sized gap, an exposed underside, or a clear lateral approach.",
+      "role": "Potential local-edge region requiring qualification, not an executable pinch."
+    },
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        82,
+        45
+      ],
+      "visible": "Exposed gold connector contacts along the PCB boundary.",
+      "inferred_or_unknown": "Their visibility does not establish a mechanically suitable gripping or pushing feature. Opposing contact and nearby clearance remain unknown.",
+      "role": "Connector landmark to avoid treating as a default manipulation contact."
+    }
+  ],
+  "why_different_from_failed_attempts": "A localized edge-thickness pinch would close across a small feature rather than across the full visible span, and would require a separately qualified access direction rather than repeating the stalled inclined approach. It is not another grasp batch from the planar cloud, a raised version of a rejected pose, or a lowered execution floor. It remains a conditional recovery concept, not an approved motion.",
+  "required_measurements": [
+    "Identify a structurally suitable local GPU edge or feature with both opposing contact patches visibly supported; measure its thickness, usable patch extent, and finger-entry clearance using calibrated RGB/depth.",
+    "Establish the complete finger and hand approach, closure, and extraction envelope relative to the case and motherboard. Distinguish robot pixels from environmental surfaces in the reported proxy conflicts.",
+    "Map the qualified contact geometry through the nominal local hand-to-pinch offset [0, 0, 0.1034] m and show feasibility with the unchanged 120 mm hand-origin floor. IK convergence alone is insufficient.",
+    "For any alternative push or pivot, establish a suitable contact face, actual support or pivot geometry, and a clear bounded displacement region that produces grasp access without dragging the connector or loading motherboard components. Those facts are currently missing.",
+    "If these regions cannot be exposed with existing permitted sensing, recovery needs a capability to establish their geometry and clearance; another guessed nearby camera pose is not a substitute."
+  ],
+  "first_bounded_action": {
+    "proposal_only": true,
+    "action": "None at CURRENT2813.",
+    "reason": "No contact target and displacement bound can presently be justified. Leave the already-open hand at the current withdrawn state; do not descend, close, or push."
+  },
+  "stop_conditions": [
+    "Opposing contact, support geometry, or required finger clearance remains occluded.",
+    "The proposed contact requires violating the unchanged execution floor or assuming clearance beneath the case.",
+    "Measured conflicts remain unresolved, or approach and extraction depend on unobserved space.",
+    "For any subsequently qualified motion, halt on tracking-guard failure, increasing orientation error, unexpected card motion, or loss of contact visibility. Tracking guards are not collision certification."
+  ],
+  "expected_useful_effect": "A qualified local-feature pinch could lift and reorient the card for a fresh socket-alignment and insertion attempt without full-width straddling. Stopping now produces no assembly progress, but avoids presenting unsupported contact as meaningful recovery.",
+  "uncertainty": "This is an evidence-limited stop, not proof that recovery is physically impossible. The images expose PCB surfaces but not a qualified contact pair or safe repositioning support. Proxy hits are not native collisions, zero hits do not establish clearance, and table continuation beneath the case remains an assumption."
+}

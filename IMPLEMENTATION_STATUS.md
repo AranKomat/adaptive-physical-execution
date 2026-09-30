@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST strategy review: live observation remains2813. One Astra Flex medium
+review returned stop: local-edge pinch is only a hypothesis without opposing
+contact/gap evidence; no justified push/pivot either. No motion/reset. Record in
+`docs/GRASPGENX_RECOVERY_PROPOSALS.md`; do not repeat unchanged-image reviews.
+Recovery remains evidence-blocked, not proven physically impossible.
+
 LATEST offline2813 geometry screen supersedes lowering the workspace floor:
 nominal gripper bodies extend below the measured tabletop plane and several
 poses overlap measured surfaces (not certified native collision checks).
