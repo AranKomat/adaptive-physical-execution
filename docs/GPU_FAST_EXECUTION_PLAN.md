@@ -5,6 +5,13 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+NEW READ-ONLY FINDING: successful guarded recipe used0.3 opening, whereas
+recent Direct closures used0.0 at materially different positions. Do not infer
+perception or controller causality from those unmatched failures. Next is a
+matched operator-defined aperture comparison, not another prompt sweep. See
+GRASP_COMMAND_COMPARISON_20260930.md and its fingerprinted numeric evidence.
+No new motion/paid calls, no phase completion; current scene196 preserved.
+
 LATEST: centering continuation ended at a5a0a6370e3c4b9b93ff8262dda32479:196
 on worker92546/8774. Four completed calls added4mm lateral and4mm downward
 open-hand adjustments, both arrived. The next request was blocked by the shared

@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+Read-only comparison found an overlooked aperture confound: guarded successful
+recipe closed/held at0.3 opening; failed Direct trials used0.0. Closure positions
+also differ by up to32mm on one axis. New reproducible comparison and bounded
+matched-aperture protocol: docs/GRASP_COMMAND_COMPARISON_20260930.md. No new
+robot/API actions; no phase completed. Do not fix this by silently overriding
+model commands or copying historical world targets into the live scene.
+
 LATEST: worker92546/8774 at a5a0a6370e3c4b9b93ff8262dda32479:196.
 Centering prompt trial used16 completed calls/196 actions, with lateral and
 vertical open-hand corrections but NO closure. Further API request blocked

@@ -1,0 +1,291 @@
+{
+  "scope": "read-only cross-run command comparison; not causal ablation",
+  "limitations": [
+    "Different episodes, selected surfaces, controller revisions and lift schedules.",
+    "Commanded opening is not measured contact, force, or achieved width.",
+    "Reference targets must not be reused as current object state.",
+    "Native grasp assistance is a confound, not evidence of unassisted capture."
+  ],
+  "reference": {
+    "closure_request": {
+      "contact_tracking_guard": true,
+      "gripper_open": 0.3,
+      "hand_pose_world": [
+        0.2747115468837701,
+        -0.33720069600754254,
+        0.23319794792681617,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_steps": 64,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:462",
+      "settle_at_end": true,
+      "target_source": "cached Astra pixel template on fresh depth; fixed-fixture replay; operator-defined correction; unknown clearance"
+    },
+    "closure_receipt": {
+      "command_id": "4d98cefb59bc472ba1969efddff304e2",
+      "executed_steps": 64,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:462",
+      "reason": "local stage arrived",
+      "requested_steps": 64,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:526",
+      "sim_seconds": 4.266666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.0012105706763142659,
+      "tracking_rotation_error_rad": 0.003165593567640168,
+      "wall_seconds": 31.352181332003966
+    },
+    "final_lift_request": {
+      "contact_tracking_guard": true,
+      "gripper_open": 0.3,
+      "hand_pose_world": [
+        0.2747115468837701,
+        -0.33720069600754254,
+        0.4631979479268162,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "max_steps": 64,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:643",
+      "settle_at_end": true,
+      "target_source": "cached Astra pixel template on fresh depth; fixed-fixture replay; operator-defined correction; unknown clearance"
+    },
+    "final_lift_receipt": {
+      "command_id": "7dbf07cae71d4c0abf58783210ad5681",
+      "executed_steps": 64,
+      "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:643",
+      "reason": "local stage arrived",
+      "requested_steps": 64,
+      "resulting_observation_id": "9fbd76d8e57641c79983eed82adbc2bc:707",
+      "sim_seconds": 4.266666666666667,
+      "source": "sensor_local_diffik",
+      "status": "executed",
+      "tracking_position_error_m": 0.0023508997247723247,
+      "tracking_rotation_error_rad": 0.0001370551525816462,
+      "wall_seconds": 29.724314801998844
+    }
+  },
+  "comparisons": [
+    {
+      "run": "gpu_depth_direct_a_continue7_20260930",
+      "closure_request": {
+        "contact_tracking_guard": true,
+        "gripper_open": 0.0,
+        "hand_pose_world": [
+          0.285130113363266,
+          -0.34831294417381287,
+          0.23665504157543182,
+          0.00011600072101128175,
+          -0.00010936234030398615,
+          0.9999999872817159,
+          -4.503257993999726e-06
+        ],
+        "max_steps": 64,
+        "motion_profile": "conservative",
+        "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:195",
+        "target_source": "Enhanced policy EEF destination; direct_roboicl"
+      },
+      "closure_xyz_minus_reference_mm": [
+        10.418566479495905,
+        -11.112248166270323,
+        3.457093648615656
+      ],
+      "receipts": [
+        {
+          "command_id": "8e28f687cbb0487793ba97d07b2d3c38",
+          "executed_steps": 64,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:195",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:259",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.00022541219949175775,
+          "tracking_rotation_error_rad": 0.0003798932328692481,
+          "wall_seconds": 29.01343769000232
+        },
+        {
+          "command_id": "90c11e593dc3426db84143c84caf5397",
+          "executed_steps": 64,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:259",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:323",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.0005257863973908116,
+          "tracking_rotation_error_rad": 0.0018430365476764902,
+          "wall_seconds": 28.500119377000374
+        },
+        {
+          "command_id": "5fe954d4d24d47b2b0e78433ed3fc8ed",
+          "executed_steps": 11,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:323",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:334",
+          "sim_seconds": 0.7333333333333333,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 6.665401168108335e-06,
+          "tracking_rotation_error_rad": 1.8839505493575997e-05,
+          "wall_seconds": 4.6343136109935585
+        }
+      ]
+    },
+    {
+      "run": "gpu_depth_direct_a_regrasp_guard9_20260930",
+      "closure_request": {
+        "contact_tracking_guard": true,
+        "gripper_open": 0.0,
+        "hand_pose_world": [
+          0.29532134532928467,
+          -0.34418657422065735,
+          0.23435409367084503,
+          -0.000618748227905736,
+          -0.00021441347000545282,
+          0.9999997848034637,
+          -3.962979682426992e-05
+        ],
+        "max_steps": 64,
+        "motion_profile": "conservative",
+        "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:361",
+        "target_source": "Enhanced policy EEF destination; direct_roboicl"
+      },
+      "closure_xyz_minus_reference_mm": [
+        20.60979844551458,
+        -6.9858782131148045,
+        1.1561457440288636
+      ],
+      "receipts": [
+        {
+          "command_id": "24ef5ef3a2334157bc6f5778c8960122",
+          "executed_steps": 27,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:334",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:361",
+          "sim_seconds": 1.8,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.0007883357210990397,
+          "tracking_rotation_error_rad": 0.00015509570367210358,
+          "wall_seconds": 11.265390505999676
+        },
+        {
+          "command_id": "a58d4b076a1b4f4ead5e72eae3a0ceaf",
+          "executed_steps": 64,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:361",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:425",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.0001298601556442853,
+          "tracking_rotation_error_rad": 0.0004110294305926873,
+          "wall_seconds": 29.816676424001344
+        },
+        {
+          "command_id": "e2e945660b3742b2bc7bfdacd60bbf54",
+          "executed_steps": 64,
+          "observation_id": "c6a13a2ac0f6489a858b059df0d79d99:425",
+          "reason": "local stage budget ended without arrival",
+          "requested_steps": 64,
+          "resulting_observation_id": "c6a13a2ac0f6489a858b059df0d79d99:489",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.008485017289888187,
+          "tracking_rotation_error_rad": 0.024015209366530878,
+          "wall_seconds": 30.748373925001943
+        }
+      ]
+    },
+    {
+      "run": "gpu_depth_direct_a_fresh_grasp12_continue13_20260930",
+      "closure_request": {
+        "contact_tracking_guard": true,
+        "gripper_open": 0.0,
+        "hand_pose_world": [
+          0.24230584502220154,
+          -0.3399749994277954,
+          0.2369794249534607,
+          -4.638276763746895e-05,
+          0.0003217053621471059,
+          0.9999999471765384,
+          -1.1042257103627853e-06
+        ],
+        "max_steps": 64,
+        "motion_profile": "conservative",
+        "observation_id": "0717d764f2644998aeaffc19a93cbdee:142",
+        "target_source": "Enhanced policy EEF destination; direct_roboicl"
+      },
+      "closure_xyz_minus_reference_mm": [
+        -32.405701861568545,
+        -2.774303420252866,
+        3.7814770266445255
+      ],
+      "receipts": [
+        {
+          "command_id": "b896adccec5c43fb97b8a93d093adc85",
+          "executed_steps": 64,
+          "observation_id": "0717d764f2644998aeaffc19a93cbdee:142",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "0717d764f2644998aeaffc19a93cbdee:206",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.00019898519674902383,
+          "tracking_rotation_error_rad": 0.0004788207735270421,
+          "wall_seconds": 29.445544157002587
+        },
+        {
+          "command_id": "b02dbdeb5c11407689090811f710bb64",
+          "executed_steps": 64,
+          "observation_id": "0717d764f2644998aeaffc19a93cbdee:206",
+          "reason": "local stage arrived",
+          "requested_steps": 64,
+          "resulting_observation_id": "0717d764f2644998aeaffc19a93cbdee:270",
+          "sim_seconds": 4.266666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.0015253530066481954,
+          "tracking_rotation_error_rad": 0.003787210178436997,
+          "wall_seconds": 29.555044168999302
+        },
+        {
+          "command_id": "ecc4430115d14055927e8233d628ba97",
+          "executed_steps": 28,
+          "observation_id": "0717d764f2644998aeaffc19a93cbdee:270",
+          "reason": "contact tracking guard stopped motion",
+          "requested_steps": 64,
+          "resulting_observation_id": "0717d764f2644998aeaffc19a93cbdee:298",
+          "sim_seconds": 1.8666666666666667,
+          "source": "sensor_local_diffik",
+          "status": "executed",
+          "tracking_position_error_m": 0.010699663664340872,
+          "tracking_rotation_error_rad": 0.027169960871782986,
+          "wall_seconds": 13.14997369399498
+        }
+      ]
+    }
+  ],
+  "source_sha256": {
+    "guarded_full_lift_20261001_execution/10_request.json": "e03a9f5c2263da3ca58014132a9baf6b3d8bf7038256736fda5375c619a1d77f",
+    "guarded_full_lift_20261001_execution/10_receipt.json": "a0263fec65823fb16be450463b7344f5eb17aaf3f082d82f43f78d7304b75549",
+    "guarded_full_lift_20261001_execution/14_request.json": "944ac42f23dcf680f0bba1fd7930547a10eae43c296fc1407620ae317306aede",
+    "guarded_full_lift_20261001_execution/14_receipt.json": "8d90ee4f2fe6145d315bbc70bd04c4d2416eb9b7f87a8badfc417c7edae67c3c",
+    "gpu_depth_direct_a_continue7_20260930/events.jsonl": "db9d6a758166057aca731cf3e5a3303ad9b026558302e36e0535629697eeebff",
+    "gpu_depth_direct_a_regrasp_guard9_20260930/events.jsonl": "55a31052496070962bc278862c87c5147b8715481719dc88aa6ea203d84680a8",
+    "gpu_depth_direct_a_fresh_grasp12_continue13_20260930/events.jsonl": "b3ac28b8d50f5ae977846eebd04f6904133e02441e0c775c6dde31d6ad2ff338"
+  }
+}
