@@ -18,9 +18,11 @@ def main():
     p.add_argument('--url', required=True)
     p.add_argument('--review', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--retreat-after-release', type=Path)
     a = p.parse_args()
     review = json.loads(a.review.read_text())
-    if review['decision'] != 'open_in_place':
+    expected = 'retreat_up_5cm' if a.retreat_after_release else 'open_in_place'
+    if review['decision'] != expected:
         raise ValueError('Review did not select release')
     a.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(a.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
@@ -32,10 +34,19 @@ def main():
         obs = decode_observation(client.call('/observe'))
         if obs.key != review['observation_id']:
             raise ValueError('Review is stale; no execution')
+        if a.retreat_after_release:
+            previous = json.loads((a.retreat_after_release/'receipt.json').read_text())
+            if (previous['resulting_observation_id'] != obs.key
+                    or previous['reason'] != 'local stage arrived' or obs.gripper_open < .99):
+                raise ValueError('Retreat requires current arrived open release')
         request = dict(observation_id=obs.key, hand_pose_world=obs.eef_pose.tolist(),
             gripper_open=1., max_steps=30, contact_tracking_guard=True,
             motion_profile='conservative',
             target_source='Operator bounded release selected by current visual review; unknown clearance')
+        if a.retreat_after_release:
+            request['hand_pose_world'][2] += .05
+            request['max_steps'] = 60
+            request['target_source'] = 'Reviewed open-hand inspection retreat; unknown clearance; not object lift'
         write_json(a.output/'request.json', request)
         result = decode_result(client.call('/local-stage',
             {'command_id': uuid4().hex, 'action': request}, mutating=True))

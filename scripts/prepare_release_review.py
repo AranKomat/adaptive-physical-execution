@@ -11,10 +11,16 @@ def main():
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--run', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--retreat-after-release', action='store_true')
     a = p.parse_args()
     state = json.loads((a.capture/'state.json').read_text())
-    rows = [json.loads(s) for s in (a.run/'events.jsonl').read_text().splitlines()]
-    receipt = [r['data'] for r in rows if r['kind'] == 'execution_receipt'][-1]
+    if a.retreat_after_release:
+        receipt = json.loads((a.run/'receipt.json').read_text())
+        if receipt['reason'] != 'local stage arrived' or state['gripper_open_fraction'] < .99:
+            raise ValueError('Retreat review requires arrived open release')
+    else:
+        rows = [json.loads(s) for s in (a.run/'events.jsonl').read_text().splitlines()]
+        receipt = [r['data'] for r in rows if r['kind'] == 'execution_receipt'][-1]
     if receipt['resulting_observation_id'] != state['observation_id']:
         raise ValueError('Review capture and receipt must match')
     prompt = (
@@ -29,6 +35,19 @@ def main():
         'does not support this bounded release. This is a proposal review, not proof '
         'of safety, grasp or permission for subsequent motion. Robot state: '
         + json.dumps(state) + '\nExecution receipt: ' + json.dumps(receipt))
+    if a.retreat_after_release:
+        prompt = (
+            'Review a simulator-only inspection retreat after an open-in-place release. '
+            'No grasp is verified. Assess only a 5cm world-Z upward hand retreat, '
+            'gripper held OPEN, unchanged lateral position/orientation, at most60 '
+            'conservative local actions with unchanged tracking guard. It is NOT '
+            'a held-object lift. The purpose is to expose the card top for RGB-D '
+            'targeting. Consider visible entanglement/obstruction or possible card '
+            'motion; unknown clearance is not certified free. Return JSON '
+            'observation_id, decision (retreat_up_5cm/hold), evidence, risks, '
+            'expected_effect. Choose hold if this specific retreat is unsupported. '
+            'No other action is authorized by this review. Current robot state: '
+            + json.dumps(state) + '\nRelease receipt: ' + json.dumps(receipt))
     content = [{'type': 'text', 'text': prompt}]
     for role in ('left', 'right', 'wrist'):
         encoded = base64.b64encode((a.capture/f'{role}.png').read_bytes()).decode()

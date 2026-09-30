@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+563 current-depth evidence: three visible operator-selected shroud samples lie
+29-32mm off nominal pinch center along closing direction; not object center or
+motion targets. Raises lateral-centering issue missed by repeated vertical-only
+adjustments.5cm retreat review chose hold; no new motion, scene remains563.
+See surface_audit_563.json and GPU_FAST_EXECUTION_PLAN. Next opposing-surface/view
+localization, not blind32mm shift. Shared paid count4425.
+
 Prepared open-stage dwell fix: conservative open-hand motion can end after4
 stable pose/aperture samples at completed ramp; closure/camera timing unchanged.
 307tests pass. NOT loaded into current88111/563, no new physical qualification.

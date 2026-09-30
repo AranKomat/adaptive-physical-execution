@@ -1,0 +1,14 @@
+{
+  "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+  "source": "Operator-selected visible wrist RGB shroud pixels; calibrated optical-Z depth; robot-only pinch geometry",
+  "camera": "wrist",
+  "pinch_world_m": [0.2801813474249397, -0.3612551775669003, 0.15144678134928943],
+  "closing_axis_world": [-0.0016484468652746972, 0.9999981248429015, -0.0010163334162675835],
+  "samples": [
+    {"pixel_uv": [360, 265], "surface_point_world_m": [0.31454625626786015, -0.3304783730125848, 0.14305873829878427], "local_depth_spread_m": 0.0008114427328109741},
+    {"pixel_uv": [405, 210], "surface_point_world_m": [0.28581220562947407, -0.3293301191646599, 0.1429732879216954], "local_depth_spread_m": 0.0006193965673446655},
+    {"pixel_uv": [440, 150], "surface_point_world_m": [0.26318153116365267, -0.33218801980290724, 0.14318726209711433], "local_depth_spread_m": 0.0004683881998062134}
+  ],
+  "interpretation": "Selected visible surface lies about29-32mm toward positive closing-axis direction from nominal pinch center and about8mm below it. This motivates lateral geometry inspection, not repeated descent.",
+  "limitations": "Operator selections, not autonomous detections. One visible surface is not card thickness center, exact pad contact, force, or clearance. Do not command the sample offset directly. No hidden object state."
+}

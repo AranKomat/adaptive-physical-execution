@@ -5,6 +5,20 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+563 INSPECTION: review of5cm open upward retreat chose HOLD (possible catching,
+unresolved fingertip separation); no motion executed. Shared count4425 after one
+additional review. Worker state remains563. Current wrist depth sampled at three
+operator-selected visible shroud pixels gives z~.143m and y~-0.330m, versus nominal
+pinch center z.15145/y-.36126m; closing axis nearly world+Y. Thus visible surface
+is29-32mm off pinch center along closing direction and~8mm lower. This suggests
+lateral alignment is unresolved, not just depth. Samples are ONE surface, NOT
+card center/thickness or a motion command. Full numbers/provenance in
+docs/evidence/gpu_enhanced_release/surface_audit_563.json. Next localize opposing
+surfaces or obtain a view supporting distinct retreat; do not blindly shift32mm
+or repeatedly close. The center-only grasp prompt is overly restrictive for
+diagnosis; visible off-center surfaces can constrain geometry without pretending
+the occluded grasp midpoint is measured.
+
 OPEN-STAGE DWELL FIX PREPARED: conservative open-hand stages now terminate after
 the ramp reaches its endpoint and4consecutive stable samples meet existing pose
 tolerances, <=0.5mm/0.002rad per-step motion, aperture>=.99 and aperture change
