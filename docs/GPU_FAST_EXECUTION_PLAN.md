@@ -5,7 +5,14 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
-LATEST: held1562 on103000/8772. Lower view exposed connector; paired rough
+LATEST: held1690 on103000/8772. Two useful reviewed motions completed:
+4cm current-depth coarse approach, then12.616mm horizontal correction toward
+an inferred channel line.128actions/8.533sim seconds/59.240worker seconds.
+No insertion or release; one gold point failed depth validation and was excluded.
+Next fresh retention/longitudinal geometry review, not more opposing-rail wording.
+See COARSE_ALIGNMENT_20260930.md.378tests, four calls$0.13441,count4510.
+
+PREVIOUS: held1562 on103000/8772. Lower view exposed connector; paired rough
 axes measured at1498 (2.338deg difference,132.801mm sampled vertical gap).
 Insertion centerline/end correspondence still unverified. Closer rail reviews
 declined3x3 and center-ray variants; no movement followed. Stop this wording

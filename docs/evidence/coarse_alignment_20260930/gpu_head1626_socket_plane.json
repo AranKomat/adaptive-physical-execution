@@ -1,0 +1,25 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+  "pixel_uv": [
+    361,
+    147
+  ],
+  "surface_point_world_m": [
+    0.5118069676506547,
+    0.03314991194391352,
+    0.037540662984247575
+  ],
+  "optical_depth_m": 0.3098527789115906,
+  "local_depth_spread_m": 0.00044423341751098633,
+  "neighborhood_radius_pixels": 1,
+  "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose.",
+  "plane_normal_world_up_hemisphere": [
+    -0.0001002060969986382,
+    -0.00014643898717694073,
+    0.9999999842571805
+  ],
+  "plane_rms_m": 1.948654848776689e-08,
+  "normal_up_cosine": 0.9999999842571805,
+  "plane_sample_count": 9,
+  "normal_limitation": "Observed local plane, sign chosen toward world up; not object identity, outward normal, contact or clearance"
+}

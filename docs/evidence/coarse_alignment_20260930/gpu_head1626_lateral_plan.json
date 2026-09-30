@@ -1,0 +1,58 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+  "finish": false,
+  "target_source": "Reviewed operator-compiled coarse lateral correction: one measured gold point and inferred channel plane line; no descent/contact",
+  "phases": [
+    {
+      "name": "elevated_carry_lateral_alignment",
+      "hand_pose_world": [
+        0.47075344525512547,
+        0.057703819803252676,
+        0.327985018491745,
+        0.0037079607953941435,
+        -1.1755756962257277e-05,
+        0.9999839852080497,
+        -0.004275536921745218
+      ],
+      "finger_position_m": 0.012,
+      "actions": 64
+    }
+  ],
+  "candidate": {
+    "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+    "translation_world_m": [
+      0.00019220911201326467,
+      0.012614943764462925,
+      0.0
+    ],
+    "held_sample_vertical_gap_m": 0.08972270864095794,
+    "target_hand_pose_world": [
+      0.47075344525512547,
+      0.057703819803252676,
+      0.327985018491745,
+      0.0037079607953941435,
+      -1.1755756962257277e-05,
+      0.9999839852080497,
+      -0.004275536921745218
+    ],
+    "aperture": 0.3,
+    "actions": 64,
+    "limitations": "One measured gold point toward inferred channel line; unchanged height/attitude/grip; NOT full-card alignment, clearance, contact or insertion; second gold sample rejected"
+  },
+  "review": {
+    "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+    "decision": "approve_lateral_alignment",
+    "evidence": [
+      "The current right view supports the visible gold strip and a plausible receiving-channel line beneath it; the three housing-plane projections are consistent with that line.",
+      "The supplied horizontal translation, approximately 12.62 mm, brings the single accepted gold-strip point toward the inferred line in XY. This is useful for coarse alignment without requiring insertion precision.",
+      "The wrist view supports continued gripper engagement, with native grasp assistance ON. Current views show no definite interference that invalidates this bounded lateral correction.",
+      "Approval is limited to the supplied translation with unchanged height, current measured attitude, aperture 0.3, and unchanged per-action tracking guard, for at most 64 actions at 15 Hz. No descent or release."
+    ],
+    "uncertainty": [
+      "The rejected second gold sample is not used. One accepted point cannot establish full-card alignment or connector angular alignment.",
+      "Channel coordinates are ray intersections with the measured housing plane, not measured opening depth, seating depth, or independently verified semantic identity.",
+      "The approximately 89.7 mm sampled vertical gap is not full-object or swept-volume clearance. Occluded card, gripper, and housing geometry remain unverified.",
+      "This approval does not authorize contact or insertion; retention and tracking must remain valid throughout the bounded motion."
+    ]
+  }
+}

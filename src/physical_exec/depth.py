@@ -61,6 +61,44 @@ def surface_patch(depth, calibration, pixel, *, radius=1, max_spread_m=.01):
                 normal_limitation='Observed local plane, sign chosen toward world up; not object identity, outward normal, contact or clearance')
 
 
+def project_pixel_to_surface_plane(calibration, pixel, image_shape, plane):
+    """Infer a ray/observed-plane intersection; never a measured gap or clearance."""
+    if plane.get('observation_id') != calibration.get('observation_id'):
+        raise ValueError('Plane and camera must share a current observation')
+    if len(image_shape) != 2 or any(type(n) is not int or n < 1 for n in image_shape):
+        raise ValueError('Invalid image shape')
+    uv = finite_vector(pixel, 2)
+    if (not np.equal(uv, np.floor(uv)).all() or not 0 <= uv[0] < image_shape[1]
+            or not 0 <= uv[1] < image_shape[0]):
+        raise ValueError('Pixel must be inside the original image')
+    rms = plane.get('plane_rms_m')
+    if (isinstance(rms, bool) or not isinstance(rms, (int, float))
+            or not np.isfinite(rms) or not 0 <= rms <= .001
+            or plane.get('plane_sample_count', 0) < 9):
+        raise ValueError('Requires a qualified observed local plane')
+    k = np.asarray(calibration['intrinsic_matrix'], dtype=float)
+    if (k.shape != (3, 3) or not np.isfinite(k).all() or k[0, 0] <= 0
+            or k[1, 1] <= 0 or not np.allclose(k[2], [0, 0, 1])):
+        raise ValueError('Invalid camera intrinsics')
+    eye = finite_vector(calibration['camera_position_world'], 3)
+    normal = finite_vector(plane['plane_normal_world_up_hemisphere'], 3)
+    if not np.isclose(np.linalg.norm(normal), 1., atol=.001):
+        raise ValueError('Invalid plane normal')
+    point = finite_vector(plane['surface_point_world_m'], 3)
+    ray = quat_to_matrix(calibration['camera_quaternion_world_wxyz_optical']) @ np.linalg.solve(k, [*uv, 1.])
+    denominator = float(normal @ ray)
+    if abs(denominator)/np.linalg.norm(ray) < .1:
+        raise ValueError('Ray too nearly parallel to plane')
+    distance = float(normal @ (point-eye))/denominator
+    inferred = eye+distance*ray
+    if not 0 < distance <= 3. or np.linalg.norm(inferred-point) > .15:
+        raise ValueError('Intersection outside bounded local plane extrapolation')
+    return dict(observation_id=calibration['observation_id'], pixel_uv=uv.astype(int).tolist(),
+                inferred_point_world_m=inferred.tolist(), inferred=True,
+                plane_source_pixel_uv=plane['pixel_uv'],
+                limitation='Ray intersection with observed housing plane, NOT measured opening depth, seating depth, semantic identity or clearance')
+
+
 def project_surface_memory(measurement, calibration, depth):
     """Project an earlier sensor sample; a depth match is not semantic identity."""
     old_episode, old_seq = measurement['observation_id'].rsplit(':',1)

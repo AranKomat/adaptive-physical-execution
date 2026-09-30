@@ -47,7 +47,7 @@ def main():
     p.add_argument('--output', type=Path, required=True)
     p.add_argument('--target-object', choices=['graphics_card', 'ram_module'], default='graphics_card',
                    help='RAM is supported only for initial approach/grasp selection')
-    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'inspection_camera', 'feature_inventory', 'contact_recovery'], required=True)
+    p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'coarse_centerline', 'held_feature', 'correspondence', 'inspection_motion', 'inspection_camera', 'feature_inventory', 'contact_recovery'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
     p.add_argument('--prior-carry-capture', type=Path)
@@ -210,6 +210,28 @@ def main():
             'seating depth, or certify clearance. A midpoint between measured rail surfaces would '
             'only be an inferred centerline, not a directly observed gap surface. '
             '\nRobot-only state: ' + json.dumps(state))
+    if args.stage == 'coarse_centerline':
+        prompt = (
+            'Review the CURRENT held graphics card and CPU-adjacent PCIe socket. '
+            'This is an observation-only coarse alignment hypothesis, not contact permission. '
+            'Locate the projected CENTER of the actual insertion channel at three separated '
+            'longitudinal stations, not the bright rim or decorative heatsink stripes. '
+            'Channel pixels may lie in the opening; they do NOT need measured surface depth '
+            'or a3x3 solid patch. They will be ray-projected onto a separately measured '
+            'nearby socket-housing plane, producing an INFERRED point at housing height, '
+            'not a measured gap floor, seating depth, or clearance. '
+            'Only choose a channel if you can distinguish its visible opening from a '
+            'single decorative groove or rim. If that semantic distinction remains '
+            'unreliable, return inspect; changing geometry methods does not resolve identity. '
+            'Also select two current solid interior gold-contact pixels for independent '
+            'depth sampling, not corresponding endpoints. Do not require a visible key '
+            'for this rough axis estimate; report key visibility separately. '
+            'Return JSON observation_id, decision (channel_estimate/inspect), '
+            'channel_samples (three {camera,pixel_uv} entries or []), connector_samples '
+            '(two {camera,pixel_uv} entries or []), key_visible, evidence, uncertainty. '
+            'Use original640x360 integer[u,v], upper-left origin, camera left/right/wrist. '
+            'No hidden object poses or collision state are supplied. '
+            '\nCurrent robot state: '+json.dumps(state))
     if args.stage == 'inspection_motion':
         calibrations = {role: json.loads((args.capture/f'{role}_calibration.json').read_text())
                         for role in ('left','right','wrist')}
@@ -324,7 +346,7 @@ def main():
             'Unknown contact/clearance stays unknown. No task object poses or evaluator are supplied. '
             '\nRobot-only state: '+json.dumps(state))}]
     if args.feature_measurements:
-        if args.stage not in ('feature_inventory','correspondence','grasp','socket_gap'):
+        if args.stage not in ('feature_inventory','correspondence','grasp','socket_gap','coarse_centerline'):
             raise ValueError('Measurement feedback requires feature localization')
         measurements = json.loads(args.feature_measurements.read_text())
         if measurements['observation_id'] != state['observation_id']:

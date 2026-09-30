@@ -60,7 +60,7 @@ def test_inspection_translation_budget_is_explicit_and_bounded(tmp_path, limit, 
 
 
 @pytest.mark.parametrize('measurement_id,accepted',[('e:12',True),('e:11',False)])
-@pytest.mark.parametrize('stage', ['feature_inventory', 'grasp', 'socket_gap'])
+@pytest.mark.parametrize('stage', ['feature_inventory', 'grasp', 'socket_gap', 'coarse_centerline'])
 def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted,stage):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):

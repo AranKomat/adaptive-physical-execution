@@ -10,6 +10,7 @@ from uuid import uuid4
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
 from physical_exec.carry import carry_stages, standoff_stages, reviewed_standoff_stages
 from physical_exec.carry import validate_lift_diagnostic, lift_endpoint_completed
+from physical_exec.carry import coarse_approach_stage
 from physical_exec.imaging import png_bytes
 from physical_exec.trace import write_json
 from physical_exec.transport import LocalClient, decode_observation, decode_result
@@ -22,6 +23,8 @@ def main():
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--standoff-review', type=Path,
                         help='Execute a current reviewed history-based closer-look candidate')
+    parser.add_argument('--coarse-approach-review', type=Path,
+                        help='Explicit current-depth 4cm approach with >=8cm nominal gap; no insertion')
     parser.add_argument('--exploratory-standoff',action='store_true',
                         help='Current feature measurements; <=10 cm down, >=12 cm nominal standoff, no insertion')
     parser.add_argument('--near-standoff',action='store_true',
@@ -33,6 +36,10 @@ def main():
     parser.add_argument('--lift-diagnostic-completion', action='store_true',
                         help='Upward diagnostic only: assess final motion at 10mm / .03rad; not grasp verification')
     args = parser.parse_args()
+    if args.coarse_approach_review and (args.standoff_review or args.exploratory_standoff
+            or args.near_standoff or args.contact_hypothesis or args.lift_diagnostic_completion
+            or not args.contact_tracking_guard):
+        parser.error('Coarse approach requires tracking guard and excludes all other modes')
     if args.lift_diagnostic_completion and (not args.contact_tracking_guard
             or args.standoff_review or args.exploratory_standoff
             or args.near_standoff or args.contact_hypothesis):
@@ -56,7 +63,12 @@ def main():
                 or not meta.get('continuous_transit_enabled')):
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
-        if args.standoff_review:
+        if args.coarse_approach_review:
+            review = json.loads(args.coarse_approach_review.read_text())
+            stages = [coarse_approach_stage(plan, review, obs.key, obs.eef_pose,
+                                           meta.get('last_gripper_command'))]
+            write_json(args.output/'review.json', review)
+        elif args.standoff_review:
             review = json.loads(args.standoff_review.read_text())
             stages = reviewed_standoff_stages(plan, review, obs.key, obs.eef_pose,
                                              meta.get('last_gripper_command'), obs.control_dt)

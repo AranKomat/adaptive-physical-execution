@@ -1,0 +1,94 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+  "motion_authorized": false,
+  "channel_inferred": [
+    {
+      "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+      "pixel_uv": [
+        276,
+        206
+      ],
+      "inferred_point_world_m": [
+        0.4533358095157461,
+        0.030779585913224952,
+        0.03753445670946298
+      ],
+      "inferred": true,
+      "plane_source_pixel_uv": [
+        361,
+        147
+      ],
+      "limitation": "Ray intersection with observed housing plane, NOT measured opening depth, seating depth, semantic identity or clearance"
+    },
+    {
+      "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+      "pixel_uv": [
+        318,
+        180
+      ],
+      "inferred_point_world_m": [
+        0.48057076700600254,
+        0.030386741257090025,
+        0.037537128290523525
+      ],
+      "inferred": true,
+      "plane_source_pixel_uv": [
+        361,
+        147
+      ],
+      "limitation": "Ray intersection with observed housing plane, NOT measured opening depth, seating depth, semantic identity or clearance"
+    },
+    {
+      "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+      "pixel_uv": [
+        365,
+        151
+      ],
+      "inferred_point_world_m": [
+        0.5122138084406309,
+        0.02988248418199485,
+        0.037540225273356265
+      ],
+      "inferred": true,
+      "plane_source_pixel_uv": [
+        361,
+        147
+      ],
+      "limitation": "Ray intersection with observed housing plane, NOT measured opening depth, seating depth, semantic identity or clearance"
+    }
+  ],
+  "connector_samples": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        281,
+        155
+      ],
+      "measurement": {
+        "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1626",
+        "pixel_uv": [
+          281,
+          155
+        ],
+        "surface_point_world_m": [
+          0.45543469695256283,
+          0.018129733579892476,
+          0.1272629339143142
+        ],
+        "optical_depth_m": 0.21022284030914307,
+        "local_depth_spread_m": 0.002158045768737793,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      }
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        350,
+        114
+      ],
+      "rejected": "depth discontinuity: select an interior surface pixel"
+    }
+  ],
+  "limitation": "Channel projections are inferred housing-plane intersections, not measured gap depth. Rejected connector samples cannot authorize alignment."
+}

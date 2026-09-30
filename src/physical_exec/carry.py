@@ -124,6 +124,52 @@ def reviewed_standoff_stages(plan, review, observation_id, hand_pose, opening, c
     return stages
 
 
+def coarse_approach_stage(measurements, review, observation_id, hand_pose, opening):
+    """One reviewed 4cm exploratory descent; nominal 8cm gap, never insertion."""
+    if (measurements.get('observation_id') != observation_id
+            or review.get('observation_id') != observation_id
+            or review.get('decision') != 'approve_coarse_approach'
+            or isinstance(review.get('descent_m'), bool)
+            or review.get('descent_m') != .04):
+        raise ValueError('Requires current explicit 4cm coarse-approach review')
+    hand = finite_vector(hand_pose, 7)
+    if isinstance(opening, bool) or not isinstance(opening, (int, float)) or not np.isfinite(opening) or not 0 <= opening <= 1:
+        raise ValueError('Established gripper command required')
+    points = {}
+    for name in ('connector', 'socket'):
+        samples = measurements.get(name, {}).get('samples', [])
+        if len(samples) != 2 or any('measurement' not in s for s in samples):
+            raise ValueError('Two current qualified samples per feature required')
+        for sample in samples:
+            m = sample['measurement']
+            spread = m.get('local_depth_spread_m')
+            if (m.get('observation_id') != observation_id
+                    or m.get('neighborhood_radius_pixels') != 1
+                    or not isinstance(spread, (int, float)) or isinstance(spread, bool)
+                    or not np.isfinite(spread) or not 0 <= spread <= .01):
+                raise ValueError('Unqualified current feature measurement')
+        points[name] = np.array([finite_vector(s['measurement']['surface_point_world_m'], 3)
+                                 for s in samples])
+    if np.max(np.linalg.norm(points['connector']-hand[:3], axis=1)) > .35:
+        raise ValueError('Connector samples too far from hand')
+    gap = float(points['connector'][:, 2].min()-points['socket'][:, 2].max())
+    axes = [np.diff(points[name][:, :2], axis=0)[0] for name in ('connector', 'socket')]
+    if any(np.linalg.norm(axis) < .01 for axis in axes):
+        raise ValueError('Insufficient observed horizontal axis extent')
+    axes = [axis/np.linalg.norm(axis) for axis in axes]
+    transverse = np.array([-axes[1][1], axes[1][0]])
+    offset = abs(float((points['connector'][:, :2].mean(0)-points['socket'][:, :2].mean(0)) @ transverse))
+    if (gap-.04 < .08 or abs(float(axes[0] @ axes[1])) < np.cos(np.deg2rad(25))
+            or offset > .04):
+        raise ValueError('Observed geometry does not support bounded coarse approach')
+    target = hand.copy()
+    target[2] -= .04
+    return dict(hand_pose_world=target.tolist(), gripper_open=opening, max_steps=64,
+                settle_at_end=True, contact_tracking_guard=True,
+                target_source='Explicit reviewed 4cm coarse approach from current RGB-D; '
+                              '>=8cm nominal sampled gap; unknown full-object clearance; NOT insertion')
+
+
 def standoff_stages(measurements, observation_id, hand_pose, opening, *, near=False, contact=False):
     """Exploratory approach with 12/6 cm nominal separation, not a clearance bound."""
     if measurements.get('observation_id') != observation_id:

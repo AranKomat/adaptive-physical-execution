@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: held1690 on103000/8772. Reviewed current-depth4cm approach passed
+1.704mm error; then inferred channel-plane line + ONE valid gold-strip point
+supported a reviewed12.616mm lateral correction, passed0.696mm error. Second
+gold point rejected, not used. No contact/descent during lateral stage, no
+insertion/release.378tests pass. Four calls$0.13441, shared count4510.
+See docs/COARSE_ALIGNMENT_20260930.md. Next fresh longitudinal/key and retention
+review; do not equate one-point alignment or inferred plane with full mating.
+
 LATEST: lower camera resolved gold-strip visibility. Fresh1498 depth samples
 give connector/socket-rim axes2.338deg apart and132.801mm sampled vertical gap.
 These are NOT corresponding endpoints or a socket centerline. Closer1562
