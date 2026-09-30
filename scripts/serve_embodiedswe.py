@@ -33,6 +33,14 @@ def main():
     if len(token)<16: raise SystemExit(f"Set {args.token_env} to a fresh random token (at least 16 characters)")
     from physical_exec.config import load_task
     task,limits=load_task(args.task)
+    if args.allow_inspection_camera:
+        from physical_exec.inspection_camera import camera_path
+        view = task.get('extra_cameras', {}).get(task['camera_map']['right'])
+        if view is None:
+            raise ValueError('Inspection requires an explicitly configured initial right camera')
+        # Reject incompatible static installations before starting an expensive GPU episode.
+        camera_path(view['eye'], view['eye'], [0,0,0,1,0,0,0], [0,0,0,1,0,0,0],
+                    1, 1/task['control_hz'], oblique_envelope=True)
     # Hardware capability is tested by Isaac itself. No CPU substitute is selected.
     launcher=AppLauncher(args);app=launcher.app
     server=None;env=None

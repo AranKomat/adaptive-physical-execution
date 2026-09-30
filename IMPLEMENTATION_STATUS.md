@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE aimed RAM720:500-action measured-axis preclosure passed,2.128mm error;
+both pads now visible but closure review still inspect. External camera FIRST
+request rejected before action: initial y=.95 outside inspection envelope; chosen
+final z=.20 also invalid. Confirmed still720, no closure/reset. Startup check and
+separate pc_ram_contact_view config prepared, NOT loaded.252tests. This is an
+agent configuration/planning error, not physical impossibility. See RAM_FIRST_TRIAL.
+
 LIVE camera-enabled RAM220: fresh model-selected housing anchor + legal depth
 produced220-action open-hand standoff,2.699mm error, no guard stop. No operator
 pixel correction in this approach, but recipe remains operator-defined. Both

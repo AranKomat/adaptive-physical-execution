@@ -25,3 +25,19 @@ def test_ram_aimed_condition_changes_only_robot_local_view_and_notes():
     assert {k for k in aimed if aimed[k] != baseline.get(k)} == {'wrist_target_hand','notes'}
     assert aimed['wrist_target_hand'] == [0,0,.1034]
     assert old_limits == new_limits
+
+
+def test_ram_contact_camera_starts_inside_unchanged_inspection_envelope():
+    from physical_exec.config import load_task
+    from physical_exec.inspection_camera import camera_path
+    root = Path(__file__).resolve().parents[1]/'configs/tasks'
+    old,_ = load_task(root/'pc_ram_wrist_aim.json')
+    new,_ = load_task(root/'pc_ram_contact_view.json')
+    hold = [0,0,0,1,0,0,0]
+    eye = old['extra_cameras']['external_right']['eye']
+    with pytest.raises(ValueError,match='envelope'):
+        camera_path(eye,eye,hold,hold,1,1/15,oblique_envelope=True)
+    eye = new['extra_cameras']['external_right']['eye']
+    camera_path(eye,eye,hold,hold,1,1/15,oblique_envelope=True)
+    assert {k for k in new if new[k] != old.get(k)} == {'extra_cameras','notes'}
+    assert new['extra_cameras']['external_left'] == old['extra_cameras']['external_left']

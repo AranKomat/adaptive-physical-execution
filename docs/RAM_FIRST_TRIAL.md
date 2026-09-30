@@ -1,5 +1,38 @@
 # RAM: next independent assembly experiment
 
+## Live aimed720: placement passed, closure deferred, camera command rejected
+
+Current episode `febb2e8b8f8c4b6ab1a7dd160701fbde:720`, worker79506/8772.
+Operator-marked current220 top/axis pixels[320,70],[240,35],[360,85] passed legal
+depth sampling. Center[.300880,-.361681,.068058]m. Astra approved preclosure only.
+Robot-only waypoint IK preflight passed;500actions completed rotation and descent,
+final2.128mm/0.000967rad error, no tracking guard stop. No closure/lift.
+
+The aimed wrist shows both pads around the module, improving visibility versus
+baseline726. Closure review nevertheless returns inspect: holder-to-finger
+closing path remains unresolved. Do not call projected straddling a grasp.
+See [wrist](evidence/ram_aimed_preclosure_720/08_wrist.png),
+[receipt](evidence/ram_aimed_preclosure_720/08_receipt.json),
+[closure review](evidence/ram_aimed_preclosure_720/closure_review.json).
+
+One planned four-segment external-camera route was attempted, but its FIRST
+request was rejected as `InputRejected` BEFORE execution. Fresh observe confirms
+still720. Static right-camera y=.95 is outside the unchanged inspection envelope
+y<=.7; metadata enabling camera controls did not establish a usable start pose.
+The proposed final z=.20 was also below the envelope's .30m floor. Neither
+boundary was widened; no request retried, no camera/arm movement or closure from
+the rejected route. This was an agent planning/configuration error, not a physical
+obstruction or model-control failure.
+
+Fix prepared: launcher checks configured initial right-camera pose before GPU
+startup when inspection is enabled. New `pc_ram_contact_view.json` places the
+camera at[.08,-.58,.30], aimed at earlier legal measured grasp-region coordinates.
+It is a SEPARATE condition, not loaded into79506. Robot wrist aim, physics and
+limits remain unchanged.252tests pass including old-start rejection/new-start
+acceptance. Rendering/contact visibility still needs native qualification.
+Preserve both live RAM episodes; do not reset them or claim that changing a
+source config changes an existing worker. Full RAM task/recovery remain undone.
+
 ## Camera-enabled live220: model-selected noncontact approach
 
 Current episode `febb2e8b8f8c4b6ab1a7dd160701fbde:220`, worker79506,

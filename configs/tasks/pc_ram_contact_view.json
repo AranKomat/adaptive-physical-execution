@@ -1,0 +1,25 @@
+{
+  "schema": "physical-exec-task/v1",
+  "id": "pc_ram",
+  "preset": "assembly.pc_ram.franka.joint",
+  "instruction": "Install both loose RAM modules into the computer's DIMM slots. Verify their placement visually.",
+  "control_hz": 15,
+  "image_size": [640, 360],
+  "camera_map": {"wrist": "wrist", "left": "external_left", "right": "external_right"},
+  "extra_cameras": {
+    "external_left": {"eye": [1.2, -0.95, 0.8], "target": [0.45, 0.0, 0.1], "focal": 18.0},
+    "external_right": {"eye": [0.08, -0.58, 0.3], "target": [0.3, -0.36, 0.09], "focal": 18.0}
+  },
+  "wrist_target_hand": [0, 0, 0.1034],
+  "limits": {"max_translation_m": 0.03, "max_rotation_rad": 0.15, "max_joint_step_rad": 0.15, "max_chunk": 32},
+  "default_horizons": {"direct_roboicl": 5, "direct_reference": 3, "hybrid": 8},
+  "notes": [
+    "Separate contact-view condition, not the previously launched wrist-aim-only condition.",
+    "Initial right camera lies inside the unchanged inspection envelope.",
+    "Right gaze chosen from previous legal RAM surface measurements, not source object poses.",
+    "Wrist targets nominal Panda pinch center; left overview unchanged.",
+    "Idealized sensing, no physical camera-body clearance claim. Task and physics unchanged.",
+    "Prepared after rejected camera request; not yet GPU-qualified. Do not reset a held episode to apply silently."
+  ],
+  "source": "https://github.com/EmbodiedSWE/EmbodiedSWE/blob/d34837e99e5016525f0e9b6bb84791eb3d4b8162/robobench/suites/assembly/configs/envs.py"
+}
