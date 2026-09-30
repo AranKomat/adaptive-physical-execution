@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+NEW physical evidence: GPU-condition anti-windup unloaded12cm up/return PASSED.
+Worker84047/8774(local18774), episode20e8a36447af44088fa373cf8782e9ca:209.
+209actions,13.933sim/89.271execution wall seconds. Endpoint errors0.080/0.074mm,
+no guard stop. No model calls, grasp or task success. Retained at209; old five
+workers untouched. Next faster trajectory integration/qualification. See GPU_FAST_EXECUTION_PLAN.
+
 User approved retiring RAM baseline78152 at726. Full recordings checksum-verified
 again, then SIGTERM issued; cleanup retained5.1GB, so exact PID force-stopped.
 Other five GPU processes remained present. Baseline live physics state is gone;

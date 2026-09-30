@@ -16,10 +16,20 @@ Preserve historical trials as historical evidence, not matched comparisons.
 
 ## Immediate sequence
 
+- Conservative anti-windup qualification COMPLETED on fresh GPU-task worker84047,
+  remote8774/local18774, episode20e8a36447af44088fa373cf8782e9ca:209.
+  Open-hand12cm up/return:40+64+41+64=209actions,13.933sim seconds,
+  89.271execution wall seconds. Upper endpoint0.080mm, return0.074mm error;
+  intermediate descent1.367mm. No guard stop/contact/paid call or retry.
+  [Endpoint image](evidence/gpu_antiwindup_209/3_right.png),
+  [return receipt](evidence/gpu_antiwindup_209/3_receipt.json).
+  Unloaded/elevated only; not proof of lower-workspace or payload performance.
+  Other five workers preserved. Current qualification worker retained at209.
+
 - [ ] Free a simulator slot without losing current GPU recovery2813.
   RAM baseline726 recordings are backed up and checksum-verified; retiring a
   worker loses live physics state, not merely GPU cache. Retention decision pending.
-- [ ] Qualify anti-windup on an elevated noncontact GPU-condition trajectory.
+- [x] Qualify anti-windup on an elevated noncontact GPU-condition trajectory.
   Use the prepared bounded ramp/return probe; no repeat after ambiguous execution.
 - [ ] Qualify faster transit, starting with twice the current translation and
   rotation rates. Increase further only with measured tracking and stopping
