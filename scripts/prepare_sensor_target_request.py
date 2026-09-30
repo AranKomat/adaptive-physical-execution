@@ -12,6 +12,35 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from physical_exec.depth import surface_point, project_surface_memory
 
 
+def aperture_experience_content(directory):
+    content = [{'type': 'text', 'text': (
+        'RETAINED APERTURE EXPERIMENT, not current grasp verification. '
+        'These operator-directed trials used native simulator grasp assistance. '
+        'Their mechanism and transfer to other poses are uncertain. Use as experience, '
+        'not a mandatory command or permission to reuse old world coordinates. '
+        'Aperture is a continuous opening setpoint, not a force command: 0 fully closed, '
+        '1 fully open, intermediate values allowed. Full closure need not maximize retention. '
+        'In addition to the current target response fields, return gripper_open (number '
+        'in [0,1], or null for inspect) and aperture_reason (short string). '
+        'This is a proposed closure aperture, not an immediate closure instruction.')}]
+    for condition in ('03', '00'):
+        review = json.loads((directory/f'condition{condition}_review.json').read_text())
+        run = directory/f'gpu_aperture_pair{condition}_lift'
+        state = json.loads((run/'03_observation.json').read_text())
+        receipt = json.loads((run/'03_receipt.json').read_text())
+        if (review['observation_id'] != state['observation_id']
+                or receipt['resulting_observation_id'] != state['observation_id']
+                or type(review['visual_retention']) is not bool
+                or review['aperture_command'] != (0.3 if condition == '03' else 0.0)):
+            raise ValueError('Aperture evidence provenance mismatch')
+        evidence = {k: review[k] for k in ('observation_id', 'aperture_command', 'visual_retention')}
+        evidence['review_source'] = 'operator visual assessment of recorded images'
+        content.append({'type': 'text', 'text': 'Retained external view: '+json.dumps(evidence)})
+        encoded = base64.b64encode((run/'03_left.png').read_bytes()).decode()
+        content.append({'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,'+encoded}})
+    return content
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
@@ -27,7 +56,11 @@ def main():
     p.add_argument('--contact-receipt',type=Path)
     p.add_argument('--feature-measurements',type=Path,
                    help='Current raw depth results to reconsider a prior visual association')
+    p.add_argument('--aperture-experience', type=Path,
+                   help='Explicit retained paired visual evidence; adds proposed closure aperture to grasp response')
     args = p.parse_args()
+    if args.aperture_experience and (args.stage != 'grasp' or args.target_object != 'graphics_card'):
+        raise ValueError('Aperture experience is scoped to graphics-card grasp selection')
     if args.target_object == 'ram_module' and args.stage not in ('approach', 'grasp'):
         raise ValueError('RAM target selection supports approach/grasp only; other prompts are GPU-specific')
     if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
@@ -270,7 +303,7 @@ def main():
             'Unknown contact/clearance stays unknown. No task object poses or evaluator are supplied. '
             '\nRobot-only state: '+json.dumps(state))}]
     if args.feature_measurements:
-        if args.stage not in ('feature_inventory','correspondence'):
+        if args.stage not in ('feature_inventory','correspondence','grasp'):
             raise ValueError('Measurement feedback requires feature localization')
         measurements = json.loads(args.feature_measurements.read_text())
         if measurements['observation_id'] != state['observation_id']:
@@ -360,6 +393,8 @@ def main():
                 + json.dumps(old_response))},
             {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}},
         ])
+    if args.aperture_experience:
+        content.extend(aperture_experience_content(args.aperture_experience))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps([{'role': 'user', 'content': content}]))
 

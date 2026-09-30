@@ -7,7 +7,8 @@ import pytest
 
 
 @pytest.mark.parametrize('measurement_id,accepted',[('e:12',True),('e:11',False)])
-def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted):
+@pytest.mark.parametrize('stage', ['feature_inventory', 'grasp'])
+def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted,stage):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):
         (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
@@ -15,7 +16,7 @@ def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,
     measurements.write_text(json.dumps({'observation_id':measurement_id,'connector':{'samples':[]}}))
     output=tmp_path/'messages.json'
     script=Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
-    result=subprocess.run([sys.executable,str(script),'--stage','feature_inventory',
+    result=subprocess.run([sys.executable,str(script),'--stage',stage,
         '--capture',str(tmp_path),'--feature-measurements',str(measurements),'--output',str(output)],
         capture_output=True,text=True)
     assert (result.returncode==0)==accepted

@@ -1,0 +1,10 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:575",
+  "decision": "inspect",
+  "camera": "right",
+  "pixel_uv": null,
+  "evidence": "The loose card is outside the chassis. Its narrow upper strip is visible, but the previous central samples straddle a depth discontinuity or may hit the side face. The wrist view clips the card.",
+  "uncertainty": "Cannot confidently identify an interior top-surface pixel centered between both opposing faces near mid-length. Additional inspection is needed.",
+  "gripper_open": null,
+  "aperture_reason": "Defer aperture selection until the centered top surface is verified; retained trials do not verify the current grasp."
+}

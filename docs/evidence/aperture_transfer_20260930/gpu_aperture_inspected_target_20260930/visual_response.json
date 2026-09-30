@@ -1,0 +1,13 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:642",
+  "decision": "target",
+  "camera": "right",
+  "pixel_uv": [
+    369,
+    259
+  ],
+  "evidence": "Interior of the loose card's visible upper surface, near mid-length and centered across its thickness between the opposing faces; excludes the PCB front, stand, and end bracket.",
+  "uncertainty": "Visual centering is approximate; verify local depth and opposing-face geometry before closure. No current grasp success assumed.",
+  "gripper_open": 0.3,
+  "aperture_reason": "Proposed partial closure based on retained assisted-trial evidence; transfer to this grasp remains unverified."
+}

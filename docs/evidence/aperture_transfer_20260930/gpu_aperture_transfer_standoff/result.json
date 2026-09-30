@@ -1,0 +1,1 @@
+{"actions": 84, "final_observation_id": "e086f25bf69249db8d3f0a366cddf36d:726", "grasp_verified": false, "limitation": "Endpoint arrival is not grasp or task verification; inspect final images independently", "stages": 2}

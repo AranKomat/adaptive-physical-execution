@@ -1,0 +1,13 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:575",
+  "decision": "target",
+  "camera": "right",
+  "pixel_uv": [
+    367,
+    257
+  ],
+  "evidence": "Visible interior black top surface of the loose upright graphics card beside the chassis, near mid-length and centered between its opposing thickness boundaries; excludes PCB face, stand, and end bracket.",
+  "uncertainty": "Top surface is narrow; verify valid depth samples remain within both edges before closure. Wrist view clips the card.",
+  "gripper_open": 0.3,
+  "aperture_reason": "Proposed intermediate opening informed by retained assisted trial; retention at this pose remains unverified."
+}

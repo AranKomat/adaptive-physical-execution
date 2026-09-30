@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: experience-conditioned Astra chose0.3 explicitly, but fresh pixel
+selection did not establish a top surface. One depth-feedback call declined
+the ambiguous target. Operator wrist inspection (67actions) and open-hand
+standoff (84actions) passed; live98214/8772 now at e086f25bf69249db8d3f0a366cddf36d:726.
+No new grasp. Three paid calls total$0.09428875; shared count4493, ceiling$85.
+341 tests pass. See docs/APERTURE_TRANSFER_PROGRESS_20260930.md. Next use closer
+view for grasp geometry, not more aperture/prompt sweeps. Not FLUX Hybrid.
+
 LATEST PHYSICAL RESULT: matched aperture pair complete.0.3 retained/lifted card;
 0.0 left card on support while hand rose successfully. Both passed predeclared
 10mm/.03rad lift completion, no guard bypass or paid calls. Approach identical;

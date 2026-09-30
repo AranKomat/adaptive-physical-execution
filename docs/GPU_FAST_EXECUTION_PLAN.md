@@ -5,6 +5,13 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+CURRENT INTEGRATED ATTEMPT: same failed-capture episode now at726 after a
+guarded wrist inspection and open-hand standoff. Astra adopted0.3 from labeled
+experience but top-face localization remained uncertain; no closure authorized.
+Three calls cost$0.09428875. Use current closer wrist view next; distinguish
+observed top/side geometry instead of accepting any smooth depth patch. See
+APERTURE_TRANSFER_PROGRESS_20260930.md. No installation or autonomous recovery.
+
 MATCHED PAIR COMPLETE:0.3 opening lifted/retained;0.0 did not, despite successful
 hand motion in both conditions. No new paid calls. See APERTURE_PAIR_RESULT_20260930.md.
 Next integrated trial may use this explicitly labeled experience; expose the same

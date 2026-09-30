@@ -1,0 +1,8 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:575",
+  "previous_selection": {"camera": "right", "pixel_uv": [367,257], "gripper_open": 0.3},
+  "requested_pixel_3x3_status": "depth discontinuity",
+  "candidate_measurement": {"camera": "right", "pixel_uv": [366,258], "surface_point_world_m": [0.26206338783941796,-0.32127824023005175,0.12919913549543133], "local_depth_spread_m": 0.002450227737426758},
+  "nearby_point_measurement": {"camera": "right", "pixel_uv": [365,255], "surface_point_world_m": [0.27386044683114136,-0.3362336250343273,0.14400894834053096], "neighborhood_radius_pixels": 0, "3x3_status": "depth discontinuity"},
+  "limitation": "Both are current legal sensor samples, neither is verified top-face identity or a grasp pose. Do not select a point merely to match historical geometry. Inspect RGB for whether the lower point is a side face; choose a visible interior top surface or inspect. No motion has been made."
+}
