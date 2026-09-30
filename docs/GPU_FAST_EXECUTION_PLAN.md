@@ -5,6 +5,24 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+DEPTH FEEDBACK PILOT AT563: two bounded Astra calls selected5visible pixels and
+reviewed calibrated3D hand-frame offsets; all5depth neighborhoods passed. New
+scripts/grasp_surface_feedback.py implements selection -> deterministic depth
+measurement -> review, observation-only. It rejects stale selection/calibration,
+limits6samples, and supplies no coordinates for rejected patches.309tests pass.
+This is NOT yet an integrated Direct tool or a motion result. Crucially, review
+correctly rejected the inference that positive closing-axis surface offset alone
+proves miscentering. Samples on card lie handX~-25to-31mm versus pad samples+2to4mm,
+and handZ111to130mm versus nominal pinch103.4mm. But off-center samples are not
+corresponding contact sections; none of these offsets is a motion target. Need
+corresponding surface/pad extent geometry. This demonstrates useful interpretation
+of numeric depth feedback, not reliable grasp planning or proof of failure cause.
+Earlier RGB-only trials did not supply depth to GPT and cannot test its depth
+understanding. Evidence: docs/evidence/gpu_depth_feedback_563/{measurements,review}.json.
+No motion/reset; scene remains563. Shared reserved calls4427. Next integrate
+bounded sensor queries in the actual decision loop and obtain contact-region
+geometry rather than more unstructured RGB-only closures.
+
 563 INSPECTION: review of5cm open upward retreat chose HOLD (possible catching,
 unresolved fingertip separation); no motion executed. Shared count4425 after one
 additional review. Worker state remains563. Current wrist depth sampled at three

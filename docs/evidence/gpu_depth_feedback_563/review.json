@@ -1,0 +1,41 @@
+{
+  "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+  "supported_findings": [
+    {
+      "finding": "Current open-gripper state; capture remains unverified.",
+      "evidence": "RGB shows separated fingers near the exposed card. Measured open fraction is 0.9959. Neither aperture nor these surface samples establish retention or contact."
+    },
+    {
+      "finding": "Sampled surfaces support lateral misregistration along hand X.",
+      "evidence": "The three samples visually consistent with exposed card surfaces lie at hand X = -31.3 to -24.9 mm, whereas the two apparent finger-pad samples lie at X = +2.2 and +3.8 mm. This is a roughly 27\u201335 mm separation between sampled regions along X, transverse to the hand-Y closing direction.",
+      "qualification": "This supports an offset between sampled card and finger regions, not a measured card center or proof that the complete pad footprints miss the card."
+    },
+    {
+      "finding": "Sampled surfaces support concern about insufficient reach depth.",
+      "evidence": "The apparent card samples lie at hand Z = 111.2\u2013130.4 mm, or 7.8\u201327.0 mm beyond nominal pinch Z = 103.4 mm. Apparent pad samples lie at Z = 94.6\u201397.1 mm. Thus the sampled card regions are farther along positive hand Z than the sampled pad regions.",
+      "qualification": "This is consistent with a shallow grasp position relative to those regions. Pad boundaries, suitable opposing contact surfaces and actual overlap are not measured, so insufficient depth is not established as the failure cause."
+    },
+    {
+      "finding": "Closing-axis centering and jaw orientation remain underconstrained.",
+      "evidence": "The apparent card samples have hand Y = +5.8, +20.1 and +36.4 mm; apparent pad samples have Y = -43.9 and +39.5 mm. These card points fall between the sampled pad Y coordinates, but that alone does not establish enclosure, thickness centering or appropriate jaw orientation."
+    }
+  ],
+  "unsupported_claims": [
+    "A positive hand-Y surface offset proves lateral miscentering along the closing axis.",
+    "Any single sampled face is the card's thickness center, or its offset can be copied as a corrective motion.",
+    "The jaws are definitively incorrectly oriented; no reliable opposing-face geometry or contact-surface normals have been established.",
+    "The card is captured, contacting both pads, or clear of surrounding obstacles.",
+    "The current released-open geometry uniquely explains the earlier failed grasps.",
+    "Sample labels establish semantic identity, or local depth spread is calibrated measurement uncertainty."
+  ],
+  "missing_measurements": [
+    "Verified corresponding opposing grasp surfaces at the same intended pinch cross-section, including thickness and midpoint along hand Y.",
+    "Spatially distributed, RGB-validated samples sufficient to estimate candidate contact-surface normals and card orientation.",
+    "Both pads' contact-area boundaries and depth extent, allowing overlap assessment in hand X and Z.",
+    "Contact or retention evidence and geometry of nearby support, case and bracket surfaces."
+  ],
+  "next_observation": {
+    "request": "Without commanded motion, obtain synchronized RGB/depth and inspect denser patches on both visible pad boundaries and candidate card contact regions. Use existing side views to seek corresponding opposing surfaces and fit surface normals only within visually validated regions.",
+    "fallback": "If occlusion prevents observing the opposing surface or pad overlap, report those quantities as unobservable from the current views rather than infer a thickness center or corrective target."
+  }
+}

@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+Depth-feedback pilot at563: GPT selected5pixels, code deprojected them, GPT
+reviewed numeric hand-frame offsets and rejected unsupported center/correction
+claims.309tests. No motion; not yet integrated into Direct controller. Numeric
+depth is usable in this read-only test; past RGB-only failures do not demonstrate
+poor GPT depth use. Shared calls4427. See GPU_FAST_EXECUTION_PLAN/evidence.
+
 563 current-depth evidence: three visible operator-selected shroud samples lie
 29-32mm off nominal pinch center along closing direction; not object center or
 motion targets. Raises lateral-centering issue missed by repeated vertical-only

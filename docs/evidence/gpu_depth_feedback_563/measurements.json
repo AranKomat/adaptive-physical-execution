@@ -1,0 +1,191 @@
+{
+  "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+  "samples": [
+    {
+      "selection": {
+        "camera": "wrist",
+        "pixel_uv": [
+          302,
+          202
+        ],
+        "surface": "Visible populated PCB face of the GPU; constrains this face only, not the hidden opposing face."
+      },
+      "status": "measured",
+      "measurement": {
+        "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+        "pixel_uv": [
+          302,
+          202
+        ],
+        "surface_point_world_m": [
+          0.3104741180138734,
+          -0.35540703265101037,
+          0.1233471199969262
+        ],
+        "optical_depth_m": 0.12453538924455643,
+        "local_depth_spread_m": 0.0032977238297462463,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      },
+      "point_hand_m": [
+        -0.031238485608813316,
+        0.005826756551799871,
+        0.13044902293951727
+      ],
+      "offset_from_nominal_pinch_hand_m": [
+        -0.031238485608813316,
+        0.005826756551799871,
+        0.02704902293951726
+      ]
+    },
+    {
+      "selection": {
+        "camera": "wrist",
+        "pixel_uv": [
+          378,
+          262
+        ],
+        "surface": "Solid black branded shroud strip beside the finned region; constrains one exposed shroud surface, not full card thickness."
+      },
+      "status": "measured",
+      "measurement": {
+        "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+        "pixel_uv": [
+          378,
+          262
+        ],
+        "surface_point_world_m": [
+          0.3111101823349171,
+          -0.32484155858305624,
+          0.14253833099790147
+        ],
+        "optical_depth_m": 0.11642133444547653,
+        "local_depth_spread_m": 0.0008359700441360474,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      },
+      "point_hand_m": [
+        -0.03127208441665419,
+        0.03637162011741329,
+        0.11121453455585054
+      ],
+      "offset_from_nominal_pinch_hand_m": [
+        -0.03127208441665419,
+        0.03637162011741329,
+        0.00781453455585053
+      ]
+    },
+    {
+      "selection": {
+        "camera": "right",
+        "pixel_uv": [
+          388,
+          276
+        ],
+        "surface": "Off-center exposed branded top/shroud strip beyond the gripper occlusion; provides a top-surface constraint, not an opposing-face measurement."
+      },
+      "status": "measured",
+      "measurement": {
+        "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+        "pixel_uv": [
+          388,
+          276
+        ],
+        "surface_point_world_m": [
+          0.30468201531588895,
+          -0.34108366230708353,
+          0.13932646039210367
+        ],
+        "optical_depth_m": 0.46235430240631104,
+        "local_depth_spread_m": 0.00447392463684082,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      },
+      "point_hand_m": [
+        -0.024930450617114686,
+        0.020143407673079424,
+        0.11466013740717831
+      ],
+      "offset_from_nominal_pinch_hand_m": [
+        -0.024930450617114686,
+        0.020143407673079424,
+        0.011260137407178308
+      ]
+    },
+    {
+      "selection": {
+        "camera": "wrist",
+        "pixel_uv": [
+          127,
+          130
+        ],
+        "surface": "Visible flat black surface of the image-left finger pad; constrains the finger surface for comparison with card measurements, not card thickness."
+      },
+      "status": "measured",
+      "measurement": {
+        "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+        "pixel_uv": [
+          127,
+          130
+        ],
+        "surface_point_world_m": [
+          0.27835077954740584,
+          -0.4051957703965986,
+          0.16033421385246305
+        ],
+        "optical_depth_m": 0.0656340941786766,
+        "local_depth_spread_m": 0.00028167665004730225,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      },
+      "point_hand_m": [
+        0.002202049798947503,
+        -0.043946525434942124,
+        0.09462691545937249
+      ],
+      "offset_from_nominal_pinch_hand_m": [
+        0.002202049798947503,
+        -0.043946525434942124,
+        -0.008773084540627515
+      ]
+    },
+    {
+      "selection": {
+        "camera": "wrist",
+        "pixel_uv": [
+          460,
+          230
+        ],
+        "surface": "Visible black surface of the image-right finger pad; constrains the finger surface for comparison with card measurements, not card thickness."
+      },
+      "status": "measured",
+      "measurement": {
+        "observation_id": "8838a36a428c40c38aa6270f759398e4:563",
+        "pixel_uv": [
+          460,
+          230
+        ],
+        "surface_point_world_m": [
+          0.27653283905476017,
+          -0.3217871260292414,
+          0.15787276062059252
+        ],
+        "optical_depth_m": 0.08648892492055893,
+        "local_depth_spread_m": 0.0009534657001495361,
+        "neighborhood_radius_pixels": 1,
+        "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+      },
+      "point_hand_m": [
+        0.0038008539690561616,
+        0.03946746096358198,
+        0.09705926271670015
+      ],
+      "offset_from_nominal_pinch_hand_m": [
+        0.0038008539690561616,
+        0.03946746096358198,
+        -0.006340737283299855
+      ]
+    }
+  ],
+  "limitation": "Visible surfaces only, not semantic truth, hidden thickness, contact or clearance. Nominal pinch is hand [0,0,0.1034]; closing axis is hand Y. No executable targets."
+}
