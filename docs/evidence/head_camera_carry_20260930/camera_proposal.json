@@ -1,0 +1,36 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1023",
+  "decision": "move_camera",
+  "eye_world_m": [
+    0.82,
+    0.15,
+    0.62
+  ],
+  "gaze_world_m": [
+    0.468,
+    0.007,
+    0.4
+  ],
+  "expected_visible_feature": "An oblique view toward the held card's lower PCB/contact edge, potentially exposing contact fingers and the key notch currently hidden or unresolved.",
+  "evidence": "The right image is dominated by the arm and hand, which obscure the held card from above. The left image shows only a small card sliver behind the arm. The wrist image exposes a PCB strip, heatsink fins and the GEFORCE RTX shroud, with gripper hardware crossing the board; a continuous contact row and key notch cannot be identified confidently. The proposed camera moves laterally and downward rather than retaining the obstructed overhead sightline. Its gaze is an approximate held-assembly framing point based on the hand pose and current calibrated viewing direction, not a measured connector position. Travel is approximately 0.478 m, requiring 0.112 m/s over 64 actions at 15 Hz. The viewing-direction change is approximately 0.99 rad, with nearly unchanged azimuth; eye-to-gaze distance remains above 0.41 m.",
+  "current_image_samples": [
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        222,
+        259
+      ],
+      "feature": "Exposed PCB strip; not a verified PCIe contact sample"
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        327,
+        202
+      ],
+      "feature": "Foreground robot surface occluding the historical socket projection"
+    }
+  ],
+  "target_identity_assessment": "The previously selected socket cannot be verified in the current images. Its projection is occluded by substantially nearer surfaces in both external cameras and falls outside the wrist image. No neighboring socket is substituted, and no current socket sample is asserted.",
+  "uncertainty": "The contact-bearing side and exact lower-edge position remain unverified. The new oblique sightline should reduce arm occlusion, but the card's own shroud or gripper may still hide some contacts. This is an information-gathering simulator-camera move, not a clearance or insertion claim."
+}

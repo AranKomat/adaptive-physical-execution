@@ -5,15 +5,16 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
-CURRENT: card visibly held clear of support at1055 on98214/8772. Fresh Astra
-target and0.3 aperture, observed upward-face refinement, operator sequence.
-Use current retained grip for feature-relative carry/alignment next. No more
-aperture sweeps or4.557mm endpoint tuning. Upward-plane sampling is opt-in and
-does not certify semantic identity or clearance. See UPWARD_SURFACE_GRASP_RESULT_20260930.md.
-Four calls/$0.13304125 for experience transfer through this lift;347tests pass.
+CURRENT: worker103000/8772 holds card at1023 in episode
+5fc1330e1fb9410e9cc56d5c948ee0af. Cached assisted grasp/lift plus augmented
+camera view enabled fresh Astra+depth carry:320actions,0.859mm final error.
+Post-carry endpoints remain occluded. New camera proposal was rejected locally
+for angular rate before any command. Next resolve feasible camera trajectory
+and mating geometry, not aperture sweeps or endpoint tuning.351tests pass.
+See HEAD_CAMERA_CARRY_20260930.md. Three fresh calls cost$0.11855125.
 Full installation, autonomous recovery, and matched policy comparisons unfinished.
 
-CURRENT INTEGRATED ATTEMPT: same failed-capture episode now at726 after a
+HISTORICAL INTEGRATED ATTEMPT: same failed-capture episode then at726 after a
 guarded wrist inspection and open-hand standoff. Astra adopted0.3 from labeled
 experience but top-face localization remained uncertain; no closure authorized.
 Three calls cost$0.09428875. Use current closer wrist view next; distinguish
@@ -479,3 +480,13 @@ profiles; runner rejects old workers before reset. Run the ramp/return probe
 with `--motion-profile elevated_open_2x` only after conservative qualification.
 Not deployed or physically tested;267tests prove neither physical tracking
 performance nor grasp retention. Larger rates remain deferred.
+# September 30 continuation: assisted carry with independent sensing
+
+Fresh Astra-selected coarse carry completed320actions/21.333sim seconds,
+149.747summed worker wall seconds. No intermediate settling holds, final
+0.859mm tracking error, visual card retention. This is still approximately
+7x slower wall time than simulator time; camera view and simulator throughput
+remain distinct from model-call latency. One carry-target call cost$0.0246275.
+No insertion: post-carry matching features are occluded. Preserve current target
+identity and resolve geometry, rather than repeating grasp or aperture tests.
+Detailed scope, evidence and current state: HEAD_CAMERA_CARRY_20260930.md.

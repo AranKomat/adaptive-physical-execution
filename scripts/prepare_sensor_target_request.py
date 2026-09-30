@@ -58,7 +58,13 @@ def main():
                    help='Current raw depth results to reconsider a prior visual association')
     p.add_argument('--aperture-experience', type=Path,
                    help='Explicit retained paired visual evidence; adds proposed closure aperture to grasp response')
+    p.add_argument('--inspection-motion-limit-m', type=float, default=.05,
+                   help='Prospective inspection translation budget, at most0.20m; default0.05m')
     args = p.parse_args()
+    if not np.isfinite(args.inspection_motion_limit_m) or not .01 <= args.inspection_motion_limit_m <= .20:
+        raise ValueError('Inspection translation budget must be0.01..0.20m')
+    if args.inspection_motion_limit_m != .05 and args.stage != 'inspection_motion':
+        raise ValueError('Inspection translation budget applies only to inspection_motion')
     if args.aperture_experience and (args.stage != 'grasp' or args.target_object != 'graphics_card'):
         raise ValueError('Aperture experience is scoped to graphics-card grasp selection')
     if args.target_object == 'ram_module' and args.stage not in ('approach', 'grasp'):
@@ -205,7 +211,7 @@ def main():
             'region or external view would become more informative. Do not assume unseen space '
             'is free. No object pose, collision truth or force sensor is supplied. '
             'Allowed motion: keep hand orientation and gripper command unchanged, translate '
-            'at most 0.05 m Euclidean norm in WORLD coordinates, dz >= 0 (no lowering). '
+            f'at most {args.inspection_motion_limit_m:.2f} m Euclidean norm in WORLD coordinates, dz >= 0 (no lowering). '
             'The bounded local controller, not GPT, executes and stops the movement. '
             'If these limits cannot produce an informative view, choose no_informative_motion. '
             'Do not suggest a move merely to comply. Return JSON: observation_id, decision '
@@ -223,8 +229,9 @@ def main():
             'Choose ONE informative view of the held graphics card lower PCIe contact edge. '
             'The right camera is an explicitly controllable idealized simulator camera; left and '
             'wrist cameras remain fixed relative to their mounts. The arm and gripper will HOLD, '
-            'not translate or rotate. Current right view shows the cooler side and does not expose '
-            'the lower mating edge. Avoid another nearby cooler-side view that repeats this failure. '
+            'not translate or rotate. Determine from the CURRENT images which features are visible '
+            'and what occludes missing features; do not assume a particular card side is facing '
+            'the camera. Avoid a nearby view that preserves the observed occlusion. '
             'Use current RGB, robot pose and measured camera calibration to choose a different '
             'line of sight. Do not use hidden object geometry or assume generic card dimensions. '
             'Return JSON: observation_id, decision (move_camera/hold), eye_world_m, gaze_world_m '

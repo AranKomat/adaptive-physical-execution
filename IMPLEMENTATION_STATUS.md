@@ -2,6 +2,18 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST (supersedes historical live-worker references below): cached assisted
+grasp/lift replay plus independent sensor positioning exposed the motherboard.
+Fresh Astra+depth coarse carry completed,320actions/21.33sim seconds,0.859mm
+final hand error. Card remains visible in gripper. Worker103000/8772 holds
+episode5fc1330e1fb9410e9cc56d5c948ee0af:1023. Correspondence review declined
+insertion because arm occludes mating features. Astra camera proposal failed
+local angular-rate preflight before execution; no retry. Next resolve feasible
+camera trajectory, not another grasp. Three fresh calls cost$0.11855125,
+shared count4499, ceiling$85 with holds unchanged.
+351tests pass. No autonomous installation/recovery or matched Hybrid result.
+See docs/HEAD_CAMERA_CARRY_20260930.md. This is augmented sensing, not baseline.
+
 LATEST PHYSICAL SUCCESS: fresh Astra region/aperture + measured upward-face
 refinement + operator local sequence retained/lifted card clear of support.
 Worker98214/8772 now e086f25bf69249db8d3f0a366cddf36d:1055, card held, aperture0.3.

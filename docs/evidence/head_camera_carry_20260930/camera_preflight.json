@@ -1,0 +1,9 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1023",
+  "translation_preflight_passed": true,
+  "angular_preflight_passed": false,
+  "reason": "camera angular speed budget exceeded",
+  "actions": 64,
+  "control_dt": 0.06666666666666667,
+  "simulator_request_sent": false
+}

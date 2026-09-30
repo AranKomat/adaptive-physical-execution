@@ -1,0 +1,26 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1023",
+  "decision": "inspect",
+  "connector": {
+    "end_a": null,
+    "end_b": null
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": null
+  },
+  "key_visible": false,
+  "evidence": [
+    "The left and right views are substantially blocked by the robot arm and hand; neither exposes both ends of the selected PCIe socket or the actual gold connector.",
+    "The wrist view shows the card PCB, cooler and gripper, but does not resolve both gold-contact endpoints. The card outline and heatsink ends are not connector endpoints.",
+    "The historical socket projection is depth-inconsistent in both external views: the current surfaces are approximately 0.299 m nearer in left and 0.614 m nearer in right. These pixels cannot be used as current socket samples.",
+    "The historical socket projection falls outside the wrist image, above its upper boundary."
+  ],
+  "uncertainty": [
+    "Neither mating feature has two identifiable, visible solid-surface endpoint pixels.",
+    "Bracket-side versus opposite-side endpoint association is not established for the mating features.",
+    "The connector key and corresponding socket key are not resolved. Alignment, insertion and clearance cannot be assessed."
+  ],
+  "target_identity_assessment": "The historically selected socket remains the target under review, but its identity and endpoints cannot be verified in the current images. The projections indicate occlusion or cropping, not a competing visible socket selection. No neighboring socket is substituted, and the historical identification is neither confirmed nor disproved.",
+  "next_view": "Obtain an unobstructed oblique view into the case toward the motherboard expansion-slot area, framing the entire historically selected socket and its bracket-side reference. Also view the card from its gold-contact edge side, with both contact ends and the key notch in frame. The arm/hand blocks the external views, while the card and gripper obscure mating-edge detail in the wrist view; a viewing direction around these occluders is needed. This is an inspection requirement, not motion authorization."
+}
