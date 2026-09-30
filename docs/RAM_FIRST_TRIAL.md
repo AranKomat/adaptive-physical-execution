@@ -1,5 +1,42 @@
 # RAM: next independent assembly experiment
 
+## Live update: reviewed open-hand placement reached726
+
+Current same episode `83ce804cdf06479ab757f513ab84185c:726`; RAM worker78152,
+remote8771/local18771. FLUX remains intentionally unloaded. Do not reset.
+
+Operator-marked current216 top-strip pixels center[285,100], axis[230,100] and
+[340,100] deproject to a roughly world-y long axis. Center world position is
+[.300034,-.360339,.068150]m; spread0.075mm. These are sensor surface samples,
+not object pose truth. Hand x follows the axis, hand z points down; choose the
+equivalent jaw heading with smaller rotation from current pose. Nominal5mm bite
+and103.4mm pinch offset give target hand z166.55mm. Nominal112.9mm finger extent
+leaves5.65mm above the previously measured ledge, NOT whole-holder certification.
+
+Astra Flex medium approved open-hand preclosure only, explicitly noting the10mm
+tracking guard is looser than that nominal clearance. The runner checks a matching
+review, open hand, target formula and all waypoint robot-only IK before mutation.
+It rotates at current elevated position before descending; never closes or lifts.
+Unknown external clearance stays exploratory. No source collision/evaluator input.
+
+Execution:9 segments,510 actions,34 simulated seconds. All intermediate segments
+passed; rotation endpoint and final endpoint arrived. Final error2.474mm and
+0.000653rad. No guard stop, retry, closure or lift. Final images show the module
+still upright; fingers appear beside it but actual opposing contact is not yet
+verified. This completes only bounded preclosure positioning, not a grasp or
+assembly phase. Next: independent current-state closure decision, not another
+target replay. Any closure needs explicit aperture/hold/stop bounds and separate
+lift/retention verification.
+
+Evidence: [left](evidence/ram_preclosure_726/08_left.png),
+[wrist](evidence/ram_preclosure_726/08_wrist.png),
+[receipt](evidence/ram_preclosure_726/08_receipt.json),
+[review](evidence/ram_preclosure_726/review.json),
+[sensor plan](evidence/ram_preclosure_726/source_plan.json).
+`prepare_ram_preclosure.py` records the operator-selected pixels and measured
+heading. `run_grounded_correction.py --preclosure-only` enforces no closure.
+249tests pass; not evidence of task success.
+
 ## Live update: operator-assisted standoff reached216
 
 New live episode `83ce804cdf06479ab757f513ab84185c:216`, worker PID78152,

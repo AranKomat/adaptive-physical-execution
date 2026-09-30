@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE RAM726: measured-axis reorientation and reviewed open-hand preclosure
+placement completed510 actions,2.474mm final error, no guard stop/closure/lift.
+Module remains upright; opposing contact not yet verified. Same RAM worker78152;
+FLUX intentionally unloaded.249tests. Next separate current-state closure review,
+then bounded closure/lift only if supported. See `docs/RAM_FIRST_TRIAL.md`.
+
 LIVE RAM216: operator-corrected legal-depth standoff completed216 actions,
 2.574mm final error, no guard stop/closure. Fresh model pixel was rejected as
 support ledge; this is not autonomous targeting. Worker78152 remote8771/local18771;

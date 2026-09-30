@@ -23,7 +23,7 @@ def load_script(name):
     ('--pause-before-close','awaiting_preclosure_review',False),
     ('--pause-at-standoff','awaiting_close_range_target',False),
     ('--pause-before-close','awaiting_preclosure_review',True),
-    ('--approach-only',None,False)])
+    ('--approach-only',None,False), ('--preclosure-only',None,False)])
 def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observation, pause, terminal, grasp_only, continuous):
     module = load_script('run_grounded_correction')
     initial = replace(observation, eef_pose=np.array([.18,-.34,.35,0,0,1,0]), gripper_open=1.)
@@ -57,7 +57,17 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     plan = tmp_path/'plan.json'
     plan.write_text(json.dumps({'observation_id':initial.key,
                     'target_source':'cached pixel on fresh depth',
+                    'bite_depth_m':.005,
+                    'target_hand_pose_world':[.18,-.34,.13+.1034-.005,0,0,1,0],
                     'measured_surface':{'surface_point_world_m':[.18,-.34,.13]}}))
+    review = tmp_path/'review.json'
+    review.write_text(json.dumps({'observation_id':initial.key, 'decision':'approve_preclosure',
+                                 'contact_authorized':False}))
+    if pause == '--preclosure-only':
+        from physical_exec.kinematics import URDFKinematics
+        fake_kin = SimpleNamespace(fk=lambda q: [0,0,0,1,0,0,0],
+            solve=lambda *a,**kw: SimpleNamespace(converged=True,joints=initial.joints))
+        monkeypatch.setattr(URDFKinematics,'from_urdf',lambda *a:fake_kin)
     output = tmp_path/'output'
     monkeypatch.setattr(module, 'LocalClient', Client)
     monkeypatch.setattr(module, 'decode_observation', lambda value:value)
@@ -66,7 +76,8 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
     monkeypatch.setattr(module.sys, 'argv', ['test','--url','http://unused','--plan',str(plan),
                                            '--output',str(output),pause]
                         + (['--grasp-only','--lift-height','.23'] if grasp_only else [])
-                        + (['--contact-tracking-guard'] if pause == '--approach-only' else [])
+                        + (['--contact-tracking-guard'] if pause in ('--approach-only','--preclosure-only') else [])
+                        + (['--preclosure-review',str(review)] if pause == '--preclosure-only' else [])
                         + ([] if continuous else ['--no-continuous-transit']))
     module.main()
     assert calls and all(action['gripper_open'] == 1 for action in calls)
@@ -81,6 +92,10 @@ def test_pause_before_close_never_sends_closure(monkeypatch, tmp_path, observati
         assert len(calls) <= 8
         assert {s['name'] for s in stages} == {'standoff'}
         assert all(np.allclose(s['hand_pose_world'][3:], initial.eef_pose[3:]) for s in stages)
+        assert all(action['contact_tracking_guard'] for action in calls)
+    if pause == '--preclosure-only':
+        assert {s['name'] for s in stages} == {'reorient','preclosure'}
+        assert stages[-1]['hand_pose_world'][2] == pytest.approx(.13+.1034-.005)
         assert all(action['contact_tracking_guard'] for action in calls)
     if continuous:
         assert any(s['settle_at_end'] is False for s in stages)

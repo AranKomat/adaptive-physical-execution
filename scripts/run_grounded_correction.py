@@ -30,6 +30,9 @@ def main():
     mode.add_argument('--grasp-only', action='store_true', help='Resume from a fresh close-range target')
     mode.add_argument('--approach-only', action='store_true',
                       help='Open-hand standoff only, preserve current attitude; no grasp recipe or closure')
+    mode.add_argument('--preclosure-only', action='store_true',
+                      help='Reviewed sensor-axis rotation at current height, then open-hand placement; no closure')
+    parser.add_argument('--preclosure-review', type=Path)
     parser.add_argument('--lift-height', type=float, default=.05)
     parser.add_argument('--phase-completion', action='store_true',
                         help='Use predeclared exploratory bounds for closure/lift only')
@@ -42,6 +45,13 @@ def main():
     if not math.isfinite(args.lift_height) or not 0 < args.lift_height <= .23:
         raise ValueError('Lift height must be in (0, 0.23] m')
     plan = json.loads(args.plan.read_text())
+    if args.preclosure_only:
+        if not args.preclosure_review or not args.contact_tracking_guard:
+            raise ValueError('Preclosure requires explicit review and tracking guard')
+        review = json.loads(args.preclosure_review.read_text())
+        if (review.get('decision') != 'approve_preclosure' or review.get('contact_authorized') is not False
+                or review.get('observation_id') != plan['observation_id']):
+            raise ValueError('Review must approve current open-hand preclosure only')
     surface = np.asarray(plan['measured_surface']['surface_point_world_m'], dtype=float)
     if surface.shape != (3,) or not np.isfinite(surface).all():
         raise ValueError('Invalid measured surface')
@@ -78,6 +88,18 @@ def main():
             if obs.gripper_open < .95 or not args.contact_tracking_guard:
                 raise ValueError('Approach-only requires measured open hand and tracking guard')
             endpoints = [('standoff', np.r_[surface+[0,0,.22], obs.eef_pose[3:]], 1.)]
+        if args.preclosure_only:
+            from physical_exec.geometry import finite_vector, matrix_pose, pose_matrix
+            from physical_exec.kinematics import URDFKinematics
+            if obs.gripper_open < .95:
+                raise ValueError('Preclosure requires already open hand')
+            target = finite_vector(plan['target_hand_pose_world'], 7)
+            if (abs(np.linalg.norm(target[3:])-1) > 1e-6 or plan.get('bite_depth_m') != .005
+                    or not np.allclose(target[:3], surface+[0,0,.1034-.005], atol=1e-8)):
+                raise ValueError('Invalid measured preclosure target')
+            endpoints = [('reorient', np.r_[obs.eef_pose[:3], target[3:]], 1.),
+                         ('preclosure', target, 1.)]
+            write_json(args.output/'review.json', review)
         # Predeclare the entire bounded sequence before the first mutation.
         stages = []
         start = obs.eef_pose.copy()
@@ -94,6 +116,16 @@ def main():
             raise ValueError('Correction exceeds 16-stage/1024-action limit')
         if args.approach_only and len(stages) > 8:
             raise ValueError('Approach-only exceeds 512-action limit')
+        if args.preclosure_only:
+            kin = URDFKinematics.from_urdf(Path(__file__).resolve().parents[1]/
+                'upstream/EmbodiedSWE/robobench/robots/assets/franka/panda_kinematics.urdf')
+            base = matrix_pose(pose_matrix(obs.eef_pose) @ np.linalg.inv(pose_matrix(kin.fk(obs.joints))))
+            seed = obs.joints.copy()
+            for stage in stages:
+                ik = kin.solve(stage['hand_pose_world'], seed, base, iterations=300)
+                if not ik.converged:
+                    raise ValueError('Preclosure waypoint IK failed; no motion')
+                seed = ik.joints
         if args.continuous_transit:
             for index, stage in enumerate(stages):
                 stage['settle_at_end'] = (index == len(stages)-1
