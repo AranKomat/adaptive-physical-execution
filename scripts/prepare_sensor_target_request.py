@@ -16,6 +16,8 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--capture', type=Path, required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--target-object', choices=['graphics_card', 'ram_module'], default='graphics_card',
+                   help='RAM is supported only for initial approach/grasp selection')
     p.add_argument('--stage', choices=['approach', 'grasp', 'carry', 'alignment', 'socket', 'socket_gap', 'held_feature', 'correspondence', 'inspection_motion', 'inspection_camera', 'feature_inventory', 'contact_recovery'], required=True)
     p.add_argument('--prior-socket-capture', type=Path)
     p.add_argument('--prior-socket-response', type=Path)
@@ -26,6 +28,8 @@ def main():
     p.add_argument('--feature-measurements',type=Path,
                    help='Current raw depth results to reconsider a prior visual association')
     args = p.parse_args()
+    if args.target_object == 'ram_module' and args.stage not in ('approach', 'grasp'):
+        raise ValueError('RAM target selection supports approach/grasp only; other prompts are GPU-specific')
     if args.project_carry_anchor and not (args.prior_carry_capture and args.prior_carry_response):
         raise ValueError('Projected carry anchor requires historical capture and response')
     state = json.loads((args.capture / 'state.json').read_text())
@@ -243,6 +247,24 @@ def main():
             'Return JSON with observation_id, connector, socket, and next_view describing only '
             'the view needed for missing features. Never call an empty gap a solid surface. '
             'Unseen clearance and insertion alignment remain unknown regardless of localization. '
+            '\nRobot-only state: '+json.dumps(state))}]
+    if args.target_object == 'ram_module':
+        content = [{'type': 'text', 'text': (
+            'Identify ONE loose RAM module standing beside the chassis in its support holder. '
+            'Do not select the holder, motherboard, case wall, or a module already installed. '
+            'Use all current views to choose the module with the clearest accessible TOP grasp surface. '
+            'Select an ORIGINAL 640x360 integer pixel on that solid top surface near its length center '
+            'and centered across its thickness. Depth is measured separately: never guess world coordinates. '
+            'Pixel origin is upper-left, u rightward, v downward. A pixel on a bright light strip alone '
+            'does not prove load-bearing contact; explain whether the housing beneath is a plausible '
+            'gripping feature. Return inspect if the surface is not resolved. '
+            'This is an open-hand standoff target, NOT authorization to descend or close. '
+            'Also select two visible solid-surface pixels along the SAME module long axis, '
+            'away from the ends, for a depth-derived heading estimate; do not infer hidden endpoints. '
+            'Return only JSON: observation_id, decision (target/inspect), camera (left/right/wrist), '
+            'pixel_uv ([u,v]), axis_samples (two {camera,pixel_uv} entries, or empty when unresolved), '
+            'module_identity (which module and visual evidence), evidence, uncertainty. '
+            'Unknown contact/clearance stays unknown. No task object poses or evaluator are supplied. '
             '\nRobot-only state: '+json.dumps(state))}]
     if args.feature_measurements:
         if args.stage not in ('feature_inventory','correspondence'):

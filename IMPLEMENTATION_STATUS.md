@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST RAM offline selector: fixed GPU-hardcoded prompt with explicit RAM option.
+Astra located a module, but exact center/one axis sample fail10mm depth spread;
+no target or action admitted. Diagnostic heading differs from fixed GPU recipe.
+245tests; see `docs/RAM_FIRST_TRIAL.md`. Fresh heading/contact evidence needed,
+not silent pixel-template or fixed-GPU-attitude reuse. RAM episode remains closed.
+
 LATEST RAM initial native capture completed, zero commanded actions/model calls.
 Both modules visible; socket geometry unresolved in overview. Temporary worker
 closed, FLUX restored/authenticated PID77661, GPU recovery rechecked2813 unchanged.

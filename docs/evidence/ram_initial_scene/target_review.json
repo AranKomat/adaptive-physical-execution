@@ -1,0 +1,28 @@
+{
+  "observation_id": "fa459b5bcfb745a2a6b9209f0839d684:0",
+  "decision": "target",
+  "camera": "wrist",
+  "pixel_uv": [
+    320,
+    94
+  ],
+  "axis_samples": [
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        290,
+        94
+      ]
+    },
+    {
+      "camera": "wrist",
+      "pixel_uv": [
+        348,
+        94
+      ]
+    }
+  ],
+  "module_identity": "The lower of the two loose RAM modules in the wrist view, standing horizontally in its own gray support beside the chassis. It has a cyan-to-green/yellow illuminated strip and dark housing.",
+  "evidence": "The wrist view resolves this module most clearly. The selected pixel is near its length center on the narrow dark upper housing beneath the illuminated strip, above the separate gray holder. The housing appears to be a plausible solid gripping feature; brightness alone is not the contact evidence. Both axis samples lie on the same visible housing, inward from its ends. The left view confirms two separately supported loose modules outside the chassis.",
+  "uncertainty": "The narrow surface limits pixel-placement precision. Housing strength, actual contact suitability, and finger clearance remain unknown. This is an open-hand standoff target only; no descent or closure is authorized. Depth and heading must be measured separately."
+}

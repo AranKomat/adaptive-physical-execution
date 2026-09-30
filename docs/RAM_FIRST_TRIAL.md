@@ -37,6 +37,30 @@ as current-state measurements.
 
 ## Why now
 
+### Offline target selection follow-up
+
+The old request builder hardcoded graphics-card identity. Added explicit
+`--target-object ram_module` for approach/grasp selection only; GPU-specific
+later stages reject it rather than silently issuing a wrong-object prompt.
+Two regression tests added;245tests pass.
+
+One Astra Flex medium call on the retained initial images chose the nearer
+module at wrist[320,94], with long-axis samples[290,94] and[348,94]. Its grasp
+claim was limited to a standoff hypothesis. Exact3x3 measured depth spreads were
+10.851,9.649,10.859mm: center and second axis point FAIL the unchanged10mm gate.
+No target admitted, no live action or phase completion. Raw smooth depth
+variation can also trigger this gate; failure alone is not proof of mixed pixels.
+
+Single-pixel diagnostic deprojection (NOT admitted as a motion target) shows an
+approximately world-y axis at z55.3mm. Do not reuse the GPU recipe's fixed jaw
+heading for this module. Neither those samples nor a nearby depth-continuous
+pixel proves an upper load-bearing contact surface. Next live trial must obtain
+current contact/axis evidence and derive jaw heading; do not apply cached pixels
+as autonomous decisions or weaken the gate to get an approach command.
+
+See [model selection](evidence/ram_initial_scene/target_review.json) and
+[raw depth rejection](evidence/ram_initial_scene/depth_measurements.json).
+
 The GPU episode remains at2813 with no supported contact recovery. Preserve it.
 RAM is the next primary task in the original experiment sequence, not a claimed
 recovery of the GPU failure. Success requires BOTH modules installed and isolated
