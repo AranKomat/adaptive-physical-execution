@@ -18,6 +18,15 @@ paid measurements without action. Targeted and full tests pass (`315 passed`).
 Do not interpret this guard as a grasp-success improvement until a new physical
 trial demonstrates it.
 
+Confirmation run with the guard enabled: after one valid query, Astra issued a
+27mm open-pad reposition and a closure; both arrived with sub-mm tracking.
+A subsequent20mm loaded lift exhausted the64-action stage budget and stopped
+8.5mm short, with no retry. Native score0. This is the first evidence that
+grasp staging improved while loaded/contact motion remains unqualified. The
+unfinished target must not be replayed; next work is a shorter loaded-lift
+qualification or a separately bounded contact-aware profile. Evidence:
+`runs/gpu_depth_direct_a_regrasp_guard9_20260930`.
+
 Latest: depth-led staged recovery arrived155 after5cm descent39actions,0.689mm
 error; model used measured height gap rather than blind full descent. No grasp.
 Fixed repeated-query prompt (first6calls had no motion); now2queries/observation

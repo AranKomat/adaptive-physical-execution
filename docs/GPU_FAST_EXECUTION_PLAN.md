@@ -24,6 +24,17 @@ a claim that the grasp geometry is solved. Next physical trial should use a
 fresh episode or an explicitly bounded continuation with a real reposition
 proposal, then measure grasp/lift outcome.
 
+DEPTH-GUARD CONFIRMATION: continuation from step334 with the new rule used5
+Astra Flex medium calls. After one valid query, Astra lowered the open pads
+27mm, closed successfully, and requested a20mm lift. The reposition and
+closure both arrived with sub-mm tracking error. The loaded lift consumed its
+64-action local-stage budget and stopped8.5mm short; the runner correctly did
+not retry. Native score0 and no verified lift. This is meaningful progress on
+grasp staging, but exposes a loaded/contact local-stage duration or force
+tracking limitation. Evidence: runs/gpu_depth_direct_a_regrasp_guard9_20260930.
+Do not resume the unfinished target; qualify a shorter loaded lift or a
+separate contact-aware profile in a fresh bounded trial.
+
 DEPTH-LED STAGING RECOVERY: current90072/8774 episode
 c6a13a2ac0f6489a858b059df0d79d99:155. Explicit ramp-budget recovery checks prior
 receipt reason, full budget consumption, open conservative profile, nominal ramp
