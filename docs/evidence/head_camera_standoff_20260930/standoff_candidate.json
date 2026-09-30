@@ -1,0 +1,44 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1151",
+  "reference_control_dt": 0.06666666666666667,
+  "execution_backend": "local_stage_continuous",
+  "phases": [
+    {
+      "name": "bounded_closer_standoff",
+      "hand_pose_world": [
+        0.46960321068763733,
+        0.04709077626466751,
+        0.3749468755722046,
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      "finger_position_m": 0.012,
+      "actions": 128
+    }
+  ],
+  "finish": false,
+  "target_source": "sensor-history rigid-grasp prediction plus fresh robot pose; operator-defined bounded closer look",
+  "limitations": "Exploratory unknown clearance; no insertion, contact, seating, or slip-free certificate.",
+  "evidence": {
+    "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1151",
+    "source_observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:703",
+    "last_measured_slot_surface_world_m": [
+      0.4757403675562015,
+      0.02292067398405749,
+      0.028953079123382186
+    ],
+    "predicted_held_feature_world_m": [
+      0.47548709687903,
+      0.0209678585595356,
+      0.2586625494125676
+    ],
+    "predicted_vertical_gap_m": 0.22970947028918542,
+    "predicted_lateral_error_m": 0.0019691709215214222,
+    "assumptions": "Stationary socket and no grasp slip. Predicted point is NOT a fresh measurement or whole-object clearance.",
+    "proposed_descent_m": 0.08,
+    "minimum_estimated_gap_m": 0.12,
+    "predicted_remaining_vertical_gap_m": 0.1497094702891854
+  }
+}

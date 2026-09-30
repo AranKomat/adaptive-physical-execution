@@ -1,0 +1,43 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1370",
+  "connector": {
+    "status": "occluded",
+    "samples": [],
+    "key_visible": false,
+    "evidence": "The held card's PCB and cooler are visible, but its actual lower PCIe contact edge is not sufficiently exposed to select reliable contact-surface pixels.",
+    "uncertainty": "Visible PCB edges and cooler surfaces are not treated as the connector. The contact-edge axis and notch location remain unknown."
+  },
+  "socket": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          280,
+          237
+        ],
+        "surface": "Exposed light-gray solid socket housing segment above the CPU area."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          301,
+          229
+        ],
+        "surface": "Separated interior sample on the same narrow socket housing segment, approaching the arm occlusion."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "The right image exposes a short section of narrow PCIe socket housing between the motherboard cover and the overlying card/arm. The samples describe its visible solid surface, not the dark opening.",
+    "uncertainty": "Only a short housing segment is exposed, so its rough axis is uncertain. Neither endpoint nor the internal key is established. The projected historical pixel is depth-inconsistent and is not used as a current surface sample."
+  },
+  "target_identity_assessment": {
+    "status": "provisional",
+    "evidence": "The sampled housing is in the motherboard region associated with the historical selection; no neighboring slot is intentionally substituted.",
+    "uncertainty": "Occlusion prevents definitive tracking of the complete historical socket. All three projected anchors are depth-inconsistent, so none independently verifies present socket identity. The right-view discrepancy also prevents treating the projected pixel itself as exposed housing."
+  },
+  "next_view": {
+    "description": "An unobstructed oblique close-up from the motherboard-facing side of the card is needed to expose the actual lower contact edge and its notch, while showing enough of the selected socket housing and internal key to verify identity.",
+    "limitations": "Unseen clearance and insertion alignment remain unknown. These observations provide no motion permission."
+  }
+}

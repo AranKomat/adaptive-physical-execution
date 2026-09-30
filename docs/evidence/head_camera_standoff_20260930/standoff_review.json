@@ -1,0 +1,15 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1151",
+  "decision": "approve_standoff",
+  "evidence": [
+    "Current right and wrist views show the card between the gripper fingers, with no clear visual indication of slip or obstacle interference.",
+    "The card is positioned over the open chassis, consistent with the historical target context; no obvious target-association mismatch is visible.",
+    "The proposed 0.08 m descent preserves commanded attitude and predicts a remaining feature-to-historical-surface gap of 0.1497 m, above the stated 0.12 m minimum estimated gap.",
+    "This supports the bounded closer inspection only, not insertion or lateral/key alignment."
+  ],
+  "uncertainty": [
+    "The rigid/no-slip grasp and stationary socket assumptions remain unverified; current RGB does not freshly measure the tracked feature or socket.",
+    "The predicted gap and 0.00197 m lateral error are not whole-object clearance measurements.",
+    "Occlusion limits assessment of the socket and surroundings. External swept clearance remains unknown, and tracking guards do not establish collision clearance."
+  ]
+}

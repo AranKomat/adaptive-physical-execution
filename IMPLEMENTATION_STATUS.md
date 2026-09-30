@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: same worker103000/8772 now at1370. Retiming the rejected camera path
+passed unchanged rate limits. Reviewed8cm closer standoff completed91actions,
+1.543mm error. Opposite-side camera exposes PCB and partial socket housing,
+but connector remains occluded. Two housing depth samples span24.679mm;
+identity/axis uncertain, NOT insertion geometry. No contact/release. Two calls
+$0.0822175, shared count4501. See docs/HEAD_CAMERA_STANDOFF_20260930.md.
+No code changes this continuation; last software verification351tests.
+
 LATEST (supersedes historical live-worker references below): cached assisted
 grasp/lift replay plus independent sensor positioning exposed the motherboard.
 Fresh Astra+depth coarse carry completed,320actions/21.33sim seconds,0.859mm

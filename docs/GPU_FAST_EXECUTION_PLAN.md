@@ -5,7 +5,14 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
-CURRENT: worker103000/8772 holds card at1023 in episode
+LATEST: held1370 on103000/8772. Camera rate issue resolved by retiming, not
+relaxation. Reviewed8cm standoff passed91actions/1.543mm error. New view yields
+two partial socket-housing depth samples, but no visible connector and no
+verified target identity/centerline. No insertion. Next address mating-edge
+visibility, not further aperture or threshold tuning. HEAD_CAMERA_STANDOFF_20260930.md
+contains exact evidence and limitations. Two calls cost$0.0822175; count4501.
+
+PREVIOUS: worker103000/8772 held card at1023 in episode
 5fc1330e1fb9410e9cc56d5c948ee0af. Cached assisted grasp/lift plus augmented
 camera view enabled fresh Astra+depth carry:320actions,0.859mm final error.
 Post-carry endpoints remain occluded. New camera proposal was rejected locally

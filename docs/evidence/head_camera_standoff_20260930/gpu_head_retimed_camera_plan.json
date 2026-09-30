@@ -1,0 +1,15 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1023",
+  "source_response": "gpu_head1023_camera_selection/visual_response.json",
+  "scope": "Operator-retimed camera trajectory; same model-selected endpoint and linear eye/gaze path; arm/grip hold",
+  "original_peak_angular_rate_rad_s": 0.3777471940909513,
+  "retimed_peak_angular_rate_rad_s": 0.18901607209093915,
+  "unchanged_angular_rate_limit_rad_s": 0.35,
+  "segments": [
+    {"actions": 64, "eye_world_m": [0.66, 0.085, 0.785], "gaze_world_m": [0.459, 0.0035, 0.25]},
+    {"actions": 64, "eye_world_m": [0.82, 0.15, 0.62], "gaze_world_m": [0.468, 0.007, 0.4]}
+  ],
+  "preflight": "Both segments passed camera_path and camera_gaze_path before first motion",
+  "stop_policy": "Each segment must finish with local stage arrived; no continuation after ambiguous execution or guard stop",
+  "limitation": "Idealized camera has no collision body; not hardware-qualified sensing"
+}

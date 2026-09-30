@@ -1,0 +1,14 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1242",
+  "scope": "Operator-selected opposite-side camera framing; not an autonomous view decision",
+  "source_measurement": "gpu_head703_carry_plan.json:measurements.held_feature",
+  "gaze_derivation": "Current FK * inverse source FK * historical legal depth point; unverified rigid/no-slip grasp assumption",
+  "predicted_feature_world_m": [0.475048433653419, 0.021503942651980204, 0.17702588858249485],
+  "segments": [
+    {"actions": 64, "eye_world_m": [0.615, 0.005, 0.61], "gaze_world_m": [0.47152421682670953, 0.014251971325990102, 0.2885129442912474]},
+    {"actions": 64, "eye_world_m": [0.41, -0.14, 0.60], "gaze_world_m": [0.475048433653419, 0.021503942651980204, 0.17702588858249485]}
+  ],
+  "preflight": "Both segments passed unchanged camera_path and camera_gaze_path bounds",
+  "arm_command": "Hold measured arm pose and established aperture; no descent or reorientation",
+  "limitation": "Predicted feature is for framing, not current localization or clearance. Idealized sensor has no physical collision body."
+}
