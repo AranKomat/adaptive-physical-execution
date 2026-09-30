@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+CURRENT CRITERIA CORRECTION: distinguish visible lift success from precision
+endpoint arrival. Added opt-in upward-only10mm/.03rad final assessment with all
+intermediate/guard checks intact and raw receipts preserved.335 CPU tests pass.
+No live retry or tolerance change to insertion. Next fresh matched aperture
+runs use identical predeclared criteria; see grasp comparison document. The
+previous assisted lift is positive retention evidence, not a failed grasp.
+
 LATEST: no-API0.3-aperture reference visibly held/lifted the card clear of its
 support. Closure passed (0.589mm error); three lift waypoints passed; final
 waypoint exhausted64 actions at4.573mm error, above3mm arrival tolerance.

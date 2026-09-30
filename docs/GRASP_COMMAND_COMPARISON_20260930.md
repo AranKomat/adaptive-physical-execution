@@ -1,5 +1,32 @@
 # Retained grasp comparison and next experiment
 
+## Completion Criteria Correction
+
+Following user feedback, a3mm precision endpoint is unnecessarily strict as
+the completion criterion for this upward retention diagnostic. The existing run
+remains a strict controller nonarrival, but its visible assisted lift is a
+positive physical result, not a failed grasp. Do not erase either observation.
+
+For the next matched pair, declare the same criteria BEFORE motion in both arms:
+`run_sensor_carry.py --lift-diagnostic-completion --contact-tracking-guard`.
+Only the final upward endpoint may complete within10mm translation and0.03rad
+rotation, either on strict arrival or after the full64-action budget. Every
+intermediate waypoint retains its original completion check. Guard stops,
+aborted/rejected commands, missing/nonfinite telemetry and other terminal reasons
+remain failures. No additional retry, longer budget or forced movement is added.
+The runner restricts this option to at most four upward stages/23.1cm total,
+at most1mm lateral adjustment, preserved attitude, and unchanged grip commands
+through the existing compiler. It cannot be used for insertion or standoff.
+Raw receipts remain untouched; a separate assessment records motion completion
+and explicitly leaves grasp verification false until independent visual review.
+
+Use fresh matched runs with these criteria, not a retry of the stopped live
+episode. Require visible card retention/support clearance for the physical lift
+outcome. Keep assistance ON/disclosed and cached-pixel legal-depth provenance.
+Do not spend another diagnostic cycle solely reducing the old4.573mm residual.
+The code and bounds passed335 CPU tests; no new physical run has yet exercised
+this completion option. Earlier stop decisions below describe the old protocol.
+
 ## Latest Reference Result
 
 The no-API reference run reached episode

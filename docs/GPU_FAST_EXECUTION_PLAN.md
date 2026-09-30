@@ -5,6 +5,13 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+COMPLETION POLICY UPDATE: the user correctly challenged treating4.573mm lift
+endpoint error as failed physical behavior. Use predeclared10mm/.03rad completion
+for the final upward diagnostic only, unchanged guard/intermediate checks, plus
+independent visual retention. New option implemented and335 tests pass. Run a
+fresh matched pair; do not retry the stopped reference, tune away its residual,
+or relax insertion. This supersedes the next-residual-debugging suggestion below.
+
 LATEST APERTURE REFERENCE:0.3 closure passed; card visibly lifted off support.
 Final23cm target missed strict arrival (4.573mm error after64 actions), so stop
 without retry. The0.0 comparison is not authorized by a passing reference and

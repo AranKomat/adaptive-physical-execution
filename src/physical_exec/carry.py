@@ -6,6 +6,44 @@ import numpy as np
 from .geometry import finite_vector, pose_error
 
 
+def validate_lift_diagnostic(stages, hand_pose):
+    """Limit the relaxed endpoint assessment to one bounded upward diagnostic."""
+    origin = finite_vector(hand_pose, 7)
+    if not stages or len(stages) > 4:
+        raise ValueError('Lift diagnostic requires at most four stages')
+    previous = origin
+    for index, stage in enumerate(stages):
+        target = finite_vector(stage['hand_pose_world'], 7)
+        delta = pose_error(origin, target)
+        if (target[2] <= previous[2] or delta[2] > .231
+                or np.linalg.norm(delta[:2]) > .001
+                or np.linalg.norm(delta[3:]) > .03
+                or stage.get('contact_tracking_guard') is not True
+                or stage.get('max_steps') != 64
+                or stage.get('settle_at_end') is not (index == len(stages)-1)):
+            raise ValueError('Lift diagnostic must preserve lateral pose and attitude with guards')
+        previous = target
+
+
+def lift_endpoint_completed(receipt):
+    """Assess motion only; never turn a guard stop into success or verify a grasp."""
+    if receipt.get('status') != 'executed':
+        return False
+    reason = receipt.get('reason')
+    if reason == 'local stage budget ended without arrival':
+        if receipt.get('executed_steps') != 64 or receipt.get('requested_steps') != 64:
+            return False
+    elif reason != 'local stage arrived':
+        return False
+    for key, limit in [('tracking_position_error_m', .01),
+                       ('tracking_rotation_error_rad', .03)]:
+        value = receipt.get(key)
+        if (isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or not 0 <= value <= limit):
+            return False
+    return True
+
+
 def carry_stages(plan, observation_id, hand_pose, opening):
     if plan.get('observation_id') != observation_id or plan.get('finish') is not False:
         raise ValueError('Carry requires a current, unfinished plan')

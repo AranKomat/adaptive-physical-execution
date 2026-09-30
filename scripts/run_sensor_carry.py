@@ -9,6 +9,7 @@ from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'src'))
 from physical_exec.carry import carry_stages, standoff_stages, reviewed_standoff_stages
+from physical_exec.carry import validate_lift_diagnostic, lift_endpoint_completed
 from physical_exec.imaging import png_bytes
 from physical_exec.trace import write_json
 from physical_exec.transport import LocalClient, decode_observation, decode_result
@@ -29,7 +30,13 @@ def main():
                         help='Explicit simulator contact test to measured plane; <=8cm, no extra push/release')
     parser.add_argument('--contact-tracking-guard', action='store_true',
                         help='Require and attach the per-action tracking guard')
+    parser.add_argument('--lift-diagnostic-completion', action='store_true',
+                        help='Upward diagnostic only: assess final motion at 10mm / .03rad; not grasp verification')
     args = parser.parse_args()
+    if args.lift_diagnostic_completion and (not args.contact_tracking_guard
+            or args.standoff_review or args.exploratory_standoff
+            or args.near_standoff or args.contact_hypothesis):
+        parser.error('Lift completion requires guarded upward diagnostic, excludes standoff/contact modes')
     if args.standoff_review and (args.exploratory_standoff or args.near_standoff or args.contact_hypothesis):
         parser.error('Reviewed standoff excludes measurement/contact modes')
     if args.near_standoff and not args.exploratory_standoff:
@@ -62,6 +69,12 @@ def main():
         if args.contact_tracking_guard:
             for stage in stages:
                 stage['contact_tracking_guard'] = True
+        if args.lift_diagnostic_completion:
+            validate_lift_diagnostic(stages, obs.eef_pose)
+            write_json(args.output/'completion_policy.json', dict(
+                scope='upward diagnostic final endpoint only', position_bound_m=.01,
+                rotation_bound_rad=.03, grasp_verified=False,
+                hard_worker_abort_checks='unchanged', raw_receipts='preserved'))
         write_json(args.output/'source_plan.json', plan)
         write_json(args.output/'declared_sequence.json', stages)
         write_json(args.output/'initial.json', obs.public_state())
@@ -79,7 +92,13 @@ def main():
             actions += result.receipt.executed_steps
             print(result.receipt.to_dict(), flush=True)
             expected = 'local stage arrived' if stage['settle_at_end'] else 'transit waypoint passed'
-            if result.receipt.reason != expected:
+            passed = result.receipt.reason == expected
+            if args.lift_diagnostic_completion and i == len(stages)-1:
+                passed = lift_endpoint_completed(result.receipt.to_dict())
+                write_json(args.output/'completion_assessment.json', dict(
+                    motion_within_lift_bounds=passed, grasp_verified=False,
+                    strict_arrival=result.receipt.reason == 'local stage arrived'))
+            if not passed:
                 raise RuntimeError('Carry nonarrival; no retry or subsequent stage')
         write_json(args.output/'result.json', dict(final_observation_id=obs.key, actions=actions,
                    insertion_verified=False, limitation='Endpoint only; fresh visual review required'))
