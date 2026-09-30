@@ -47,6 +47,11 @@ class NativeDiffIKFeedback:
             self.rotation_integral = np.clip(self.rotation_integral + .525*self.control_dt*error[3:],-.03,.03)
             error[3:] += self.rotation_integral
         if self.integral_feedback:
+            # A moving ramp can accumulate lag compensation that keeps pushing
+            # after crossing the target. Discard opposing per-axis integral once
+            # overshoot exceeds 1 mm; retain small steady-load compensation.
+            crossed = (error[:3] * self.position_integral < 0) & (np.abs(error[:3]) > .001)
+            self.position_integral[crossed] = 0.
             # Same time-normalized position integral gain as the reference OSC,
             # bounded to 3 cm; no mass, COM or hidden grasp-state feedforward.
             self.position_integral = np.clip(self.position_integral + .525*self.control_dt*error[:3],-.03,.03)

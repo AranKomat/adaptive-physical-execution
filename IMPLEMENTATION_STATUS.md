@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+753 diagnosis: actual hand OVERSHOT downward4.320mm; it did not stop above
+the goal. Wrist-calibration reconstruction and commanded FK support position
+integral windup (-6.364mm near target crossing). Local anti-windup change clears
+opposing per-axis integral beyond1mm crossing;262tests. NOT loaded in held
+workers or physically qualified. Next separate noncontact qualification before
+near-holder motion; no closure/retry at753. See RAM_FIRST_TRIAL.md.
+
 LIVE contact-view RAM753: episodebbd50fc209d44f9a84b12ee63827f0ff, worker81115
 remote8773/local18773. Rear-module model selection and249-action approach passed.
 Reviewed504-action preclosure ended4.323mm from target: strict nonarrival, no

@@ -1,5 +1,31 @@
 # RAM: next independent assembly experiment
 
+## Descent753 diagnosis: downward overshoot and integral windup
+
+Correction to earlier wording: target z166.933mm, measured z162.612mm.
+This is a4.320mm DOWNWARD OVERSHOOT, not stopping above the goal. Wrist-camera
+calibration reconstructs the hand trajectory using a fixed camera-to-hand
+transform inferred from terminal proprioception; preceding endpoint residuals
+are below1.1e-7 in pose-vector norm. No object state enters this reconstruction.
+At730 measured z167.353mm;735 z164.579mm;750 z162.472mm. Commanded joint FK also
+passes below the goal, so this is not simply an actuator unable to reach it.
+
+Replaying the OLD position integral against this trajectory yields -6.364mm
+at730 and still -3.793mm at753. The accumulated downward ramp-lag compensation
+continues pushing after the target crossing. This supports integral windup as
+a contributor; it does not exclude contact or prove a counterfactual outcome.
+Reproduce with `scripts/analyze_ram_descent.py --run
+runs/ram_contact_preclosure_execution --wrist-depth
+runs/ram_contact_recordings/bbd50fc209d44f9a84b12ee63827f0ff/wrist_depth`.
+
+NativeDiffIKFeedback now clears a per-axis integral that opposes correction
+after more than1mm target crossing. Same-direction load compensation and
+submillimeter deadband are retained.262tests pass. This change is LOCAL ONLY:
+held workers retain the old implementation; no hot patch/restart/motion.
+Next physically qualify anti-windup in a separately labeled noncontact condition
+before new near-holder descent. Do not close at753 or replay the failed target.
+No RAM grasp, insertion, or task phase completed.
+
 ## Contact-view condition: rear-module approach and current support evidence
 
 Separate worker81115 (remote8773/local18773), episode
