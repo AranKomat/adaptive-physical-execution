@@ -1,0 +1,31 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1157",
+  "camera": "right",
+  "source": "retained raw optical-depth sensor; visual rail selections from gpu1920_gap1157_review",
+  "sampling": "center rays at rounded interpolated rail-pair pixels, fractions 0, 0.25, 0.5, 0.75, 1",
+  "motion_authorized": false,
+  "stations": [
+    {
+      "rail_a_uv": [1067, 513],
+      "rail_b_uv": [1067, 528],
+      "rail_pair_separation_mm": 8.378732947791175,
+      "sampled_world_heights_m": [0.03756707443617591, 0.03756680597247708, 0.03756663858199605, 0.037566382180350244, 0.037566224170943685],
+      "inferred_midpoint_world_m": [0.45708938510139685, 0.029893948288782057, 0.037566649303559796]
+    },
+    {
+      "rail_a_uv": [1125, 518],
+      "rail_b_uv": [1125, 534],
+      "rail_pair_separation_mm": 8.789884721988008,
+      "sampled_world_heights_m": [0.037566709942341014, 0.03756649732208017, 0.03756639104214188, 0.037566078310246165, 0.037390015224588846],
+      "inferred_midpoint_world_m": [0.4839335643972796, 0.029539687883486515, 0.03747836258346493]
+    },
+    {
+      "rail_a_uv": [1178, 523],
+      "rail_b_uv": [1178, 538],
+      "rail_pair_separation_mm": 8.328412616593823,
+      "sampled_world_heights_m": [0.037566535730086614, 0.03756635471164216, 0.037566078486686805, 0.03756593995670787, 0.03756576185500815],
+      "inferred_midpoint_world_m": [0.5083435670773023, 0.029392873524113516, 0.03756614879254738]
+    }
+  ],
+  "limitation": "Sampled dark-gap pixels expose no appreciable recess relative to rims. This does not establish collision geometry or prove no cavity exists elsewhere. Single-pixel zero spread is not accuracy; midpoints are inferred, not measured free space or insertion permission."
+}

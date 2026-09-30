@@ -9,6 +9,24 @@ import pytest
 from PIL import Image
 
 
+@pytest.mark.parametrize('stage', ['socket_gap', 'coarse_centerline'])
+def test_gap_review_accepts_native_right_crop(tmp_path, stage):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
+    for role in ('left', 'right', 'wrist'):
+        Image.new('RGB', (1920, 1080)).save(tmp_path/f'{role}.png')
+    output = tmp_path/'messages.json'
+    script = Path(__file__).parents[1]/'scripts/prepare_sensor_target_request.py'
+    result = subprocess.run([sys.executable, str(script), '--capture', str(tmp_path),
+        '--stage', stage, '--closeup-right', '800', '480', '1280', '570',
+        '--output', str(output)], capture_output=True, text=True, check=False)
+    assert result.returncode == 0, result.stderr
+    content = json.loads(output.read_text())[0]['content']
+    assert sum(p['type'] == 'image_url' for p in content) == 4
+    assert any('800 + displayed_u' in p.get('text', '') for p in content)
+    assert '1920x1080' in content[0]['text']
+    assert '640x360' not in content[0]['text']
+
+
 @pytest.mark.parametrize('stage,accepted', [('correspondence', True), ('grasp', False)])
 def test_paired_native_crops_preserve_both_feature_mappings(tmp_path, stage, accepted):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
@@ -164,7 +182,8 @@ def test_feature_inventory_separates_localization_from_alignment(tmp_path):
 
 
 @pytest.mark.parametrize('old_id,accepted',[('e:1',True),('other:1',False),('e:12',False)])
-@pytest.mark.parametrize('stage',['feature_inventory','correspondence','inspection_camera'])
+@pytest.mark.parametrize('stage',['feature_inventory','correspondence','inspection_camera',
+                                  'socket_gap','coarse_centerline'])
 def test_feature_inventory_carry_identity_history(tmp_path,old_id,accepted,stage):
     current, old = tmp_path/'current', tmp_path/'old'
     for path, obs in ((current,'e:12'),(old,old_id)):

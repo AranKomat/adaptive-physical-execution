@@ -122,12 +122,14 @@ def main():
     p.add_argument('--single-pixel-rails', action='store_true',
                    help='Socket-gap localization diagnostic using center rays; not motion approval')
     p.add_argument('--closeup-right', nargs=4, type=int, metavar=('X0','Y0','X1','Y1'),
-                   help='Optional correspondence-only sensor crop, original pixel bounds')
+                   help='Optional mating-feature sensor crop, original pixel bounds')
     p.add_argument('--closeup-left', nargs=4, type=int, metavar=('X0','Y0','X1','Y1'),
                    help='Optional correspondence-only held-feature crop, original pixel bounds')
     args = p.parse_args()
-    if (args.closeup_right or args.closeup_left) and args.stage != 'correspondence':
-        raise ValueError('Close-up diagnostic is scoped to correspondence')
+    if args.closeup_right and args.stage not in ('correspondence', 'socket_gap', 'coarse_centerline'):
+        raise ValueError('Right close-up diagnostic is scoped to mating-feature review')
+    if args.closeup_left and args.stage != 'correspondence':
+        raise ValueError('Left close-up diagnostic is scoped to correspondence')
     if args.single_pixel_rails and args.stage != 'socket_gap':
         raise ValueError('Single-pixel rail sampling applies only to socket_gap')
     if not np.isfinite(args.inspection_motion_limit_m) or not .01 <= args.inspection_motion_limit_m <= .20:
@@ -435,7 +437,8 @@ def main():
     if args.closeup_left:
         content.extend(closeup_content(args.capture, 'left', args.closeup_left))
     if args.prior_carry_capture or args.prior_carry_response:
-        if args.stage not in ('feature_inventory','correspondence','inspection_camera') or not (args.prior_carry_capture and args.prior_carry_response):
+        if args.stage not in ('feature_inventory','correspondence','inspection_camera',
+                              'socket_gap','coarse_centerline') or not (args.prior_carry_capture and args.prior_carry_response):
             raise ValueError('carry history requires feature inventory/correspondence/camera inspection and both prior inputs')
         old_state = json.loads((args.prior_carry_capture/'state.json').read_text())
         old_response = json.loads(args.prior_carry_response.read_text())

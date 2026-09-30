@@ -850,7 +850,12 @@ New native-resolution episode: current depth support/finger samples informed
 one bounded Astra closure hypothesis, then guarded closure and larger upward
 extension retained the GPU clear of the support at667. Assisted grasp/lift now
 has actual renderer evidence in `docs/evidence/native_grasp_lift_20260930`.
-No installation/release/recovery or matched policy success.407 CPU tests pass;
+Elevated carry reached1059 and guarded10cm standoff reached1157; current
+endpoint correspondence is depth-qualified. Same-socket native RGB suggests
+rails/key, but sampled dark-gap depth is essentially rim-height, not a measured
+recess/collision channel. A labeled6cm near-standoff completed at1241 with
+strict1.223mm final arrival; fresh contact-proposal assessment is next. No contact,
+installation/release/recovery or matched policy success.415 CPU tests pass;
 see HIGH_RESOLUTION_GRASP report for raw nonarrival receipts and limitations.
 
 Native-resolution grasp continuation reached open-hand preclosure at331 and

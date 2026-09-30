@@ -1,0 +1,54 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1059",
+  "decision": "correspondence_visible",
+  "connector": {
+    "end_a": {
+      "camera": "right",
+      "pixel_uv": [
+        1292,
+        177
+      ],
+      "surface": "Visible gold contact surface at the bracket-side end of the short connector segment, right of the key notch."
+    },
+    "end_b": {
+      "camera": "right",
+      "pixel_uv": [
+        1052,
+        162
+      ],
+      "surface": "Visible gold contact surface at the opposite end of the long connector segment."
+    }
+  },
+  "socket": {
+    "end_a": {
+      "camera": "right",
+      "pixel_uv": [
+        1223,
+        531
+      ],
+      "surface": "Solid silver terminal rim of the lower long PCIe socket at its bracket-side end, on image right."
+    },
+    "end_b": {
+      "camera": "right",
+      "pixel_uv": [
+        1035,
+        514
+      ],
+      "surface": "Solid silver rim at the opposite end of the same socket opening, immediately beside the gray retention latch; not the latch center."
+    }
+  },
+  "key_visible": true,
+  "target_identity_assessment": "The historical selection tracks to the lower of the two silver-edged long expansion sockets, beside the triangular heatsink and above the illuminated RAM region. The current samples retain that socket rather than switching to the more exposed middle socket. History does not certify that this is the intended functional destination.",
+  "evidence": [
+    "The current right view shows both terminal gold-contact regions and the intervening connector key notch.",
+    "The card's bracket is on image right; the connector's short keyed segment is on that side.",
+    "Both terminal rims of the selected lower socket are visible. Its bracket-side end is on image right, opposite its gray retention latch.",
+    "Samples are on visible gold or socket-rim surfaces, not slot gaps, heatsink surfaces, or whole-card endpoints."
+  ],
+  "uncertainty": [
+    "Endpoint samples are limited by the retained image resolution; enlargement supplies no additional detail.",
+    "The connector notch is visible, but the socket's internal key is less clearly resolved.",
+    "These observations do not establish center alignment, insertion success, seating depth, or clearance."
+  ],
+  "next_view": "For clearer socket-key verification, look obliquely down into the same lower socket opening while retaining both terminal rims and the card bracket in view. The hand/card does not block the sampled endpoints in the current right view, but the hand and card obscure useful mating-feature views from the left and wrist cameras. A closer view facing the gold-contact surface would improve endpoint detail."
+}

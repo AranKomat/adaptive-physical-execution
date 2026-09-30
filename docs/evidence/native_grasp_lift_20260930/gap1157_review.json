@@ -1,0 +1,49 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1157",
+  "decision": "rails_visible",
+  "camera": "right",
+  "samples": [
+    {
+      "rail_a_uv": [
+        1067,
+        513
+      ],
+      "rail_b_uv": [
+        1067,
+        528
+      ]
+    },
+    {
+      "rail_a_uv": [
+        1125,
+        518
+      ],
+      "rail_b_uv": [
+        1125,
+        534
+      ]
+    },
+    {
+      "rail_a_uv": [
+        1178,
+        523
+      ],
+      "rail_b_uv": [
+        1178,
+        538
+      ]
+    }
+  ],
+  "evidence": [
+    "The current right-camera close-up shows two distinct thin solid rails bordering opposite sides of one continuous dark insertion gap.",
+    "Rail_a follows the image-upper side and rail_b the image-lower side of that same socket. Samples avoid the latch, end walls, and surrounding diagonal heatsink decoration.",
+    "A short transverse divider is visible near the right end of the gap."
+  ],
+  "uncertainty": [
+    "Thin rail surfaces introduce subpixel localization and mixed-pixel uncertainty; the enlarged crop adds no sensor information.",
+    "The transverse divider is consistent with a socket key, but its detailed geometry is unresolved.",
+    "No depth accuracy, seating depth, clearance, or movement authorization is established. A midpoint between rail measurements would be inferred, not an observed gap surface."
+  ],
+  "key_visible": true,
+  "target_identity_assessment": "The selected target remains the lower long expansion socket nearest the CPU and illuminated RAM, matching the historical socket's latch and surrounding heatsink layout. The upper parallel socket was not substituted."
+}

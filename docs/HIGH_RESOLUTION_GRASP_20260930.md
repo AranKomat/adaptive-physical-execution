@@ -165,6 +165,86 @@ external feedback, the next objective is one bounded serious insertion attempt
 if geometry supports it, otherwise a clean negative and changed condition;
 no further broad camera, prompt or aperture sweep is planned.
 
+### Post-Carry Correspondence At1059
+
+Fresh legal RGB-D retained the held pose at1059. The first right close-up
+[980,100,1350,470] exposed the connector but cut off the historically selected
+lower socket. Astra preserved the lower-socket identity, explicitly distinguished
+the upper neighbor, and returned `inspect`. Correcting ONLY the sensor crop to
+[800,100,1350,570] at the same physical state returned
+`correspondence_visible`. This is a presentation correction, not a camera search
+or proof that native resolution alone causes success.
+
+All four new3x3 depth samples passed (unlike the rejected731 connector end_b).
+Connector end_a/end_b right[1292,177]/[1052,162]; socket end_a/end_b
+right[1223,531]/[1035,514]. Gold-surface sample span82.897mm versus socket-rim
+span86.900mm, horizontal axis difference0.618degrees, corresponding-end
+horizontal offsets7.722mm/5.920mm, minimum sampled vertical gap225.297mm.
+Different surface definitions and finite image localization mean these values
+are NOT insertion-fit tolerances. The internal socket key remains less clearly
+resolved than the connector notch; socket rim is not the gap centerline.
+
+One operator-scoped guarded10cm vertical exploratory standoff was submitted
+using the existing measured-feature compiler: two continuous segments/max128
+actions, measured attitude and aperture0.3 retained, nominal sampled gap at
+least125mm. No insertion/contact/release or automatic retry is authorized by
+this approach. It completed98 actions at1157: intermediate waypoint passed,
+final strict arrival1.958mm/0.0000805rad,150.99s wall versus6.53s simulated.
+The original SSH output stream stalled after the intermediate receipt; separate
+read-only receipt/result inspection confirmed completion and no remaining
+remote carry process. Only that stale LOCAL SSH process was terminated; the
+worker was not restarted and the motion was not retried. Final renderer images
+show the card still held above the motherboard. Fresh matching RGB-D was captured
+for one native-detail gap review before any further descent.
+The protected original8772 episode and unrelated CPU workload are untouched.
+
+The five carry/correspondence reviews spanning731 and1059 cost$0.2286375;
+cumulative reservation count4525. Shared$85 ceiling and unresolved holds remain
+unchanged. Public reports exclude private API audit payloads and credentials.
+
+The existing native-crop and earlier-target context are now available to the
+observation-only socket-gap/centerline review paths as well as correspondence.
+Previously those stages had only bounded overviews or could lose target identity.
+No motion gate, depth qualification or evaluator boundary changed.
+
+### Same-Socket Gap Evidence At1157
+
+Native right crop[970,480,1280,570] plus731 target history produced
+`rails_visible`: three rail pairs, with a possible key divider. Six center-ray
+depth samples form consistent surface pairs8.329-8.790mm apart, nearly equal
+heights. Their inferred midpoints lie around world y0.0294-0.0299m. They are
+inferred channel hypotheses, not free-space or seating-depth measurements.
+
+Sampling five evenly spaced pixel locations ACROSS each visually selected gap
+showed essentially the same world height as the rims (approximately0.037566m;
+one outer rail sample was0.177mm lower). Dark-gap center pixels exposed no
+appreciable recess at these stations. The backend records raw sensor
+`distance_to_image_plane`, not RGB-inferred depth. Texture-only detail, rendering
+geometry or incorrect visual association are possible; this sensor evidence
+does NOT prove collision geometry or absence of a cavity elsewhere. Do not
+present an exploratory plane-contact test as verified keyed insertion.
+Public audit: `evidence/native_grasp_lift_20260930/gap_depth_audit.json`.
+
+Fresh correspondence review at1157 again identified both connector and socket
+ends, all four3x3 depth measurements passed, and each corresponding horizontal
+offset remained below10mm. Minimum sampled gap122.936mm. A separate guarded6cm
+near-standoff was submitted: two continuous segments/max128actions, same
+attitude/aperture, nominal remaining sampled gap62.936mm. No contact/release or
+retry included. This advances the bounded physical attempt, not a new prompt
+sweep or a matched-method success. The near-standoff completed84 actions at1241:
+intermediate waypoint passed, final strict arrival1.223mm/0.000420rad,
+127.03s wall versus5.6s simulated, no tracking stop. Fresh matching RGB-D and
+retention/contact-proposal assessment are next. No contact, release or seating
+success is established by these endpoint receipts.
+
+Software checks:415 CPU tests pass. Native detail and historical target context
+are tested for observation-only gap/centerline requests; tests do not complete
+physical phases.
+
+The two1157 reviews cost$0.1030175 total; cumulative reservation count4527.
+No retry or new paid-provider route was used. Total of the seven reviews from
+carry731 through correspondence1157 is$0.331655, not the full campaign spend.
+
 1. Continue feature-relative carry/mating using fresh native
    sensor crops. Do not reuse held8772 coordinates or infer insertion from
    hand arrival. Preserve measured aperture and label idealized camera/grasp
