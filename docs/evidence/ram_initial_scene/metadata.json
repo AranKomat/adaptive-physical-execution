@@ -1,0 +1,33 @@
+{
+  "backend": "embodiedswe",
+  "camera_map": {
+    "left": "external_left",
+    "right": "external_right",
+    "wrist": "wrist"
+  },
+  "contact_tracking_guard_enabled": true,
+  "continuous_transit_enabled": true,
+  "control_dt": 0.06666666666666667,
+  "controller": "joint PD; direct EEF via robot-only DLS IK",
+  "controller_qualification": "GPU execution not validated by package author",
+  "depth_policy_input": false,
+  "depth_recording": true,
+  "grasp_weld": true,
+  "inspection_camera_enabled": false,
+  "inspection_camera_gaze_enabled": false,
+  "inspection_camera_qualification": "idealized sensor only; no collision body or hardware clearance",
+  "last_gripper_command": null,
+  "local_stage_qualification": "experimental native DiffIK through joint tracker; see local-stage evidence, contact/payload not qualified",
+  "local_stage_rotation_integral": true,
+  "local_stages_enabled": true,
+  "physics_assists": "upstream scene defaults preserved; inspect grasp_weld and SOURCE_AUDIT",
+  "preset": "assembly.pc_ram.franka.joint",
+  "privileged_policy_inputs": false,
+  "real_hardware_supported": false,
+  "record_root": "/workspace/adaptive-physical-execution/runs/ram_initial_scene_capture_v2_20260930/recordings",
+  "robot": "franka",
+  "task_instruction": "Install both loose RAM modules into the computer's DIMM slots. Verify their placement visually.",
+  "time_model": "physics_paused_during_inference",
+  "worker_id": "b17df8e6b10d4a1a8a22df8229008dc4",
+  "wrist_target_hand": null
+}

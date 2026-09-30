@@ -1,7 +1,39 @@
 # RAM: next independent assembly experiment
 
-Status: CPU/configuration preflight only. No RAM simulator launch, robot motion,
-model call, grasp, insertion or phase completion yet.
+Status: native RAM observation-only launch/capture completed. Zero commanded
+control actions and zero model calls. No grasp, insertion or phase completion.
+
+## Initial scene result
+
+Episode `fa459b5bcfb745a2a6b9209f0839d684:0` was captured after one explicit
+initial reset in a new temporary worker. Isaac initialization/warmup is not
+counted as commanded control. The worker was then closed; this RAM episode is
+NOT live/resumable. A physical trial needs a fresh episode and fresh targets.
+
+- Both upright modules are visible in the left overview and wrist view. The
+  wrist view crops part of the farther module; the nearer one is fully in frame.
+- The right overview does not resolve DIMM insertion geometry. This is a usable
+  discovery/pick starting view, not insertion readiness or certified clearance.
+- Metadata confirms recorded depth, continuous transit, local DiffIK with
+  rotation integral, contact tracking guard and upstream grasp-weld assistance.
+- Initial launch reached readiness but capture helper was missing remotely;
+  it exited without a reset request. Added prerequisite checks and synced helper.
+  A subsequent preflight hit TCP TIME_WAIT, not a live worker; selected an unused
+  port after checking listeners. No motion was retried.
+- Idle FLUX was restored and authenticated ready as PID77661. Existing simulator
+  processes were not terminated. GPU recovery was re-read afterward: still2813.
+- All243 existing tests pass; the new resource probe was validated by this actual
+  launch/cleanup, not by those component tests.
+
+Evidence: [left](evidence/ram_initial_scene/000000_left.png),
+[right](evidence/ram_initial_scene/000000_right.png),
+[wrist](evidence/ram_initial_scene/000000_wrist.png),
+[metadata](evidence/ram_initial_scene/metadata.json).
+Local retained run: `runs/ram_initial_scene_capture_v2_20260930/` includes depth,
+calibration, logs and restoration receipt. Script: `scripts/probe_ram_initial_scene.py`.
+Next is a fresh bounded RAM grasp-selection/approach trial, not another startup
+probe. Keep the same information contract below and do not reuse these targets
+as current-state measurements.
 
 ## Why now
 

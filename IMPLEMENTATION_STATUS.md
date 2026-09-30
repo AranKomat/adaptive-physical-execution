@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST RAM initial native capture completed, zero commanded actions/model calls.
+Both modules visible; socket geometry unresolved in overview. Temporary worker
+closed, FLUX restored/authenticated PID77661, GPU recovery rechecked2813 unchanged.
+See `docs/RAM_FIRST_TRIAL.md` and public images. No RAM grasp or phase complete.
+Next launch should run bounded grasp selection/approach, not repeat startup QA.
+
 NEXT independent task: RAM configuration/source compatibility preflight passed;
 no RAM simulator launch or physical result. See `docs/RAM_FIRST_TRIAL.md` for
 bounded protocol and resource requirement. Both GPUs are nearly full; temporary
