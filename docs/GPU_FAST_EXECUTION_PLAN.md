@@ -5,6 +5,24 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+FIRST INTEGRATED LIVE RESULT: enhanced Direct-A, Astra Flex medium,3decisions,
+all3fast EEF destinations arrived without guard stop/rejection.46+41+33=120actions,
+8.0sim seconds,88.099total wall seconds; summed execution51.030s and model25.533s.
+Endpoint errors0.298/0.338/0.385mm. Model cost$0.09263375. Motions include17cm
+lateral,15cm descent, then about11cm combined lateral/descent, fixed orientation,
+open grip. Final inspected right view shows gripper above card, not contact/grasp.
+Native score0, success false; stopped at decision budget, NOT a failed motion.
+This is integrated approach/controller evidence, not completed manipulation or
+a matched model comparison. Legal inputs were RGB/proprioception/FK/receipts;
+depth recorded but NOT supplied to this Direct policy. No hidden object state.
+Source: runs/gpu_enhanced_direct_a_first3_20260930; public result and terminal
+image in docs/evidence/gpu_enhanced_direct_a_first3. Current worker88111/8774,
+episode8838a36a428c40c38aa6270f759398e4:120. Next bounded continuation from current
+observation with prior execution memory toward alignment/contact; no reset.
+Old86507 retired after246MB checksum-verified local backup at
+runs/gpu_fast_ff_full_backup (SIGTERM lingered, exact-PID SIGKILL). Other scenes
+untouched. Shared reserved call count advanced4412to4415; re-read before next call.
+
 Launcher/target-limit continuation: private `run_adaptive_direct_trial.py` now
 supports `--enhanced-gpu` and port18774. This selects the enhanced task, both local
 execution/fast-transit flags, Direct horizon1 and64actions per decision (actual

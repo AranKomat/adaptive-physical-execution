@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE enhanced Direct-A first3calls: all3fast destinations arrived,120actions,
+8sim/88.099wall seconds,$0.09263375. Endpoint errors0.298/0.338/0.385mm. Open
+gripper now above GPU; no grasp/contact/installation, native score0. Includes
+lateral/descent evidence; not arbitrary-rotation or payload qualification.
+Worker88111/8774 held at8838a36a428c40c38aa6270f759398e4:120. Continue bounded
+from fresh current observation plus prior memory, not reset. Details GPU_FAST_EXECUTION_PLAN.
+
 Latest: enhanced GPU launcher and explicit20cm/0.30rad EEF task config prepared;
 307tests pass. Direct horizon1,64actual-action budget per decision, fast eligible
 transit standard in --enhanced-gpu mode. Native joint limits/timing unchanged.
