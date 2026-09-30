@@ -1,0 +1,24 @@
+{
+  "experiment": "operator_directed_matched_aperture_lift",
+  "autonomous": false,
+  "native_grasp_assistance": true,
+  "seed": 0,
+  "task_config": "configs/tasks/pc_gpu_enhanced.json",
+  "matched_local_remote_sha256": {
+    "src/physical_exec/carry.py": "8631c77416fa57c9457b6a24e593360a637ddbe7b7065313cf823d7a26c2e7b1",
+    "scripts/run_sensor_carry.py": "3010af4fdafb955c4336b02ee7e6d6f2c589a8b0a77144b9e5c6f16985ff334a",
+    "scripts/run_grounded_correction.py": "eba0cb2547da10f5acb372304aa09df7e8a284c68f47588a91c400c941ad54b1",
+    "configs/tasks/pc_gpu_enhanced.json": "ef682716e52113ac44221cd87ec3e2a472e06e3e206e9bb0641f8403a3828140"
+  },
+  "conditions": [0.3, 0.0],
+  "target_rule": "Retained right-camera pixel [365,256], at most 2px refinement on each fresh legal RGB-D capture",
+  "approach": "run_grounded_correction with pause-before-close and contact-tracking-guard; conservative continuous transit",
+  "closure": "probe_contact_stage: close, 64 actions maximum, strict arrival required",
+  "lift": "run_sensor_carry: four upward segments to sensor-derived grasp endpoint +0.23m, hold the condition aperture",
+  "lift_final_completion": {"position_bound_m": 0.01, "rotation_bound_rad": 0.03, "max_actions": 64},
+  "intermediate_completion": "original transit waypoint criterion unchanged",
+  "physical_outcome": "Independent review of both external RGB views for card retention and support clearance; endpoint receipt alone is insufficient",
+  "stop_rule": "No retry after guard, rejected/ambiguous execution or out-of-bounds completion. Do not run second condition if first fails closure, bounded lift completion or visual retention.",
+  "claims_excluded": ["installation success", "autonomous grasping", "unassisted real-world grasp robustness", "success-rate estimate"],
+  "paid_calls": 0
+}

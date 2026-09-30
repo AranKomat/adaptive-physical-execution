@@ -2,6 +2,16 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST PHYSICAL RESULT: matched aperture pair complete.0.3 retained/lifted card;
+0.0 left card on support while hand rose successfully. Both passed predeclared
+10mm/.03rad lift completion, no guard bypass or paid calls. Approach identical;
+only closure/hold aperture intervention. This isolates a contributor in this
+assistance-on fixture, not the underlying contact/weld mechanism or all earlier
+Direct failures. See docs/APERTURE_PAIR_RESULT_20260930.md. Next integrated
+experience-conditioned attempt, not aperture sweeps. No autonomous phase complete.
+Worker98214/8772 at e086f25bf69249db8d3f0a366cddf36d:575 preserved; other scenes
+untouched.335 tests last passed. Earlier pending comparison notes are historical.
+
 CURRENT CRITERIA CORRECTION: distinguish visible lift success from precision
 endpoint arrival. Added opt-in upward-only10mm/.03rad final assessment with all
 intermediate/guard checks intact and raw receipts preserved.335 CPU tests pass.

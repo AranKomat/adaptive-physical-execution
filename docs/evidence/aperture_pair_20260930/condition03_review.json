@@ -1,0 +1,13 @@
+{
+  "observation_id": "d6b57bcf034945eca22c4f6f26a90602:575",
+  "reviewer": "assistant visual review of recorded external images",
+  "aperture_command": 0.3,
+  "motion_within_predeclared_lift_bounds": true,
+  "strict_controller_arrival": false,
+  "position_error_m": 0.004572685008772793,
+  "visual_retention": true,
+  "support_clearance_visible": true,
+  "evidence": ["gpu_aperture_pair03_lift/03_left.png", "gpu_aperture_pair03_lift/03_right.png"],
+  "limitation": "Single assistance-on operator diagnostic, not autonomous or installation success; no force verification",
+  "paid_calls": 0
+}

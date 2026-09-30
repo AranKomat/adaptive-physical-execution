@@ -1,5 +1,15 @@
 # Retained grasp comparison and next experiment
 
+## Matched Pair Completed
+
+Fresh prospectively assessed pair:0.3 retained/lifted the card;0.0 left the
+card supported despite a clean hand lift. Both passed10mm/.03rad final motion
+bounds. Approach sequences identical, closure requests differ only in aperture
+and observation ID. Assistance ON; no paid calls. Full result and next action:
+[APERTURE_PAIR_RESULT_20260930.md](APERTURE_PAIR_RESULT_20260930.md).
+Do not repeat an aperture sweep or debug the old4.573mm residual. This replaces
+the pending-comparison instructions below; historical receipts remain unchanged.
+
 ## Completion Criteria Correction
 
 Following user feedback, a3mm precision endpoint is unnecessarily strict as

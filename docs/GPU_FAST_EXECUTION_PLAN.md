@@ -5,6 +5,13 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+MATCHED PAIR COMPLETE:0.3 opening lifted/retained;0.0 did not, despite successful
+hand motion in both conditions. No new paid calls. See APERTURE_PAIR_RESULT_20260930.md.
+Next integrated trial may use this explicitly labeled experience; expose the same
+continuous-aperture semantics/evidence to Direct and Hybrid, never override their
+commands silently. No aperture sweep or further4.573mm endpoint debugging.
+Installation/recovery remain unfinished. Live98214/8772 at575, card still supported.
+
 COMPLETION POLICY UPDATE: the user correctly challenged treating4.573mm lift
 endpoint error as failed physical behavior. Use predeclared10mm/.03rad completion
 for the final upward diagnostic only, unchanged guard/intermediate checks, plus

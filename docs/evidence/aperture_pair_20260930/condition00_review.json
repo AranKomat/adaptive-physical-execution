@@ -1,0 +1,14 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:575",
+  "reviewer": "assistant visual review of recorded external images",
+  "aperture_command": 0.0,
+  "motion_within_predeclared_lift_bounds": true,
+  "strict_controller_arrival": true,
+  "position_error_m": 0.00017206754733025404,
+  "visual_retention": false,
+  "support_clearance_visible": false,
+  "evidence": ["gpu_aperture_pair00_lift/01_left.png", "gpu_aperture_pair00_lift/03_left.png", "gpu_aperture_pair00_lift/03_right.png"],
+  "finding": "Hand rose while the card remained in its original support",
+  "limitation": "Single assistance-on operator diagnostic; contact versus native assistance mechanism not isolated",
+  "paid_calls": 0
+}
