@@ -3,13 +3,38 @@
 import argparse
 import base64
 import json
+import io
 from pathlib import Path
 import sys
 
 import numpy as np
+from PIL import Image
 
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'src'))
 from physical_exec.depth import surface_point, project_surface_memory
+
+
+def closeup_content(capture, role, box):
+    with Image.open(capture / f'{role}.png') as source:
+        if source.size != (640, 360):
+            raise ValueError('Close-up requires original640x360 sensor image')
+        x0, y0, x1, y1 = box
+        if not (0 <= x0 < x1 <= 640 and 0 <= y0 < y1 <= 360):
+            raise ValueError('Invalid original-frame crop bounds')
+        scale = min(640 / (x1-x0), 640 / (y1-y0))
+        size = (round((x1-x0)*scale), round((y1-y0)*scale))
+        crop = source.crop(box).resize(size, Image.Resampling.NEAREST)
+        data = io.BytesIO()
+        crop.save(data, format='PNG')
+    mapping = dict(camera=role, original_box_xyxy=list(box), displayed_size=list(size),
+                   original_u=f'{x0} + displayed_u * {(x1-x0)/size[0]}',
+                   original_v=f'{y0} + displayed_v * {(y1-y0)/size[1]}')
+    return [{'type': 'text', 'text': (
+        'CURRENT sensor close-up; nearest-neighbor enlargement adds NO information. '
+        'No generative enhancement or new depth. Return ORIGINAL full-frame pixel_uv, '
+        'NOT displayed crop coordinates. Coordinate mapping: '+json.dumps(mapping))},
+        {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,'+
+                                         base64.b64encode(data.getvalue()).decode()}}]
 
 
 def aperture_experience_content(directory):
@@ -62,7 +87,11 @@ def main():
                    help='Prospective inspection translation budget, at most0.20m; default0.05m')
     p.add_argument('--single-pixel-rails', action='store_true',
                    help='Socket-gap localization diagnostic using center rays; not motion approval')
+    p.add_argument('--closeup-right', nargs=4, type=int, metavar=('X0','Y0','X1','Y1'),
+                   help='Optional correspondence-only sensor crop, original pixel bounds')
     args = p.parse_args()
+    if args.closeup_right and args.stage != 'correspondence':
+        raise ValueError('Close-up diagnostic is scoped to correspondence')
     if args.single_pixel_rails and args.stage != 'socket_gap':
         raise ValueError('Single-pixel rail sampling applies only to socket_gap')
     if not np.isfinite(args.inspection_motion_limit_m) or not .01 <= args.inspection_motion_limit_m <= .20:
@@ -363,6 +392,8 @@ def main():
         encoded = base64.b64encode((args.capture / f'{role}.png').read_bytes()).decode()
         content.extend([{'type': 'text', 'text': 'Current camera: ' + role},
                         {'type': 'image_url', 'image_url': {'url': 'data:image/png;base64,' + encoded}}])
+    if args.closeup_right:
+        content.extend(closeup_content(args.capture, 'right', args.closeup_right))
     if args.prior_carry_capture or args.prior_carry_response:
         if args.stage not in ('feature_inventory','correspondence','inspection_camera') or not (args.prior_carry_capture and args.prior_carry_response):
             raise ValueError('carry history requires feature inventory/correspondence/camera inspection and both prior inputs')

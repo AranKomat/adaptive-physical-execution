@@ -8,6 +8,12 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+LATEST: final same-view scale check at1754 added nearest-neighbor sensor crop
+with original-coordinate mapping. Astra still declined endpoint/key association;
+no arm/camera action or insertion. Four focused crop tests passed. End same-view
+prompt/crop checks; next requires a changed sensing/estimation condition, not
+another microdiagnostic. See keyed-placement report final diagnostic section.
+
 LATEST: live state revalidated1690; one held-arm camera move arrived1754,
 0.781mm hold error. Four fresh gold/rim depth samples passed;90.071mm sampled
 gap. Astra proposed2cm approach, NOT executed: would fall below existing8cm

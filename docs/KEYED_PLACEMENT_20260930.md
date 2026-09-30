@@ -62,3 +62,23 @@ input path before any API reservation; the absolute-path invocation succeeded.
 No API retry of an ambiguous/failed submitted request occurred. No software
 changes or new tests this continuation; last recorded suite remains378CPU tests.
 Installation/release, autonomous recovery and fair matched methods remain open.
+
+## Final same-view scale diagnostic
+
+Following external feedback, performed one focused correspondence check with
+the original views plus a nearest-neighbor crop of right-image rectangle
+`[180,120,410,240]`, displayed at640x334. The request supplied explicit mapping
+back to original640x360 pixels; no generative enhancement or new sensor detail.
+The model again returned inspect, all endpoint fields null and key not visible.
+This rules out this specific presentation intervention as sufficient, not all
+resolution effects or the possibility of a different estimator succeeding.
+
+No camera/arm action, gate change or insertion attempt accompanied the check.
+One Astra Flex medium call cost$0.0311275; shared count4514, ceiling$85 and
+unresolved holds unchanged.
+The current same-view inspection branch ends here; do not repeat crop/prompt
+variants. A new attempt should explicitly change sensing or estimation condition.
+The optional crop input is restricted to correspondence; four focused tests
+passed for sensor-pixel preservation, coordinate metadata and invalid bounds.
+This is diagnostic evidence, not physical phase completion. Selected response:
+`docs/evidence/keyed_placement_20260930/closeup1754.json`.

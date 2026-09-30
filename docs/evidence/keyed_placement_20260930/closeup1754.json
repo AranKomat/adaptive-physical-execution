@@ -1,0 +1,24 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1754",
+  "decision": "inspect",
+  "connector": {
+    "end_a": null,
+    "end_b": null
+  },
+  "socket": {
+    "end_a": null,
+    "end_b": null
+  },
+  "key_visible": false,
+  "evidence": [
+    "The right camera shows a narrow gold-colored edge beneath the held card, but both actual contact-region ends and their bracket-side association are not unambiguous.",
+    "An elongated socket-like rim is visible below the card in the right image. Its appearance alone does not establish both corresponding mating ends or the keyed opening.",
+    "The left view is largely obstructed by the robot and case. The wrist view mainly shows the gripper, card face, and cooling assembly."
+  ],
+  "uncertainty": [
+    "Cannot reliably distinguish every gold-contact boundary from adjacent board tabs and edge features.",
+    "The bracket-side versus opposite-side association is uncertain; assigning end_a and end_b would be arbitrary.",
+    "The connector notch and corresponding socket key are not jointly identifiable. No center alignment or insertion success is established."
+  ],
+  "next_view": "Obtain an oblique view from the exposed motherboard side, looking down into the socket mouth while also seeing the gold-contact edge broadside and the card's metal bracket. Both longitudinal ends and the key must be distinguishable on solid surfaces. The hand/card assembly currently obstructs relevant sightlines; another viewing direction must look around it rather than through the card or gripper."
+}
