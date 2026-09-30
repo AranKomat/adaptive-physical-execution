@@ -28,6 +28,33 @@ command differences, not measured errors relative to the object's current pose.
 
 ## Next Bounded Test
 
+### Assistance Audit Before Execution
+
+Pinned upstream `robobench/core/grasp_weld.py` uses the default Panda
+`joint_sum` closure mode. `_gw_closure` computes measured finger-joint sum and
+calls the fingers stalled when summed absolute finger velocity is below the
+configured threshold. `step` also checks a site-specific aperture window,
+pinch proximity and debounce. This is NOT a measured opposing-pad force test.
+A quiet commanded aperture can affect this gate without establishing ordinary
+frictional grasp quality. Neither opening command directly guarantees engagement.
+
+Do not expose grasp-band coordinates, latch state or these site windows to
+the controller. This source audit is an evaluator/methodology warning only.
+Do not tune an aperture to a hidden band or disable the assistance silently.
+The proposed0.3/0.0 comparison remains justified by retained commands, not hidden
+geometry. Even a positive result must be reported as assistance-on behavior,
+not proof of physically robust or real-world grip force.
+
+No new aperture API is necessary: `scripts/probe_contact_stage.py` already
+accepts `--opening` with a current reviewed candidate and tracking guard.
+Use that existing control for the two conditions; preserve the selected opening
+for the identical lift schedule. Do not add a silent default to Direct/Hybrid.
+
+Live capacity inspection: GPU0 has848MiB free and GPU1 has2030MiB free; six
+workers retain scenes. Do not launch a seventh simulator on these margins.
+A user choice on retiring backed-up suspended RAM8772 has been requested.
+Current GPU92546/8774 scene196 and other retained scenes remain untouched.
+
 Stop prompt-only centering sweeps. Run a simulator-only, no-paid-call matched
 aperture comparison, separately labeled as an operator-defined diagnostic:
 

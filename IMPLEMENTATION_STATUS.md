@@ -2,6 +2,15 @@
 
 ## Current experiment status (September 30 JST)
 
+Assistance source audit: Panda weld gating uses measured aperture, low finger
+velocity, band proximity and debounce, not measured opposing contact force.
+An aperture effect could change simulator assistance eligibility rather than
+unassisted grip quality. Keep hidden band/latch values out of policy inputs.
+Existing probe_contact_stage.py supports explicit aperture; no new API needed.
+Matched test awaits a simulator slot: six workers, only848/2030MiB free across
+GPUs. Asked whether to back up/retire suspended RAM8772; no scene retired.
+Also requested explicit direction on shared$75 ceiling; no paid calls issued.
+
 Read-only comparison found an overlooked aperture confound: guarded successful
 recipe closed/held at0.3 opening; failed Direct trials used0.0. Closure positions
 also differ by up to32mm on one axis. New reproducible comparison and bounded
