@@ -1,5 +1,16 @@
 # GPU-first efficient execution and matched comparison
 
+Speed target updated by user:5--10x free-space transit, not2x as the final goal.
+Offline `transit_trajectory.py` now produces synchronized rest-to-rest quintic
+translation/rotation, using5x/10x peak speed caps and explicit acceleration caps
+(.45m/s2,1.2rad/s2). For30cm translation at10x, the planned duration is2.53s,
+NOT the earlier1.3s constant-speed lower bound. This excludes tracking/settling.
+One time law spans the full transit; do not restart it at intermediate logging
+waypoints or reintroduce pauses. Offline bounds tests pass; live integration,
+joint feasibility, braking/tracking and payload qualification remain incomplete.
+Do not enlarge the old per-action ramp caps or relax tracking gates to enable
+these profiles. Existing2x RPC profile is only the earlier qualification option.
+
 User direction: focus on GPU installation, not RAM. Suspend RAM experiments.
 Preserve historical trials as historical evidence, not matched comparisons.
 
