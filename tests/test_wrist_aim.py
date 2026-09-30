@@ -1,4 +1,5 @@
 import pytest
+from pathlib import Path
 from physical_exec.config import configured_camera_view
 
 
@@ -14,3 +15,13 @@ def test_wrist_aim_is_opt_in_and_does_not_mutate_source():
     assert configured_camera_view(task,'external_right',view) is view
     with pytest.raises(ValueError):
         configured_camera_view(task,'wrist',{'link':'wrong'})
+
+
+def test_ram_aimed_condition_changes_only_robot_local_view_and_notes():
+    from physical_exec.config import load_task
+    root = Path(__file__).resolve().parents[1]/'configs/tasks'
+    baseline, old_limits = load_task(root/'pc_ram.json')
+    aimed, new_limits = load_task(root/'pc_ram_wrist_aim.json')
+    assert {k for k in aimed if aimed[k] != baseline.get(k)} == {'wrist_target_hand','notes'}
+    assert aimed['wrist_target_hand'] == [0,0,.1034]
+    assert old_limits == new_limits

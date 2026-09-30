@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+NEW camera-enabled RAM: episodefebb2e8b8f8c4b6ab1a7dd160701fbde:0,
+worker79506 remote8772/local18772, initial capture done. Wrist pinch aiming and
+inspection/gaze controls confirmed enabled. Original RAM726 preserved on8771;
+no reset of it, no eviction. FLUX remains unloaded.251tests. Next fresh targeting
+and preclosure in the separately labeled camera condition; no grasp yet.
+
 RAM726 closure BLOCKED by visibility: current-only and history+current-depth
 reviews both say inspect. History supports nominal centering, not pad/holder
 clearance. No closure/lift/reset. Current worker lacks movable-camera flag;

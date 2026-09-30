@@ -1,5 +1,37 @@
 # RAM: next independent assembly experiment
 
+## New camera-enabled condition, original726 preserved
+
+New separate live episode `febb2e8b8f8c4b6ab1a7dd160701fbde:0`, worker79506,
+remote8772/local18772. This is NOT a continuation or reset of726. Original RAM
+worker78152/8771 remains held at726, verified by a fresh public read after launch.
+Other GPU episodes were not stopped. FLUX remains intentionally unloaded.
+
+The prior RAM launch omitted existing inspection-camera support and pinch-centered
+wrist aiming. This was a setup omission, not a model or physics limitation.
+`configs/tasks/pc_ram_wrist_aim.json` changes only the robot-local wrist target
+and explanatory notes versus baseline; instruction, external cameras, physics,
+rate and limits remain unchanged. Launch explicitly includes
+`--allow-inspection-camera --record-depth --allow-local-stages
+--local-stage-rotation-integral`. Live metadata confirmed camera and gaze control
+enabled plus `wrist_target_hand=[0,0,.1034]`. This is idealized simulated sensing,
+not qualified physical camera hardware or baseline FLUX conditioning.
+
+GPU1 had7433/24564MiB used before this separate launch, sufficient for another
+simulator. No active scene was evicted. Initialization and one explicit new-worker
+reset completed; zero commanded control actions or paid calls in this launch.
+The new wrist image shows both loose modules and part of the gripper; inspection
+at the future bite location is still untested. Do not claim the closure blocker
+solved before seeing that view at actual preclosure.
+
+Next: fresh targeting/heading for this camera condition, bounded preclosure, and
+use a sensor-grounded external inspection if pads/support are still occluded.
+Do not replay earlier pixel coordinates, which are invalid under the changed
+wrist orientation. Retained run/capture: `runs/ram_aimed_20260930` on host and
+`runs/ram_aimed_initial_capture` locally. Selected legal depth/calibration under
+`runs/ram_aimed_recordings`. [Initial wrist view](evidence/ram_aimed_initial/000000_wrist.png).
+251tests pass, including condition-isolation check; no new physical success.
+
 ## Closure review at726: visibility blocked, no closure
 
 Fresh public read confirms726. Current-only Astra review returns inspect: both
