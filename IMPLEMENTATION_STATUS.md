@@ -1,5 +1,11 @@
 # Implementation status / next-agent handoff
 
+Consolidated research update through experiment commit `81a8134`:
+[assisted grasp, carry, and coarse alignment](docs/RESEARCH_HANDOFF_GRASP_ALIGNMENT_20260930.md).
+It distinguishes verified component progress from incomplete installation,
+recovery, and matched policy comparisons. The entries below are chronological
+notes; older worker references are historical.
+
 ## Current experiment status (September 30 JST)
 
 LATEST: held1690 on103000/8772. Reviewed current-depth4cm approach passed
