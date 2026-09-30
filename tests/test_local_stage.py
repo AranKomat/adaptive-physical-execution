@@ -60,6 +60,30 @@ def test_stage_bounds_and_no_mutation(observation):
         validate_local_stage(value,obs)
 
 
+def test_fast_profile_requires_elevated_open_guarded_state(observation):
+    obs = replace(observation, eef_pose=np.array([0,0,.4,1,0,0,0]),
+                  gripper_open=1., control_dt=1/15)
+    value = {**request(obs), 'motion_profile':'elevated_open_2x', 'contact_tracking_guard':True}
+    validate_local_stage(value, obs)
+    for change in ({'contact_tracking_guard':False}, {'gripper_open':.05},
+                   {'hand_pose_world':[0,0,.29,1,0,0,0]}, {'motion_profile':'unbounded'}):
+        with pytest.raises(InputRejected):
+            validate_local_stage({**value, **change}, obs)
+    for changed_obs in (replace(obs,gripper_open=.7), replace(obs,control_dt=.1),
+                        replace(obs,eef_pose=np.array([0,0,.29,1,0,0,0]))):
+        with pytest.raises(InputRejected):
+            validate_local_stage(value,changed_obs)
+
+
+def test_double_speed_ramp_halves_time_to_same_target():
+    start = np.array([0,0,.4,1,0,0,0])
+    target = np.r_[0,0,.46,rotvec_to_quat([0,0,.16])]
+    slow = ramped_pose_target(start,target,40,.0015,.004)
+    fast = ramped_pose_target(start,target,20,.003,.008)
+    np.testing.assert_allclose(fast,slow,atol=1e-12)
+    np.testing.assert_allclose(fast,target,atol=1e-12)
+
+
 def test_camera_stage_is_opt_in_and_preserves_commanded_grip(observation):
     value = {**request(observation), 'camera_eye_world':[.6,-.35,.7],
              'camera_gaze_world':[.45,.03,.035]}

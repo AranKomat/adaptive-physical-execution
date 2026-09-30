@@ -15,10 +15,15 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     optional = ({'camera_eye_world'} if camera else set()) | ({'settle_at_end'} if 'settle_at_end' in fields else set())
     if 'contact_tracking_guard' in fields:
         optional.add('contact_tracking_guard')
+    if 'motion_profile' in fields:
+        optional.add('motion_profile')
     if camera and 'camera_gaze_world' in fields:
         optional.add('camera_gaze_world')
     if not isinstance(value, dict) or fields != required | optional:
         raise InputRejected('invalid local-stage fields')
+    profile = value.get('motion_profile', 'conservative')
+    if profile not in ('conservative', 'elevated_open_2x'):
+        raise InputRejected('unknown motion profile')
     if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
         raise InputRejected('settle_at_end must be boolean')
     if 'contact_tracking_guard' in value and type(value['contact_tracking_guard']) is not bool:
@@ -44,6 +49,12 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     opening = value['gripper_open']
     if isinstance(opening, bool) or not isinstance(opening, (float, int)) or not np.isfinite(opening) or not 0 <= opening <= 1:
         raise InputRejected('invalid gripper opening')
+    if profile == 'elevated_open_2x':
+        if (camera or value.get('contact_tracking_guard') is not True
+                or observation.gripper_open < .999 or opening != 1.
+                or min(observation.eef_pose[2], pose[2]) < .3
+                or observation.control_dt > 1/15+1e-10):
+            raise InputRejected('2x qualification requires elevated open hand, guard and <=1/15 cadence')
     if not isinstance(value['target_source'], str) or not 1 <= len(value['target_source']) <= 2000:
         raise InputRejected('explicit target provenance required')
     if camera:

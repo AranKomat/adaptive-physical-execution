@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+Prepared explicit elevated/open-hand2x speed profile (45mm/s,0.12rad/s), with
+default/contact rates unchanged. Qualification runner checks worker capability.
+267tests pass; NOT deployed or physically qualified. GPU-first plan contains
+the bounds and continuation sequence. Simulator-slot decision remains pending.
+
 USER DIRECTION: GPU-first; suspend RAM experiments. Qualify reliable faster local
 motion, then GPU manipulation and matched enhanced Direct-A/Direct-B/Hybrid.
 See `docs/GPU_FAST_EXECUTION_PLAN.md`. Keep native FLUX joint execution distinct

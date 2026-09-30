@@ -56,3 +56,13 @@ action counts. A controller test or visually plausible endpoint is not success.
 
 Current status: plan adopted, execution integration and fast physical
 qualification incomplete. Anti-windup is tested locally, not live-qualified.
+
+Prepared speed profile: `elevated_open_2x`,45mm/s and0.12rad/s, versus default
+22.5mm/s and0.06rad/s. Explicit request only; requires measured/commanded open
+gripper, both endpoint heights>=.30m, tracking guard, and cadence<=1/15s.
+Camera moves are excluded. These are experiment scope checks, NOT clearance
+certification. Default/contact behavior unchanged. Worker metadata advertises
+profiles; runner rejects old workers before reset. Run the ramp/return probe
+with `--motion-profile elevated_open_2x` only after conservative qualification.
+Not deployed or physically tested;267tests prove neither physical tracking
+performance nor grasp retention. Larger rates remain deferred.

@@ -21,7 +21,10 @@ def main():
                         help='qualify guard-enabled free-space execution; does not test a contact stall')
     parser.add_argument('--ramp-return-qualification', action='store_true',
                         help='Fresh worker only: guarded 12cm upward excursion and return; 256 actions maximum')
+    parser.add_argument('--motion-profile', choices=['conservative', 'elevated_open_2x'], default='conservative')
     args = parser.parse_args()
+    if args.motion_profile != 'conservative' and not args.ramp_return_qualification:
+        raise ValueError('experimental speed requires explicit ramp-return qualification')
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
     try:
@@ -33,6 +36,8 @@ def main():
         if args.ramp_return_qualification and (not args.contact_tracking_guard or
                 metadata.get('position_integral_antiwindup') != 'opposing_axis_reset_above_1mm'):
             raise ValueError('ramp return requires guarded anti-windup worker')
+        if args.motion_profile != 'conservative' and args.motion_profile not in metadata.get('local_motion_profiles', {}):
+            raise ValueError('worker does not advertise requested speed profile')
         write_json(args.output/'metadata.json', metadata)
         obs = decode_observation(client.call('/reset', {'seed': 0}, mutating=True))
         write_json(args.output/'initial.json', obs.public_state())
@@ -68,6 +73,7 @@ def main():
                            gripper_open=1., max_steps=steps, target_source='robot-only '+name+' qualification; unknown clearance')
             if args.ramp_return_qualification:
                 request['settle_at_end'] = name.endswith('arrive')
+                request['motion_profile'] = args.motion_profile
             if args.contact_tracking_guard:
                 request['contact_tracking_guard'] = True
             envelope = dict(command_id=uuid4().hex, action=request)

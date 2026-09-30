@@ -264,7 +264,8 @@ class EmbodiedSWEEnvironment:
                 if reason:
                     raise RuntimeError(reason)
                 waypoint = ramped_pose_target(ramp_start, target, index+1,
-                                              .0225*state.control_dt, .06*state.control_dt)
+                                              (.045 if value.get('motion_profile') == 'elevated_open_2x' else .0225)*state.control_dt,
+                                              (.12 if value.get('motion_profile') == 'elevated_open_2x' else .06)*state.control_dt)
                 raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
                 q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
                                                                device=self.sim.env.device)))[0]
@@ -363,6 +364,9 @@ class EmbodiedSWEEnvironment:
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "continuous_transit_enabled": True,
                 "position_integral_antiwindup": "opposing_axis_reset_above_1mm",
+                "local_motion_profiles": {"conservative": {"linear_m_s": .0225, "angular_rad_s": .06},
+                    "elevated_open_2x": {"linear_m_s": .045, "angular_rad_s": .12,
+                                         "qualification": "experimental; not contact or payload qualified"}},
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_gaze_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
