@@ -27,12 +27,15 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 budget: RunBudget, manifest_extra: dict | None = None, reference_run: str | Path | None = None,
                 allow_related_reference: bool = False, resume_observation_id: str | None = None,
                 local_eef_execution: bool = False, fast_open_transit: bool = False,
-                depth_queries: bool = False) -> Path:
+                depth_queries: bool = False, resume_after_ramp_budget: bool = False) -> Path:
     metadata = env.metadata()
+    if resume_after_ramp_budget and not (resume_observation_id and depth_queries and local_eef_execution):
+        raise ValueError('ramp-budget recovery requires explicit observation, depth queries and local execution')
     if depth_queries and (controller.mode == 'hybrid' or not metadata.get('depth_point_query_available')):
         raise ValueError('depth queries require capable worker and Direct mode')
     controller.depth_queries = depth_queries
     controller.depth_feedback = None
+    controller.depth_query_counts = {}
     if depth_queries:
         controller.memory.config = replace(controller.memory.config, image_layout='separate')
     if fast_open_transit and (not local_eef_execution
@@ -63,6 +66,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
     start = time.monotonic(); decisions = 0; rejections = 0; consecutive = 0; steps = 0
     evaluation = Evaluation(); terminal = "not_started"; error = None; source_steps = {}
     provider = controller.provider; obs = None
+    unfinished_target = None
+    recovery_measured = False
     try:
         if resume_observation_id is not None:
             if reference_run is None:
@@ -70,9 +75,31 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
             import json
             prior = Path(reference_run)
             prior_result = json.loads((prior/'result.json').read_text())
-            if prior_result['terminal_reason'] not in ('decision_budget', 'control_budget', 'wall_budget'):
+            if (not resume_after_ramp_budget
+                    and prior_result['terminal_reason'] not in ('decision_budget', 'control_budget', 'wall_budget')):
                 raise ValueError('only a clean budget-ended run may continue')
             prior_events = [json.loads(line) for line in (prior/'events.jsonl').read_text().splitlines()]
+            if resume_after_ramp_budget:
+                import numpy as np
+                from .geometry import pose_error
+                if prior_result['terminal_reason'] != 'local_stage_stopped_without_retry':
+                    raise ValueError('ramp recovery requires recorded local nonarrival')
+                receipt = [r['data'] for r in prior_events if r['kind']=='execution_receipt'][-1]
+                request = [r['data']['request'] for r in prior_events if r['kind']=='local_stage_requested'][-1]
+                initial = [r['data'] for r in prior_events if r['kind']=='observation'
+                           and r['data']['observation_id']==receipt['observation_id']][-1]
+                delta = pose_error(initial['eef_pose_world_xyz_wxyz'],request['hand_pose_world'])
+                ramp_seconds = max(np.linalg.norm(delta[:3])/.0225,np.linalg.norm(delta[3:])/.06)
+                if (receipt['reason'] != 'local stage budget ended without arrival'
+                        or receipt['executed_steps'] != receipt['requested_steps']
+                        or request.get('motion_profile') != 'conservative'
+                        or request['gripper_open'] != 1.
+                        or ramp_seconds <= receipt['sim_seconds']):
+                    raise ValueError('not an exhausted open conservative ramp; no recovery')
+                unfinished_target = request['hand_pose_world']
+                controller.ramp_budget_recovery = unfinished_target
+                trace.event('ramp_budget_recovery_scope',dict(previous_target=unfinished_target,
+                    rule='Fresh depth query required; unfinished target cannot be replayed; no guard relaxation'))
             last = [row['data'] for row in prior_events if row['kind'] == 'observation'][-1]
             if last['observation_id'] != resume_observation_id:
                 raise ValueError('prior trace does not end at requested observation')
@@ -92,7 +119,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
             from .memory import reference_from_run
             controller.memory.references = reference_from_run(reference_run, obs.robot, obs.task,
                 allow_related_task=allow_related_reference, expected_dt=obs.control_dt, expected_eef_frame=obs.eef_frame,
-                continuation_observation_id=resume_observation_id)
+                continuation_observation_id=resume_observation_id,
+                ramp_budget_history=resume_after_ramp_budget)
             trace.event("reference_loaded", {"source_run": str(Path(reference_run).resolve()),
                         "related_task_opt_in": allow_related_reference})
         trace.observation(obs)
@@ -125,11 +153,21 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                         if feedback['observation_id'] != obs.key:
                             raise InputRejected('stale depth response')
                         controller.depth_feedback = feedback
+                        controller.depth_query_counts[obs.key] = controller.depth_query_counts.get(obs.key,0)+1
+                        recovery_measured = any(s.get('status')=='measured' for s in feedback['samples'])
                         trace.event('depth_query_result', feedback)
                         continue
                     if decision.action is None:
                         terminal = "model_stopped_incomplete"; break
                     action = validate_chunk(decision.action, obs, controller.limits)
+                    if unfinished_target is not None:
+                        import numpy as np
+                        from .geometry import pose_error
+                        if not recovery_measured:
+                            raise InputRejected('Recovery requires a fresh valid depth query before motion')
+                        if (action.kind != 'eef_absolute_world' or len(action.values)!=1
+                                or np.linalg.norm(pose_error(action.values[0,:7],unfinished_target)) < .001):
+                            raise InputRejected('Recovery must choose a distinct single destination, not replay unfinished target')
                     if local_eef_execution and action.kind == 'eef_absolute_world' and len(action.values) != 1:
                         raise InputRejected('enhanced EEF execution requires exactly one destination')
                     remaining = budget.max_control_steps-steps
@@ -177,6 +215,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 controller.memory.commit(obs, result.observation, action, result.receipt, decision.raw,
                     local_destination=local_eef_execution and action.kind == 'eef_absolute_world')
                 obs = result.observation
+                unfinished_target = None
+                controller.ramp_budget_recovery = None
                 steps += result.receipt.executed_steps
                 source_steps[action.source] = source_steps.get(action.source, 0)+result.receipt.executed_steps
                 evaluation = result.evaluation; consecutive = 0

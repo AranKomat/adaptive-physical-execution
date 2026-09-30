@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+Latest: depth-led staged recovery arrived155 after5cm descent39actions,0.689mm
+error; model used measured height gap rather than blind full descent. No grasp.
+Fixed repeated-query prompt (first6calls had no motion); now2queries/observation
+plus stop option. Explicit ramp-budget-only continuation, no guard-stop retry.
+90072/8774 atc6a13a2ac0f6489a858b059df0d79d99:155;314tests/shared calls4441.
+Continue same episode contact geometry using prior trace. See GPU_FAST_EXECUTION_PLAN.
+
 LIVE depth-enabled Direct:5calls/116actions,$0.0721255, first fast approach
 arrived, next conservative18cm descent exceeded64-action ramp capacity and ended
 short. No contact/grasp/retry.90072/8774 holds c6a13a2ac0f6489a858b059df0d79d99:116.

@@ -162,7 +162,8 @@ def enforce_context_budget(messages: list[dict], cfg: MemoryConfig) -> dict:
 def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
                        max_chunks: int = 12, allow_related_task: bool = False,
                        expected_dt: float | None = None, expected_eef_frame: str | None = None,
-                       continuation_observation_id: str | None = None) -> list[dict]:
+                       continuation_observation_id: str | None = None,
+                       ramp_budget_history: bool = False) -> list[dict]:
     """Export successful simulated execution, or explicit same-episode history.
 
     Same robot/control contract required. Pure fixtures cannot become demonstrations.
@@ -180,6 +181,8 @@ def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
     continuing = continuation_observation_id is not None
     terminal_ok = (result.get('terminal_reason') in ('decision_budget', 'control_budget', 'wall_budget')
                    if continuing else result.get('native_success', False) and result.get('terminal_reason') == 'native_success')
+    if ramp_budget_history:
+        terminal_ok = continuing and result.get('terminal_reason') == 'local_stage_stopped_without_retry'
     if manifest.get("backend") == "fixture" or not terminal_ok or not result.get("valid_robot_result", False):
         raise ValueError("only a natively verified simulator rollout can become a reference")
     if manifest.get("robot") != expected_robot:
@@ -193,11 +196,14 @@ def reference_from_run(run: str | Path, expected_robot: str, expected_task: str,
     actions = {e["data"]["command_id"]: e["data"]["action"] for e in events if e["kind"] == "execution_requested"}
     receipts = [e["data"] for e in events if e["kind"] == "execution_receipt" and e["data"]["executed_steps"] > 0]
     if not receipts: raise ValueError("no executed reference chunks")
+    if ramp_budget_history and receipts[-1]['reason'] != 'local stage budget ended without arrival':
+        raise ValueError('ramp history cannot contain a terminal tracking guard stop')
     import numpy as np
     ids = sorted(set(np.linspace(0, len(receipts)-1, min(max_chunks, len(receipts)), dtype=int).tolist()))
     output = [user_text(
         '<CONTINUATION_HISTORY>Earlier executed chunks in THIS paused episode, NOT a successful demonstration. '
-        'The prior budget ended; a new bounded budget continues at the exact final observation. '
+        'The prior budget ended (possibly with nonarrival); read actual receipts, not commanded targets. '
+        'A new bounded budget continues at the exact final observation. '
         'TRAIN source tags below denote historical context only, not success. No evaluator labels supplied.</CONTINUATION_HISTORY>'
         if continuing else '<TRAIN_REFERENCE>Prior recorded procedure, not current geometry. Adapt all positions to current observations. No evaluator labels or reward supplied.</TRAIN_REFERENCE>')]
     prev_end = 0

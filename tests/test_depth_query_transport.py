@@ -91,3 +91,32 @@ def test_direct_query_then_action_budget_and_freshness(tmp_path):
     assert result['terminal_reason']=='decision_budget'
     assert ctrl.memory.config.image_layout=='separate'
     assert verify_trace(out)['images_checked']
+
+
+def test_repeated_queries_end_with_stop_option(tmp_path):
+    from dataclasses import replace
+    from physical_exec.backends.fixture import FixtureProvider
+    from physical_exec.runner import run_episode,RunBudget
+    from test_runner_transport import controller
+    class Env(FixtureEnvironment):
+        def metadata(self):
+            return {**super().metadata(),'depth_point_query_available':True}
+        def depth_points(self,obs,samples):
+            return dict(observation_id=obs.key,samples=[dict(status='measured')])
+    class Provider(FixtureProvider):
+        def act(self,instructions,messages,schema,timeout_seconds=None):
+            reply=super().act(instructions,messages,schema,timeout_seconds)
+            raw=reply.arguments.copy()
+            if self.calls <= 2:
+                raw.update(decision_type='measure_depth',actions=[],samples=[dict(
+                    camera=schema['properties']['samples']['items']['properties']['camera']['enum'][0],
+                    pixel_uv=[2,2])])
+            else:
+                assert schema['properties']['decision_type']['enum']==['act','stop']
+                raw.update(decision_type='stop',actions=[],samples=[])
+            return replace(reply,arguments=raw)
+    run=run_episode(Env(),controller(provider=Provider()),tmp_path/'run',0,
+                    RunBudget(6,30,60),depth_queries=True)
+    result=json.loads((run/'result.json').read_text())
+    assert result['decision_count']==3 and result['executed_control_steps']==0
+    assert result['terminal_reason']=='model_stopped_incomplete'

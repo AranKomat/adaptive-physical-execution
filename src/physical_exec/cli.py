@@ -58,6 +58,7 @@ def parser():
     r.add_argument('--local-eef-execution',action='store_true',help='Enhanced single EEF destination via guarded local feedback; joint proposals unchanged')
     r.add_argument('--fast-open-transit',action='store_true',help='Opt-in experimental 5x elevated open-hand transit; other local motion remains conservative')
     r.add_argument('--depth-queries',action='store_true',help='Enhanced Direct read-only pixel-depth queries, counted against decisions')
+    r.add_argument('--resume-after-ramp-budget',action='store_true',help='Explicit depth-led recovery only after proven open conservative ramp exhaustion')
     r.add_argument("--max-images",type=int,default=50);r.add_argument("--image-edge",type=int,default=640)
     r.add_argument("--max-decisions",type=int,default=100);r.add_argument("--max-control-steps",type=int,default=1800)
     r.add_argument("--max-wall-seconds",type=float,default=1800);r.add_argument("--max-total-tokens",type=int,default=20_000_000)
@@ -170,7 +171,8 @@ def main(argv=None):
                             reference_run=args.reference_run,allow_related_reference=args.allow_related_reference,
                             resume_observation_id=args.resume_observation_id,
                             local_eef_execution=args.local_eef_execution,
-                            fast_open_transit=args.fast_open_transit,depth_queries=args.depth_queries)
+                            fast_open_transit=args.fast_open_transit,depth_queries=args.depth_queries,
+                            resume_after_ramp_budget=args.resume_after_ramp_budget)
             render_html(out)
             result=json.loads((out/"result.json").read_text())
             print(json.dumps(result,indent=2))

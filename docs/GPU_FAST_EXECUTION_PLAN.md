@@ -5,6 +5,24 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+DEPTH-LED STAGING RECOVERY: current90072/8774 episode
+c6a13a2ac0f6489a858b059df0d79d99:155. Explicit ramp-budget recovery checks prior
+receipt reason, full budget consumption, open conservative profile, nominal ramp
+longer than executed duration, same observation and prior trace; requires fresh
+valid depth before a distinct target (old unfinished target rejected). Guard or
+ambiguous stops remain ineligible. First6-call attempt only queried repeatedly,
+zero motion: prompt still said obtain fresh depth even after success. Corrected
+prompt marks prerequisite satisfied; max2queries per observation, explicit stop
+option avoids forced action. Then3calls: query ->5cm shorter descent ->new query.
+Model cited measured~.144m top vs~.2235m pinch and chose~.029m standoff remaining.
+39actions,2.6sim/16.614execution wall seconds,0.689mm endpoint error, no guard;
+whole segment38.542wall seconds,$0.2132525. Settling fix has native evidence for
+this open-hand stage (not closure/payload). No grasp/contact success. Full trace
+verified; evidence gpu_depth_replanned155.314tests pass. Shared calls4441.
+Next bounded continuation from155 with its trace toward contact geometry; no
+fresh reset needed. Queries at155 exist in trace but current continuation memory
+does not import query results, so must re-query or add explicit same-ID binding.
+
 FIRST LIVE DEPTH DIRECT TRIAL: worker90072/8774, fresh episode
 c6a13a2ac0f6489a858b059df0d79d99 now116.5calls (3queries/2actions),$0.0721255,
 116actions,7.733sim/80.065wall seconds. First query incorrectly used collage

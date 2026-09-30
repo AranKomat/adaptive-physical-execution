@@ -156,6 +156,17 @@ class ControllerPort:
         self.last_reply = None; self.last_proposal = None
         messages = self.memory.render(observation)
         prompt = BASE_PROMPT + ("\n" + HYBRID_GATE if self.mode == "hybrid" else "")
+        if getattr(self,'ramp_budget_recovery',None) is not None:
+            prompt += ('\nEXPLICIT RAMP-BUDGET RECOVERY: the previous conservative move did not '
+                'arrive because its ramp exceeded action duration. Start from CURRENT measured pose. '
+                'Choose a distinct shorter/staging target if supported; '
+                'do NOT replay the unfinished target: '+dumps(self.ramp_budget_recovery))
+            feedback = getattr(self,'depth_feedback',None)
+            measured = (feedback is not None and feedback['observation_id']==observation.key
+                        and any(s.get('status')=='measured' for s in feedback['samples']))
+            prompt += (' Fresh-depth prerequisite is SATISFIED by current measurements; do not refresh '
+                       'the same static pixels just to satisfy it again.' if measured else
+                       ' Fresh-depth prerequisite is NOT yet satisfied: first query current visible pixels.')
         if getattr(self, 'local_eef_execution', False):
             prompt += ('\nENHANCED EEF EXECUTION: supply exactly one EEF target per decision. '
                 'It is a bounded destination, not a single control-tick command: local feedback '
@@ -205,7 +216,9 @@ class ControllerPort:
             if self.mode == 'hybrid':
                 raise ValueError('depth queries currently require Direct mode')
             schema['properties']['actions']['minItems'] = 0
-            schema['properties']['decision_type'] = {'type':'string','enum':['act','measure_depth']}
+            query_count = getattr(self,'depth_query_counts',{}).get(observation.key,0)
+            schema['properties']['decision_type'] = {'type':'string',
+                'enum':['act','measure_depth','stop'] if query_count < 2 else ['act','stop']}
             schema['properties']['samples'] = {'type':'array','minItems':0,'maxItems':6,
                 'items':obj({'camera':{'type':'string','enum':list(observation.images)},
                              'pixel_uv':{'type':'array','minItems':2,'maxItems':2,'items':{'type':'integer'}}})}
@@ -217,6 +230,9 @@ class ControllerPort:
                 'nonempty actions. A surface sample is not object center, hidden thickness or clearance. '
                 'Use measured offsets before uncertain contact positioning; never copy a face offset '
                 'as a grasp-center correction. Query results are valid only for the current observation.')
+            prompt += (f' Already used {query_count}/2 queries at this observation. '
+                'For decision_type=stop use actions=[] and samples=[] when evidence is insufficient. '
+                'After two queries, act only if supported or stop; no forced motion.')
             prompt += '\nCamera-local image sizes (width,height): '+dumps({
                 role:[int(im.shape[1]),int(im.shape[0])] for role,im in observation.images.items()})
             prompt += ' Use per-camera pixels, NEVER coordinates across a multi-camera panel.'
@@ -231,6 +247,10 @@ class ControllerPort:
         if raw["observation_id"] != observation.key:
             raise InputRejected("model selected an old observation")
         if getattr(self,'depth_queries',False):
+            if raw['decision_type']=='stop':
+                if raw['actions'] or raw['samples']:
+                    raise InputRejected('stop must contain no actions or samples')
+                return ControllerDecision(None,raw,reply.usage,reply.response_id)
             if raw['decision_type']=='measure_depth':
                 if raw['actions'] or not raw['samples']:
                     raise InputRejected('depth query requires samples and no actions')
