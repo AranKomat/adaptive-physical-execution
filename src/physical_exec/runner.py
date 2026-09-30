@@ -26,12 +26,17 @@ class RunBudget:
 def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 budget: RunBudget, manifest_extra: dict | None = None, reference_run: str | Path | None = None,
                 allow_related_reference: bool = False, resume_observation_id: str | None = None,
-                local_eef_execution: bool = False) -> Path:
+                local_eef_execution: bool = False, fast_open_transit: bool = False) -> Path:
     metadata = env.metadata()
+    if fast_open_transit and (not local_eef_execution
+            or 'elevated_open_5x' not in metadata.get('local_motion_profiles',{})
+            or metadata.get('trajectory_feedforward') != 'one_step_world_increment_optional'):
+        raise ValueError('fast open transit requires enhanced execution and capable worker')
     if local_eef_execution:
         if not metadata.get('local_stages_enabled') or not metadata.get('contact_tracking_guard_enabled'):
             raise ValueError('enhanced EEF execution requires guarded local stages')
     controller.local_eef_execution = local_eef_execution
+    controller.fast_open_transit = fast_open_transit
     if metadata.get("backend") not in ("fixture", "embodiedswe") or metadata.get("real_hardware_supported") is not False:
         raise ValueError("this runner accepts only the audited simulation/fixture backends, never real hardware")
     manifest = {"software": "physical-exec/0.1.0", **(manifest_extra or {}), **metadata,
@@ -41,7 +46,7 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 "measured gripper aperture", "task text", "execution receipts", "robot-only FK"],
                 "privileged_policy_inputs": False, "model_tools": ["Act"],
                 "scope": "SIMULATION ONLY; no certified safety or real-robot execution",
-                "local_eef_execution":local_eef_execution}
+                "local_eef_execution":local_eef_execution,"fast_open_transit":fast_open_transit}
     trace = TraceWriter(output, manifest)
     start = time.monotonic(); decisions = 0; rejections = 0; consecutive = 0; steps = 0
     evaluation = Evaluation(); terminal = "not_started"; error = None; source_steps = {}
@@ -121,6 +126,12 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                             gripper_open=float(action.values[0,7]),max_steps=min(64,remaining),
                             contact_tracking_guard=True,
                             target_source='Enhanced policy EEF destination; '+action.source)
+                        if (fast_open_transit and obs.gripper_open >= .999
+                                and request['gripper_open'] == 1.
+                                and min(obs.eef_pose[2],request['hand_pose_world'][2]) >= .3):
+                            request.update(motion_profile='elevated_open_5x',trajectory_feedforward=True)
+                        else:
+                            request['motion_profile']='conservative'
                         validate_local_stage(request,obs)
                         trace.event('local_stage_requested',dict(command_id=command_id,request=request,
                             proposal_id=action.proposal_id,policy_source=action.source))

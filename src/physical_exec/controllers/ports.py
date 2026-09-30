@@ -161,6 +161,11 @@ class ControllerPort:
                 'may execute up to64 actions before returning a fresh observation/receipt. '
                 'Do not send a multi-target EEF sequence. Native joint proposals retain their '
                 'original timing. A local tracking stop or nonarrival ends this run without retry.')
+            if getattr(self,'fast_open_transit',False):
+                prompt += (' Elevated open-hand destinations use experimental smooth5x transit when both '
+                    'hand endpoint heights are at least0.30m; other destinations use conservative motion. '
+                    'This geometric scope rule does NOT establish obstacle clearance. Choose targets '
+                    'from current evidence, not merely to qualify for the fast profile.')
         if observation.robot == 'franka' and observation.eef_frame == 'panda_hand':
             # Pinned EmbodiedSWE robot pad-center convention, also used by its RL tasks.
             pinch = (pose_matrix(observation.eef_pose) @ np.array([0., 0., .1034, 1.]))[:3]

@@ -11,25 +11,35 @@ from test_runner_transport import controller
 
 @pytest.mark.parametrize('mode',['direct_roboicl','direct_reference','hybrid'])
 @pytest.mark.parametrize('stop',[False,True])
-def test_local_policy_actual_budget_and_stop(tmp_path,mode,stop):
+@pytest.mark.parametrize('fast',[False,True])
+@pytest.mark.parametrize('elevated',[False,True])
+def test_local_policy_actual_budget_and_stop(tmp_path,mode,stop,fast,elevated):
     class Env(FixtureEnvironment):
         local_calls=0
+        def reset(self,seed=0):
+            super().reset(seed)
+            self.pose[2]=.4 if elevated else .2
+            return self._observe()
         def metadata(self):
-            return {**super().metadata(),'local_stages_enabled':True,'contact_tracking_guard_enabled':True}
+            return {**super().metadata(),'local_stages_enabled':True,'contact_tracking_guard_enabled':True,
+                    'local_motion_profiles':{'elevated_open_5x':{}},
+                    'trajectory_feedforward':'one_step_world_increment_optional'}
         def local_stage(self,request,cid):
             self.local_calls+=1
             before=self._observe()
-            assert request['max_steps']==7
+            assert request['max_steps']==32
+            assert request['motion_profile']==('elevated_open_5x' if fast and elevated else 'conservative')
+            assert request.get('trajectory_feedforward',False)==(fast and elevated)
             self.seq+=7
             self.pose=np.array(request['hand_pose_world'])
             after=self._observe()
-            return StepResult(after,ExecutionReceipt(cid,before.key,after.key,7,7,'executed',
+            return StepResult(after,ExecutionReceipt(cid,before.key,after.key,32,7,'executed',
                 'contact tracking guard stopped motion' if stop else 'local stage arrived',
                 'sensor_local_diffik',7/15,.01),self.evaluate())
     env=Env(complete_after=100)
     ctrl=controller(mode)
     ctrl.horizon=1
-    run=run_episode(env,ctrl,tmp_path/'run',0,RunBudget(5,7,60),local_eef_execution=True)
+    run=run_episode(env,ctrl,tmp_path/'run',0,RunBudget(1,32,60),local_eef_execution=True,fast_open_transit=fast)
     result=json.loads((run/'result.json').read_text())
     if mode=='hybrid':
         # Fixture hybrid accepts native joint proposals; local routing must not rewrite them.
@@ -37,6 +47,6 @@ def test_local_policy_actual_budget_and_stop(tmp_path,mode,stop):
     else:
         assert env.local_calls==1
         assert result['executed_control_steps']==7
-        assert result['terminal_reason']==('local_stage_stopped_without_retry' if stop else 'control_budget')
+        assert result['terminal_reason']==('local_stage_stopped_without_retry' if stop else 'decision_budget')
         assert 'receipt counts local control actions' in str(ctrl.memory.records)
     verify_trace(run)
