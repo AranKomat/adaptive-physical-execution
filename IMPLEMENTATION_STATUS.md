@@ -846,6 +846,13 @@ benchmark sweeps, download every dataset, or port to another GPU software stack 
 
 ## Validation interpretation
 
+New native-resolution episode: current depth support/finger samples informed
+one bounded Astra closure hypothesis, then guarded closure and larger upward
+extension retained the GPU clear of the support at667. Assisted grasp/lift now
+has actual renderer evidence in `docs/evidence/native_grasp_lift_20260930`.
+No installation/release/recovery or matched policy success.407 CPU tests pass;
+see HIGH_RESOLUTION_GRASP report for raw nonarrival receipts and limitations.
+
 Native-resolution grasp continuation reached open-hand preclosure at331 and
 completed one targeted camera hold to395. Fresh Astra review resolved longitudinal
 centering but still declined closure on pad/support occlusion. No closure/lift

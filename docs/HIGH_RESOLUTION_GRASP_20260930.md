@@ -1,5 +1,11 @@
 # Native-Resolution Integrated Grasp Continuation
 
+**Latest physical result:** fresh image-targeted, depth-supported assisted closure
+and lift retained the card clear of its support at667. Installation/release,
+recovery and matched-method comparisons remain incomplete. This is meaningful
+grasp/lift progress, not completion of the project or proof of autonomous grasp
+planning, unassisted physics, or strict clearance.
+
 ## Condition
 
 Separate fresh1920x1080 RGB-D episode on8780:
@@ -46,6 +52,68 @@ admission result is not a failed physical grasp and not a new completed phase.
 
 ## Software Correction
 
+### Depth-Supported Contact Hypothesis
+
+At395, three explicitly operator-selected current right-camera samples supplied
+new metric evidence without another view. Support upper-face hypotheses at
+[800,818] and[950,822] deprojected to world z0.085105m; their fitted normals were
+nearly vertical, with sub-micrometre plane RMS in this idealized sensor. A visible
+distal OUTER finger surface at[940,735] was z0.126537m. The nominal robot pinch
+center was z0.129335m. Thus that visible finger sample is41.43mm above the sampled
+support, and the nominal pinch44.23mm above it. These are surface-height
+differences, NOT minimum clearance, calibrated uncertainty, full finger-volume
+geometry or hidden inner-pad measurements. Operator labels remain hypotheses.
+
+One fresh Astra review was given these raw samples plus an explicitly scoped
+proposal: hold current hand pose, opening0.3, at most64 actions/15Hz, existing
+10mm/0.10rad per-action tracking stop, no lift/transit/retry, assistance ON and
+unknown external clearance. Astra corroborated the sample labels and returned
+`close_candidate`. The earlier `inspect` was not edited or relabeled as approval;
+this is new depth evidence AND a more explicitly bounded contact condition, so
+it does not isolate the causal effect of depth alone. No strict safety gate was
+relaxed. Cost$0.0455775; cumulative reservation count4519.
+
+The separately executed closure completed64 actions at459, strict endpoint
+arrival:0.423mm hand error/0.001127rad,90.01s wall time. Fresh images show narrowed
+fingers around the card, without an obvious support strike. Capture remains
+unverified from closure alone. A separate one-shot5cm upward diagnostic was
+submitted with aperture0.3, tracking guard and declared10mm/0.15rad final motion
+bounds; this does not authorize a carry or imply grasp success. No automatic
+retry is allowed.
+
+Short lift outcome at523:64 actions, raw reason `local stage budget ended without
+arrival`,4.285mm final position error/0.002968rad. This passed the predeclared
+exploratory motion bounds without a guard stop; raw precision nonarrival is
+retained. Before/after visual review returned `partial_contact`: both card ends
+rose and the card/finger relation was similar, but no definite gap from the
+support's upper edge was visible. It is not yet a verified unsupported grasp.
+Review cost$0.03747125; cumulative reservation count4520.
+
+One new operator-defined upward extension was then declared from the CURRENT
+523 hand pose:179mm up (approximately18cm), no lateral/reorientation/aperture
+change, three continuous guarded stages/max192 actions, final endpoint motion
+bounds10mm/0.03rad. This is a separate larger retention/clearance test, not a
+retry to force the missed short-lift endpoint. No carry/contact with the case or
+release is included.
+
+The extension completed144 actions at667. Intermediate stages passed; final
+receipt remained precision nonarrival at4.699mm/0.000181rad, inside the declared
+lift-only bounds. Wall time208.07s versus9.6s simulated time. Fresh independent
+operator review of left/right images shows the entire card above the now-empty
+support, retained near its upper edge by the hand. This establishes assisted
+grasp/lift for this episode, not stability under arbitrary manipulation.
+
+Actual renderer evidence (no world model or generative enhancement):
+
+![Before closure: card supported](evidence/native_grasp_lift_20260930/before_left.png)
+
+![After extension: card retained above empty support](evidence/native_grasp_lift_20260930/held_left.png)
+
+Public evidence also retains the raw final receipt, three current depth samples
+and the scoped contact review under `docs/evidence/native_grasp_lift_20260930`.
+No evaluator/object pose or API credentials are included. The next action is one
+arm-hold camera overview for destination targeting, not another grasp-view sweep.
+
 Preclosure and lift review builders now reuse bounded overview encoding.
 Preclosure uses native-coordinate declarations and supports explicitly mapped
 sensor crops; old hardcoded640x360 language/full1920 API image payloads were
@@ -54,21 +122,54 @@ Tests cover640/1920 image bounds and coordinate/crop mapping; invalid crop
 bounds fail before writing a request. These checks do not complete phases.
 Review of a camera probe requires a matching completed open-hand hold receipt,
 not an invented descent stage. Full CPU suite:398 passed.
+New `prepare_grasp_contact_proposal.py` records operator sample hypotheses,
+measured/rejected patches, hand-relative offsets and exact bounded proposal.
+Stale inputs/invalid apertures fail; rejected depth never becomes free-space
+evidence. It contains no simulator control or evaluator input.405 CPU tests pass;
+new-script/test lint passes. These are component checks, not phase completion.
 
 ## Next Physical Milestones
 
-1. Before any closure, address the specific remaining contact/support ambiguity
-   with sensor-derived finger/support geometry and an explicit bounded contact
-   hypothesis. Stop repeating RGB-only reviews or nearby viewpoints. Neither
-   the advisory model's uncertainty nor one visible free ray is a clearance
-   certificate; do not relabel the existing `inspect` as approval.
-2. One proposed-aperture closure and bounded short lift, with unchanged raw
-   stop checks and no automatic retry. Independently compare before/after
-   images for card motion, support clearance and retention.
-3. If retained, continue feature-relative carry/mating using fresh native
+### Destination Detail And Geometric Validation
+
+An arm-hold destination overview completed at731, preserving the held card and
+aperture. A correspondence review with only a native right-camera socket crop
+returned `inspect`, with no resolved key or endpoints. At the SAME physical
+state, adding a native left-camera connector crop returned
+`correspondence_visible` and key visibility. This supports paired-detail
+presentation, not a controlled resolution comparison or insertion success.
+
+Three selected endpoints passed3x3 measured-depth validation: connector end_a
+left[491,497], socket end_a right[1224,534], and socket end_b right[1031,521].
+Connector end_b left[421,470] FAILED the depth-discontinuity check. Its center
+ray hit the background table (world z0.000087m), with nearby optical depths
+spanning1.18675-1.72628m. It must not be used to fit connector alignment.
+Visual correspondence is therefore only partially geometrically validated.
+
+A separate current-depth carry review selected valid center anchors at
+left[450,474] and right[1110,528]. An elevated approximately43.9cm translation
+was submitted with retained attitude/aperture and per-action tracking guards;
+it does not use the rejected endpoint or include insertion, descent or release.
+The carry completed328 actions at1059: all eight intermediate stages passed,
+and final strict arrival passed at0.877mm/0.000427rad. This establishes hand
+arrival only; fresh images must establish card retention and mating visibility.
+Operator review of final left/right renderer images shows the card still
+suspended above the motherboard; the right image exposes the gold connector
+and socket region. This is visual retention evidence, not a validated alignment
+or mating measurement. No insertion, descent or release occurred.
+
+The working controller is an operator-defined sensor/local differential-IK
+sequence with Astra review, NOT FLUX Hybrid or per-step GPT Direct. Idealized
+camera geometry and native grasp assistance remain disclosed. Following the
+external feedback, the next objective is one bounded serious insertion attempt
+if geometry supports it, otherwise a clean negative and changed condition;
+no further broad camera, prompt or aperture sweep is planned.
+
+1. Continue feature-relative carry/mating using fresh native
    sensor crops. Do not reuse held8772 coordinates or infer insertion from
-   hand arrival. If not retained, record the physical negative result.
-4. Independently verified insertion/release and recovery remain incomplete;
+   hand arrival. Preserve measured aperture and label idealized camera/grasp
+   assistance. The fresh grasp/lift is achieved only in this assisted condition.
+2. Independently verified insertion/release and recovery remain incomplete;
    matched Direct/FLUX comparison must use equal sensing/action semantics.
 
 Relevant local artifacts: `runs/gpu1920_close_target`,

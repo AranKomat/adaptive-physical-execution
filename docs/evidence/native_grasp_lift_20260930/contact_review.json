@@ -1,0 +1,50 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:395",
+  "decision": "close_candidate",
+  "opposing_contact_evidence": "The wrist view shows the open fingers on opposite sides of the graphics-card assembly, supporting a thickness-direction closure hypothesis. The right view corroborates the near finger overlapping the board's interior region. Both exact inner pad contact patches are not visible; the measured finger point is an outer surface, not evidence of pad contact.",
+  "longitudinal_center_evidence": "The right view places the visible finger approximately in the board's longitudinal middle region rather than at an end. The wrist view is consistent with an interior grasp location. This supports approximate longitudinal alignment, not an exact contact centroid or center-of-mass grasp.",
+  "interference_evidence": {
+    "measured_separation": "The accepted support samples are at world z approximately 0.08510 m. The visible distal finger sample is approximately 41.43 mm higher, and the nominal pinch reference is approximately 44.23 mm above those support samples.",
+    "relevance": "This separation helps resolve the apparent support/finger overlap in RGB and supports trying closure without lowering the hand. No interference requiring repositioning is evident in the supplied views.",
+    "limits": "These are local surface-height differences, not minimum finger clearance or a swept-volume check. Unseen finger geometry, board components, the support's remaining geometry and nearby enclosure remain possible interference sources."
+  },
+  "measurement_label_assessment": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        800,
+        818
+      ],
+      "assessment": "Corroborated: the pixel lies on the narrow visible upper face of the gray support, left of the finger. The measured locally horizontal plane is consistent with that interpretation."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        950,
+        822
+      ],
+      "assessment": "Corroborated: the pixel lies on the gray support's upper face below the visible finger. Its height and locally horizontal plane agree with the other support sample."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        940,
+        735
+      ],
+      "assessment": "Corroborated: the pixel lies on the visible distal robot finger surface. The locally near-vertical plane is consistent with an outer face; it does not identify the hidden inner pad."
+    }
+  ],
+  "uncertainty": [
+    "Exact opposing contact locations, pad engagement and component loading remain unknown.",
+    "The samples do not establish exhaustive clearance; local depth spread is not calibrated geometric uncertainty.",
+    "Normalized opening 0.3 does not by itself establish physical pad spacing or capture.",
+    "Simulator grasp assistance is enabled and may affect apparent retention. This is exploratory simulator authorization only, not hardware or strict benchmark certification."
+  ],
+  "expected_effect": "Hold the current hand pose and reduce normalized opening toward 0.3 for at most 64 actions at 15 Hz, approximately 4.27 seconds. The fingers may engage opposite sides of the card assembly. Arrival at the setpoint, narrowing, or assisted attachment must not be interpreted as verified capture. No lift, transit or automatic retry is authorized.",
+  "stop_conditions": [
+    "Apply the existing per-action tracking stop at 10 mm positional or 0.10 rad angular deviation; this is not force or contact sensing.",
+    "End on reaching the declared opening setpoint or the 64-action limit, whichever occurs first.",
+    "If observed, stop for support/enclosure interference, unexpected card displacement, visibly asymmetric engagement or worsening misalignment; inspect before further action.",
+    "Do not lift, transit or retry automatically after closure or a stop."
+  ]
+}

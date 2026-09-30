@@ -1,10 +1,38 @@
+import base64
+import io
 import json
-from pathlib import Path
 import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 from PIL import Image
+
+
+@pytest.mark.parametrize('stage,accepted', [('correspondence', True), ('grasp', False)])
+def test_paired_native_crops_preserve_both_feature_mappings(tmp_path, stage, accepted):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
+    for role in ('left', 'right', 'wrist'):
+        Image.new('RGB', (1920, 1080)).save(tmp_path/f'{role}.png')
+    output = tmp_path/'messages.json'
+    script = Path(__file__).parents[1]/'scripts/prepare_sensor_target_request.py'
+    result = subprocess.run([sys.executable, str(script), '--capture', str(tmp_path),
+        '--stage', stage, '--closeup-left', '320', '350', '650', '570',
+        '--closeup-right', '950', '480', '1280', '570', '--output', str(output)],
+        capture_output=True, text=True, check=False)
+    assert (result.returncode == 0) == accepted
+    if not accepted:
+        assert not output.exists()
+        return
+    content = json.loads(output.read_text())[0]['content']
+    assert sum(p['type'] == 'image_url' for p in content) == 5
+    assert any('320 + displayed_u' in p.get('text', '') for p in content)
+    assert any('950 + displayed_u' in p.get('text', '') for p in content)
+    for part in content:
+        if part['type'] == 'image_url':
+            with Image.open(io.BytesIO(base64.b64decode(
+                    part['image_url']['url'].split(',', 1)[1]))) as image:
+                assert max(image.size) <= 640
 
 
 @pytest.mark.parametrize('stage,accepted', [('socket_gap', True), ('grasp', False)])
