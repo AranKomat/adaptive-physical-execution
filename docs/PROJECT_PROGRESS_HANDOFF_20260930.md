@@ -5,7 +5,65 @@ ten-hour work period as requested by the user, not the older BEHAVIOR project
 or the entirety of the earlier EmbodiedSWE coding-agent experiments. Durations
 below are measured per experiment; the ten-hour description is approximate.
 
-## Latest continuation (supersedes the older live-state section below)
+## Current Status (Supersedes All Historical Entries Below)
+
+Latest repository continuation: September30 JST, after RAM observation753.
+The original phase0--7 experiment sequence remains the objective. Recent work
+has been sensor-grounded local-controller manipulation, NOT a demonstrated
+FLUX+GPT hybrid success. Component tests and camera improvements do not complete
+the remaining task, baseline-comparison, hybrid, recovery, or memory requirements.
+
+| Track | Actual outcome | Still missing |
+| --- | --- | --- |
+| GPU manipulation | Assisted lift/carry demonstrated; subsequent release tipped card onto motherboard. Posthoc success=false, score0.33333334. | Installation and successful same-episode recovery. |
+| GPU recovery | Distinct views and grasp hypotheses tested; held at2813. | Supported accessible contact strategy and verified recovery. |
+| RAM | Three camera conditions; approaches and open-hand placements tested. Latest rear-module approach passed, descent overshot. | First verified grasp/lift, both modules installed, isolated native success. |
+| Local controller | Continuous intermediate motion qualified; original position integral contributed to descent overshoot. | New anti-windup change physically qualified, including loaded behavior later. |
+| Hybrid/memory | Existing plumbing and historical sensor context; FLUX currently unloaded. | Integrated useful policy-proposal execution and actual memory-assisted recovery comparison. |
+
+### Latest Failure and Fix
+
+Current RAM episode `bbd50fc209d44f9a84b12ee63827f0ff:753`, worker81115,
+remote8773/local18773. Fresh model-selected rear module;249-action approach
+succeeded.504-action preclosure ended with hand z162.612mm versus166.933mm
+target:4.320mm downward overshoot, NOT stopping above the goal. No closure,
+lift, retry, or threshold relaxation. Current evidence and images:
+[RAM trial](RAM_FIRST_TRIAL.md).
+
+[Latest RAM video](evidence/ram_contact_preclosure_753/right_1x.mp4):754 genuine
+per-latch frames, initial state through753;50.23seconds at1x simulated time.
+Model waits are excluded and grasp-assist status is labeled. This shows the
+OLD controller trial ending before closure, not a successful anti-windup test.
+
+Rigid wrist-camera calibration reconstructs the trajectory from legal sensor
+and robot data. Old position integral reached about-6.364mm near target crossing
+and kept requesting downward motion. Local anti-windup now clears opposing
+per-axis integral beyond1mm crossing.265tests pass, including qualification
+runner tests; this is NOT physical validation. Held workers still use old code.
+
+A review-prompt bug also mattered: inherited holder height initially produced
+approval. That review was discarded before motion. Removing the unsupported
+number produced inspect; measuring the actual current visible holder lip then
+supported exploratory open-hand placement. No claim of hidden clearance follows.
+
+### Immediate Continuation
+
+Both GPUs are nearly full with six retained scenes. Baseline RAM726 recordings
+(2.3GB) are backed up locally and checksum-matched, but not a resumable simulator
+snapshot. Awaiting the user's retention decision before closing baseline78152
+to free one slot; no process has been stopped. Preserve current RAM753 and GPU
+recovery2813. Exact status: [implementation handoff](../IMPLEMENTATION_STATUS.md).
+
+Next run the prepared fresh-worker, guarded12cm upward/return qualification
+(`probe_local_stage_service.py --ramp-return-qualification --contact-tracking-guard`).
+Max256actions, unchanged strict arrival, no object contact intended, no paid calls.
+If it passes, proceed toward an actual reviewed RAM grasp/lift; do not substitute
+more passing component tests. After useful manipulation, return to the original
+hybrid/proposal and execution-memory comparisons. Do not call local DiffIK work
+FLUX performance. If it fails, preserve the evidence and reconsider the controller
+approach rather than extending the same failed target indefinitely.
+
+## Historical Continuations (Not Current Worker State)
 
 NEWEST: [guarded lift/carry continuation](GUARDED_CARRY_CURRENT.md) supersedes
 the older entries below. Explicit23cm lift707 actions and carry328 actions
