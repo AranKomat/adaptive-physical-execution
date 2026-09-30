@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+PHYSICAL SPEED RESULT:5x+feedforward passed12cm up/return68actions,4.533sim
+seconds, endpoint0.336/0.216mm.3.07x faster elapsed sim time than conservative.
+Subsequent10x attempt guard-stopped8actions; no return/retry. Retained worker86507
+remote8774/local18774, episode4d39db60cb234fbf899be392416bddea:76.
+Stop serial speed tuning; carry forward5x unloaded vertical evidence toward GPU
+manipulation. Rotation/payload/contact unqualified. See GPU_FAST_EXECUTION_PLAN.
+
 5x diagnosis: command increments max0.018153rad<0.06rad/tick, so observed stop
 was not per-tick joint-command rate saturation. Optional one-step trajectory
 feedforward added for fast smooth qualification only, unchanged tracking/caps.

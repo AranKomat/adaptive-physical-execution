@@ -16,6 +16,27 @@ Preserve historical trials as historical evidence, not matched comparisons.
 
 ## Immediate sequence
 
+FEEDFORWARD PHYSICAL RESULT:5x passed12cm up/return in33+35=68actions,
+4.533sim/29.313execution wall seconds. Endpoint errors0.336/0.216mm, no guard
+stop. Compared with conservative209actions/13.933sim seconds:3.07x faster
+including acceleration and settling, not5x elapsed-time speedup. Same GPU task,
+camera config, seed and path;5x uses smooth whole-move paths and stable settling.
+Relative to FAILED smooth5x without feedforward, fresh5x+feedforward passed.
+[Up receipt](evidence/gpu_fast_ff/0_receipt.json),
+[return receipt](evidence/gpu_fast_ff/1_receipt.json).
+
+Then explicit10x qualification continued from successful returned68 without reset.
+It stopped after8actions at76 by unchanged tracking guard; no return/retry.
+[10x stop](evidence/gpu_fast_ff/10x_stop_receipt.json). Current worker86507/8774,
+episode4d39db60cb234fbf899be392416bddea:76, retained. Failed old5x worker85321
+archived locally under runs/gpu_fast5_full_backup and retired before fresh test.
+Original five task/recovery workers untouched. No paid calls.
+
+Stop speed tuning here for now:5x UNLOADED VERTICAL qualification is useful,
+but arbitrary paths, rotations, lower workspace and loaded carry are NOT qualified.
+Next use this result toward GPU manipulation, qualifying those aspects as needed.
+Do not automatically continue from stopped76 or silently enable fast contact.
+
 5x follow-up diagnosis: largest recorded joint-command increment0.018153rad,
 below upstream0.06rad/tick clamp. Terminal command-minus-measured differences
 include+0.03338rad joint4/-0.03142rad joint6. This rules against the per-tick

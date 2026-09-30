@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Fresh simulator-only hold then 1 cm upward correction; no model calls or object contact intended."""
 import argparse
+import json
 import os
 from pathlib import Path
 import sys
@@ -24,6 +25,8 @@ def main():
     parser.add_argument('--motion-profile', choices=['conservative', 'elevated_open_2x',
                         'elevated_open_5x', 'elevated_open_10x'], default='conservative')
     parser.add_argument('--trajectory-feedforward', action='store_true')
+    parser.add_argument('--continue-qualified-run', type=Path,
+                        help='Continue only a successful completed up/return qualification; never retry failure')
     args = parser.parse_args()
     if args.motion_profile != 'conservative' and not args.ramp_return_qualification:
         raise ValueError('experimental speed requires explicit ramp-return qualification')
@@ -45,14 +48,30 @@ def main():
         write_json(args.output/'metadata.json', metadata)
         if args.trajectory_feedforward and metadata.get('trajectory_feedforward') != 'one_step_world_increment_optional':
             raise ValueError('worker lacks requested feedforward; no reset')
-        obs = decode_observation(client.call('/reset', {'seed': 0}, mutating=True))
+        if args.continue_qualified_run:
+            if not args.ramp_return_qualification:
+                raise ValueError('continuation requires ramp-return qualification')
+            prior = args.continue_qualified_run
+            phases_before = json.loads((prior/'phases.json').read_text())
+            if phases_before[-1][0] != 'down_arrive':
+                raise ValueError('prior run must finish return')
+            receipts = [json.loads((prior/f'{i}_receipt.json').read_text()) for i in range(len(phases_before))]
+            if any(r['reason'] != ('transit waypoint passed' if p[0].endswith('transit') else 'local stage arrived')
+                   for p,r in zip(phases_before,receipts)):
+                raise ValueError('failed qualification cannot continue')
+            obs = decode_observation(client.call('/observe'))
+            if obs.key != receipts[-1]['resulting_observation_id']:
+                raise ValueError('qualification continuation state changed')
+            write_json(args.output/'continuation.json', dict(prior=str(prior), observation_id=obs.key))
+        else:
+            obs = decode_observation(client.call('/reset', {'seed': 0}, mutating=True))
         write_json(args.output/'initial.json', obs.public_state())
         phases = [('hold',30,0.), ('upward_1cm',60,.01)]
         origin = obs.eef_pose.copy()
         if args.ramp_return_qualification:
             from physical_exec.geometry import matrix_pose, pose_matrix
             from physical_exec.kinematics import URDFKinematics
-            if obs.gripper_open < .999 or obs.seq != 0:
+            if obs.gripper_open < .999 or (obs.seq != 0 and not args.continue_qualified_run):
                 raise ValueError('requires fresh open-hand state')
             phases = [('up_transit',64,.06), ('up_arrive',64,.12),
                       ('down_transit',64,.06), ('down_arrive',64,0.)]
