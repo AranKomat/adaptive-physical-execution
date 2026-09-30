@@ -26,8 +26,13 @@ class RunBudget:
 def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 budget: RunBudget, manifest_extra: dict | None = None, reference_run: str | Path | None = None,
                 allow_related_reference: bool = False, resume_observation_id: str | None = None,
-                local_eef_execution: bool = False, fast_open_transit: bool = False) -> Path:
+                local_eef_execution: bool = False, fast_open_transit: bool = False,
+                depth_queries: bool = False) -> Path:
     metadata = env.metadata()
+    if depth_queries and (controller.mode == 'hybrid' or not metadata.get('depth_point_query_available')):
+        raise ValueError('depth queries require capable worker and Direct mode')
+    controller.depth_queries = depth_queries
+    controller.depth_feedback = None
     if fast_open_transit and (not local_eef_execution
             or 'elevated_open_5x' not in metadata.get('local_motion_profiles',{})
             or metadata.get('trajectory_feedforward') != 'one_step_world_increment_optional'):
@@ -46,7 +51,12 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 "measured gripper aperture", "task text", "execution receipts", "robot-only FK"],
                 "privileged_policy_inputs": False, "model_tools": ["Act"],
                 "scope": "SIMULATION ONLY; no certified safety or real-robot execution",
-                "local_eef_execution":local_eef_execution,"fast_open_transit":fast_open_transit}
+                "local_eef_execution":local_eef_execution,"fast_open_transit":fast_open_transit,
+                "depth_queries":depth_queries}
+    if depth_queries:
+        manifest['depth_policy_input'] = True
+        manifest['model_tools'] = ['Act','bounded_depth_query']
+        manifest['policy_input_allowlist'].append('current selected RGB-D surface measurements')
     trace = TraceWriter(output, manifest)
     start = time.monotonic(); decisions = 0; rejections = 0; consecutive = 0; steps = 0
     evaluation = Evaluation(); terminal = "not_started"; error = None; source_steps = {}
@@ -106,6 +116,15 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                     if decision.proposal is not None:
                         trace.event("proposal", decision.proposal.public())
                     trace.decision(decision.raw, decision.action, decision.usage)
+                    if decision.depth_samples is not None:
+                        if not depth_queries:
+                            raise InputRejected('depth queries not enabled')
+                        feedback = env.depth_points(obs,decision.depth_samples)
+                        if feedback['observation_id'] != obs.key:
+                            raise InputRejected('stale depth response')
+                        controller.depth_feedback = feedback
+                        trace.event('depth_query_result', feedback)
+                        continue
                     if decision.action is None:
                         terminal = "model_stopped_incomplete"; break
                     action = validate_chunk(decision.action, obs, controller.limits)

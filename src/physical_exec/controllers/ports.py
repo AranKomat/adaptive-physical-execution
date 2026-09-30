@@ -135,6 +135,7 @@ class ControllerDecision:
     usage: Usage
     response_id: str
     proposal: Proposal | None = None
+    depth_samples: list | None = None
 
 
 class ControllerPort:
@@ -195,6 +196,25 @@ class ControllerPort:
                 prompt += ("\nGenerate 1..%d per-step world-frame Cartesian increments. Translation adds in world; rotation left-multiplies the previous target. Each next row builds on the previous commanded row, not the initial pose." % self.horizon)
             else:
                 prompt += "\nGenerate 1..5 absolute EEF world-pose targets; use short observed-state corrections."
+        if getattr(self, 'depth_queries', False):
+            if self.mode == 'hybrid':
+                raise ValueError('depth queries currently require Direct mode')
+            schema['properties']['actions']['minItems'] = 0
+            schema['properties']['decision_type'] = {'type':'string','enum':['act','measure_depth']}
+            schema['properties']['samples'] = {'type':'array','minItems':0,'maxItems':6,
+                'items':obj({'camera':{'type':'string','enum':list(observation.images)},
+                             'pixel_uv':{'type':'array','minItems':2,'maxItems':2,'items':{'type':'integer'}}})}
+            schema['required'] += ['decision_type','samples']
+            prompt += ('\nDEPTH QUERY: choose decision_type=measure_depth with 1..6 visible solid '
+                'pixels in samples and actions=[] to receive measured world/hand coordinates '
+                'without motion. Pixel coordinates are original image integer [u,v], upper-left origin. '
+                'Each query consumes a decision/call. For decision_type=act use samples=[] and '
+                'nonempty actions. A surface sample is not object center, hidden thickness or clearance. '
+                'Use measured offsets before uncertain contact positioning; never copy a face offset '
+                'as a grasp-center correction. Query results are valid only for the current observation.')
+            feedback = getattr(self,'depth_feedback',None)
+            if feedback is not None and feedback['observation_id'] == observation.key:
+                messages.append(user_text('CURRENT SENSOR DEPTH MEASUREMENTS: '+dumps(feedback)))
         enforce_context_budget(messages, self.memory.config)
         reply = self.provider.act(prompt, messages, schema, timeout_seconds=timeout_seconds)
         self.last_reply = reply
@@ -202,6 +222,13 @@ class ControllerPort:
         raw = reply.arguments
         if raw["observation_id"] != observation.key:
             raise InputRejected("model selected an old observation")
+        if getattr(self,'depth_queries',False):
+            if raw['decision_type']=='measure_depth':
+                if raw['actions'] or not raw['samples']:
+                    raise InputRejected('depth query requires samples and no actions')
+                return ControllerDecision(None,raw,reply.usage,reply.response_id,depth_samples=raw['samples'])
+            if raw['samples'] or not raw['actions']:
+                raise InputRejected('act requires actions and no depth samples')
         try:
             if self.mode == "hybrid":
                 action = self._hybrid_action(raw, observation, proposal)

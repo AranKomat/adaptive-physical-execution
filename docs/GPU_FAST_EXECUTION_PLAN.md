@@ -5,6 +5,21 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+DIRECT DEPTH LOOP IMPLEMENTED (not live-deployed): --depth-queries enables
+measure_depth decisions with1..6pixels and no actions. Each consumes the usual
+decision/API budget; /depth-points returns current recorded sensor measurements
+and hand-frame offsets, rejects stale IDs, excludes scene/evaluator data. The
+following Direct decision sees results only while observation ID matches; motion
+invalidates them. Manifest marks depth input, trace records selections/results.
+Private authorized launcher exposes the same flag with --enhanced-gpu, preserving
+ledger/holds. Direct-A/B only for now; Hybrid is explicitly rejected until its
+proposal/query scheduling is integrated. This changes observation access and must
+be matched across future comparisons.312tests pass; fixture
+query->action sequence proves accounting and stale-feedback removal, not robotics.
+Current88111/563 lacks this endpoint; no hot reload/reset or physical progress
+claimed. Next provision this revision on a fresh worker after preserving the
+current scene's evidence, then run bounded depth-enabled approach/grasp.
+
 DEPTH FEEDBACK PILOT AT563: two bounded Astra calls selected5visible pixels and
 reviewed calibrated3D hand-frame offsets; all5depth neighborhoods passed. New
 scripts/grasp_surface_feedback.py implements selection -> deterministic depth

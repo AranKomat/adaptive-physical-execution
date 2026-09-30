@@ -147,6 +147,25 @@ class EnvironmentService:
         if path == "/observe":
             if self.observation is None: raise InputRejected("reset first")
             return encode_observation(self.observation)
+        if path == '/depth-points':
+            if self.observation is None: raise InputRejected('reset first')
+            if set(payload) != {'observation_id', 'samples'}:
+                raise InputRejected('invalid depth query envelope')
+            if payload['observation_id'] != self.observation.key:
+                raise InputRejected('stale depth query')
+            samples = payload['samples']
+            if not isinstance(samples, list) or not 1 <= len(samples) <= 6:
+                raise InputRejected('depth query requires one to six pixels')
+            for sample in samples:
+                if (not isinstance(sample, dict) or set(sample) != {'camera', 'pixel_uv'}
+                        or sample['camera'] not in self.observation.images
+                        or not isinstance(sample['pixel_uv'], list)
+                        or len(sample['pixel_uv']) != 2
+                        or any(type(x) is not int for x in sample['pixel_uv'])):
+                    raise InputRejected('invalid depth pixel')
+            if not hasattr(self.env, 'depth_points'):
+                raise InputRejected('backend has no depth query')
+            return self.env.depth_points(self.observation, samples)
         if path in ("/step", "/local-stage"):
             if self.observation is None: raise InputRejected("reset first")
             if self.poisoned: raise AmbiguousExecution("worker halted after ambiguous execution")
@@ -187,6 +206,8 @@ class RemoteEnvironment:
         self._metadata = client.call("/metadata")
     def reset(self, seed): return decode_observation(self.client.call("/reset", {"seed": seed}, mutating=True))
     def observe(self): return decode_observation(self.client.call("/observe"))
+    def depth_points(self, obs, samples):
+        return self.client.call('/depth-points', {'observation_id': obs.key, 'samples': samples})
     def step(self, action, command_id):
         result = decode_result(self.client.call("/step", {"command_id": command_id, "action": action.to_dict()}, mutating=True))
         self._evaluation = result.evaluation

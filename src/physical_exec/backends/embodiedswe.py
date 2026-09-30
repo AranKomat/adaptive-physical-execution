@@ -145,6 +145,33 @@ class EmbodiedSWEEnvironment:
                 "policy_input": False,
             })
 
+    def depth_points(self, obs, samples):
+        """Read only matching recorded sensor pixels; never inspect scene objects."""
+        import json
+        from ..depth import surface_point
+        from ..geometry import pose_matrix
+        if not self.record_depth or self.record_episode is None or obs.key != self.current.key:
+            raise InputRejected('current recorded depth unavailable')
+        hand_from_world = np.linalg.inv(pose_matrix(obs.eef_pose))
+        rows = []
+        for sample in samples:
+            base = self.record_episode/(sample['camera']+'_depth')/f'{obs.seq:06d}'
+            calibration = json.loads(base.with_suffix('.json').read_text())
+            if calibration['observation_id'] != obs.key:
+                raise InputRejected('recorded depth calibration is stale')
+            try:
+                point = surface_point(np.load(base.with_suffix('.npy'), allow_pickle=False),
+                    calibration, sample['pixel_uv'], radius=1, max_spread_m=.01)
+                hand = (hand_from_world @ np.r_[point['surface_point_world_m'], 1.])[:3]
+                rows.append(dict(sample=sample, status='measured', measurement=point,
+                    point_hand_m=hand.tolist(),
+                    offset_from_nominal_pinch_hand_m=(hand-[0,0,.1034]).tolist()))
+            except ValueError as exc:
+                rows.append(dict(sample=sample, status='rejected', reason=str(exc)))
+        return dict(observation_id=obs.key, samples=rows,
+            limitation='Visible surfaces only, not hidden object center, contact, grasp or clearance. '
+            'Nominal Panda pinch hand offset [0,0,0.1034]; closing direction hand Y.')
+
     def reset(self, seed):
         if self.episode_id is not None: raise InputRejected("one episode per worker, no in-episode reset")
         self.episode_id = uuid4().hex; self.seq = 0
@@ -389,6 +416,7 @@ class EmbodiedSWEEnvironment:
                 "time_model": "physics_paused_during_inference", "privileged_policy_inputs": False,
                 "depth_recording": bool(getattr(self, "record_depth", False)),
                 "depth_policy_input": False,
+                "depth_point_query_available": bool(getattr(self, 'record_depth', False)),
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "continuous_transit_enabled": True,

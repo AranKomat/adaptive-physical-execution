@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+New --depth-queries integration connects Direct-A/B to read-only bounded current
+pixel depth RPC. Queries consume decisions, return sensor-only hand/world offsets,
+and expire after motion; manifest/trace label depth access. Hybrid excluded for
+now, so future matched comparison still requires parity. Current live88111/563
+NOT reloaded. Next fresh worker trial. See GPU_FAST_EXECUTION_PLAN.
+
 Depth-feedback pilot at563: GPT selected5pixels, code deprojected them, GPT
 reviewed numeric hand-frame offsets and rejected unsupported center/correction
 claims.309tests. No motion; not yet integrated into Direct controller. Numeric
