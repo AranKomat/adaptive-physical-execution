@@ -25,14 +25,18 @@ def capture_dimensions(capture):
 
 
 def overview_content(capture, role):
-    with Image.open(capture / f'{role}.png') as source:
+    return overview_image_content(capture / f'{role}.png', role)
+
+
+def overview_image_content(image_path, label):
+    with Image.open(image_path) as source:
         original = source.size
         shown = source.copy()
         shown.thumbnail((640, 640), Image.Resampling.LANCZOS)
         data = io.BytesIO()
         shown.save(data, format='PNG')
     return [{'type': 'text', 'text': (
-        f'Current camera: {role}. Original sensor size {original[0]}x{original[1]}; '
+        f'Camera: {label}. Original sensor size {original[0]}x{original[1]}; '
         f'displayed overview {shown.width}x{shown.height}. '
         'Return ORIGINAL sensor pixels, not overview pixels. '
         f'Original u = displayed u * {original[0]/shown.width}; '
@@ -42,7 +46,11 @@ def overview_content(capture, role):
 
 
 def closeup_content(capture, role, box):
-    with Image.open(capture / f'{role}.png') as source:
+    return closeup_image_content(capture / f'{role}.png', role, box)
+
+
+def closeup_image_content(image_path, label, box):
+    with Image.open(image_path) as source:
         width, height = source.size
         x0, y0, x1, y1 = box
         if not (0 <= x0 < x1 <= width and 0 <= y0 < y1 <= height):
@@ -52,7 +60,7 @@ def closeup_content(capture, role, box):
         crop = source.crop(box).resize(size, Image.Resampling.NEAREST)
         data = io.BytesIO()
         crop.save(data, format='PNG')
-    mapping = dict(camera=role, original_box_xyxy=list(box), displayed_size=list(size),
+    mapping = dict(camera=label, original_box_xyxy=list(box), displayed_size=list(size),
                    original_u=f'{x0} + displayed_u * {(x1-x0)/size[0]}',
                    original_v=f'{y0} + displayed_v * {(y1-y0)/size[1]}')
     return [{'type': 'text', 'text': (

@@ -1,25 +1,47 @@
 #!/usr/bin/env python3
 """Observation-only grasp geometry review; never includes later outcome or evaluator truth."""
 import argparse
-import base64
 import json
 from pathlib import Path
+
+from prepare_sensor_target_request import closeup_image_content, overview_image_content
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--correction', type=Path, required=True)
-    parser.add_argument('--index', type=int, required=True)
+    source = parser.add_mutually_exclusive_group(required=True)
+    source.add_argument('--correction', type=Path)
+    source.add_argument('--inspection-probe', type=Path,
+                        help='Actual completed camera hold at an existing open-hand preclosure pose')
+    parser.add_argument('--index', type=int)
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--target-object', choices=['graphics_card','ram_module'], default='graphics_card')
     parser.add_argument('--history-capture', type=Path)
     parser.add_argument('--history-plan', type=Path)
     parser.add_argument('--current-projections', type=Path)
+    parser.add_argument('--closeup-right', nargs=4, type=int,
+                        help='Current original-frame crop bounds; not an enhanced/generated image')
     args = parser.parse_args()
-    stages = json.loads((args.correction/'declared_sequence.json').read_text())
-    if not 0 <= args.index < len(stages) or stages[args.index]['name'] not in ('descend','preclosure'):
-        raise ValueError('Review must reference a descent endpoint')
-    state = json.loads((args.correction/f'{args.index:02d}_observation.json').read_text())
+    if args.inspection_probe:
+        if args.index is not None:
+            raise ValueError('Inspection probe has no correction stage index')
+        directory, prefix = args.inspection_probe, 'after'
+        state = json.loads((directory/'after.json').read_text())
+        receipt = json.loads((directory/'receipt.json').read_text())
+        request = json.loads((directory/'request.json').read_text())['action']
+        if (receipt['resulting_observation_id'] != state['observation_id']
+                or receipt['observation_id'] != request['observation_id']
+                or receipt['reason'] != 'local stage arrived'
+                or request.get('gripper_open', 0) < .95
+                or 'camera_eye_world' not in request):
+            raise ValueError('Requires completed open-hand camera hold with matching receipt')
+    else:
+        stages = json.loads((args.correction/'declared_sequence.json').read_text())
+        if (args.index is None or not 0 <= args.index < len(stages)
+                or stages[args.index]['name'] not in ('descend','preclosure')):
+            raise ValueError('Review must reference a descent endpoint')
+        directory, prefix = args.correction, f'{args.index:02d}'
+        state = json.loads((directory/f'{prefix}_observation.json').read_text())
     prompt = (
         'Review ONLY this current pre-closure robot observation. The task is to grasp the '
         'loose upright graphics card outside the case with parallel fingers, then lift it. '
@@ -33,7 +55,8 @@ def main():
         'uncertainty, next_observation_or_correction. A close_candidate is a visual hypothesis, '
         'not certified collision freedom or verified grasp. If evidence is insufficient, '
         'choose inspect rather than assuming the requested pose is correct. '
-        'Use original 640x360 pixel coordinates when referring to image locations; never '
+        'Use ORIGINAL sensor pixel coordinates, with the per-image mapping below, '
+        'when referring to image locations; never '
         'invent world object coordinates. Robot-only state: '+json.dumps(state))
     content = [{'type':'text','text':prompt}]
     if args.target_object == 'ram_module':
@@ -50,9 +73,11 @@ def main():
                    'Unknown clearance stays exploratory, not certified.')
         content = [{'type':'text','text':prompt}]
     for role in ('left','right','wrist'):
-        pixels = (args.correction/f'{args.index:02d}_{role}.png').read_bytes()
-        content.extend([{'type':'text','text':role}, {'type':'image_url',
-                        'image_url':{'url':'data:image/png;base64,'+base64.b64encode(pixels).decode()}}])
+        content.extend(overview_image_content(
+            directory/f'{prefix}_{role}.png', 'CURRENT '+role))
+    if args.closeup_right:
+        content.extend(closeup_image_content(directory/f'{prefix}_right.png',
+                                             'CURRENT right', args.closeup_right))
     if any((args.history_capture,args.history_plan,args.current_projections)):
         if not all((args.history_capture,args.history_plan,args.current_projections)):
             raise ValueError('History review requires capture, plan and current projections')
@@ -72,9 +97,8 @@ def main():
             'and identity despite clipping; do not equate nominal geometry with opposing-contact '
             'or collision proof. Outside-image/inconsistent samples are NOT validated historical '
             'points. Reassess with this additional evidence; approval is not expected or required. '
-            +json.dumps({'historical_plan':plan,'current_geometry':projections})},
-            {'type':'image_url','image_url':{'url':'data:image/png;base64,'+
-                base64.b64encode((args.history_capture/'wrist.png').read_bytes()).decode()}}])
+            +json.dumps({'historical_plan':plan,'current_geometry':projections})}])
+        content.extend(overview_image_content(args.history_capture/'wrist.png', 'HISTORICAL wrist'))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps([{'role':'user','content':content}]))
 

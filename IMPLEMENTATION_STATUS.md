@@ -846,6 +846,13 @@ benchmark sweeps, download every dataset, or port to another GPU software stack 
 
 ## Validation interpretation
 
+Native-resolution grasp continuation reached open-hand preclosure at331 and
+completed one targeted camera hold to395. Fresh Astra review resolved longitudinal
+centering but still declined closure on pad/support occlusion. No closure/lift
+or assembly success. End RGB-only view sweeps; next require a concrete grounded
+contact/support hypothesis.398 CPU tests pass; see
+`docs/HIGH_RESOLUTION_GRASP_20260930.md` for evidence/cost and software corrections.
+
 September30 existing-host continuation: process-local matching gpucomp completed
 the Vulkan compatibility stack, enabling a new1920x1080 RGB-D worker on8780
 without rebooting or touching the held8772 episode. Native-scale surface target

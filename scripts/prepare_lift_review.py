@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Build an observation-only before/after lift review, without target or evaluator answers."""
 import argparse
-import base64
 import json
 from pathlib import Path
+
+from prepare_sensor_target_request import overview_image_content
 
 
 def probe_captures(close, lift):
@@ -50,9 +51,7 @@ def main():
         state = json.loads(state_path.read_text())
         content.append({'type':'text','text':label+' '+state['observation_id']})
         for role in (('left', 'right', 'wrist') if args.close_probe else ('left', 'wrist')):
-            encoded = base64.b64encode((directory/f'{prefix}_{role}.png').read_bytes()).decode()
-            content.extend([{'type':'text','text':role}, {'type':'image_url',
-                            'image_url':{'url':'data:image/png;base64,'+encoded}}])
+            content.extend(overview_image_content(directory/f'{prefix}_{role}.png', label+' '+role))
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps([{'role':'user','content':content}]))
 
