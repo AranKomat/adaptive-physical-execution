@@ -3,10 +3,19 @@
 import argparse
 import base64
 import json
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from prepare_sensor_target_request import (
+    capture_dimensions,
+    closeup_content,
+    overview_content,
+)
 
-def build_messages(capture, historical_capture, measurements, inventory, episode_note):
+
+def build_messages(capture, historical_capture, measurements, inventory, episode_note,
+                   closeup_right=None):
     if not isinstance(episode_note, str) or not episode_note.strip() or len(episode_note) > 2000:
         raise ValueError('Explicit bounded operator episode note required')
     state = json.loads((capture/'state.json').read_text())
@@ -17,6 +26,7 @@ def build_messages(capture, historical_capture, measurements, inventory, episode
             or measurements['observation_id'] != old['observation_id']
             or inventory['observation_id'] != old['observation_id']):
         raise ValueError('Historical evidence must match an earlier same-episode capture')
+    width, height = capture_dimensions(capture)
     content = [{'type': 'text', 'text': (
         'Task: install the held graphics card into the computer PCIe slot. '
         'Assess the whole current manipulation situation and propose the next meaningful '
@@ -38,7 +48,7 @@ def build_messages(capture, historical_capture, measurements, inventory, episode
         'You may specify a relative delta in world coordinates only if justified by '
         'the supplied geometry; label estimates and assumptions. Otherwise identify '
         'up to four CURRENT visible solid-surface anchors with camera and original '
-        '640x360 integer pixel_uv [u,v], origin upper-left. Distinguish a rough socket '
+        f'{width}x{height} integer pixel_uv [u,v], origin upper-left. Distinguish a rough socket '
         'reference from a contact centerline. Identify possible target misassociation '
         'instead of blindly preserving an earlier selection. '
         'Return JSON observation_id, visible_state, next_stage, proposed_delta_world_m '
@@ -52,10 +62,15 @@ def build_messages(capture, historical_capture, measurements, inventory, episode
     for source, roles, label in ((capture, ('left', 'right', 'wrist'), 'CURRENT'),
                                  (historical_capture, ('right',), 'HISTORICAL')):
         for role in roles:
-            encoded = base64.b64encode((source/f'{role}.png').read_bytes()).decode()
-            content.extend([{'type': 'text', 'text': f'{label} camera {role}'},
-                            {'type': 'image_url', 'image_url': {
-                                'url': 'data:image/png;base64,'+encoded}}])
+            if source == capture:
+                content.extend(overview_content(source, role))
+            else:
+                encoded = base64.b64encode((source/f'{role}.png').read_bytes()).decode()
+                content.extend([{'type': 'text', 'text': f'{label} camera {role}'},
+                                {'type': 'image_url', 'image_url': {
+                                    'url': 'data:image/png;base64,'+encoded}}])
+    if closeup_right:
+        content.extend(closeup_content(capture, 'right', closeup_right))
     return [{'role': 'user', 'content': content}]
 
 
@@ -67,10 +82,11 @@ if __name__ == '__main__':
     p.add_argument('--inventory', type=Path, required=True)
     p.add_argument('--episode-note', required=True)
     p.add_argument('--output', type=Path, required=True)
+    p.add_argument('--closeup-right', type=int, nargs=4)
     a = p.parse_args()
     messages = build_messages(a.capture, a.historical_capture,
                               json.loads(a.measurements.read_text()),
-                              json.loads(a.inventory.read_text()), a.episode_note)
+                              json.loads(a.inventory.read_text()), a.episode_note, a.closeup_right)
     a.output.parent.mkdir(parents=True, exist_ok=True)
     with a.output.open('x') as stream:
         json.dump(messages, stream)

@@ -1,0 +1,49 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1283",
+  "visible_state": "Card remains gripped over the motherboard. The current right close-up shows exposed gold contacts above a visible socket-like rim; full seating is not established. Wrist imagery shows close surrounding structures but no definite hook, cable capture or other visible entanglement. The operator reports an incomplete downward attempt stopped at 10.174mm tracking error; this is not force or collision evidence.",
+  "next_stage": "One simulator-only upward retreat, ending this attempt; otherwise hold if the unchanged guard prevents retreat.",
+  "proposed_delta_world_m": [
+    0.0,
+    0.0,
+    0.03
+  ],
+  "proposed_rotation_world_rad": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "anchors": [
+    {
+      "camera": "right",
+      "pixel_uv": [
+        1129,
+        516
+      ],
+      "surface": "Approximate current visible gold contact surface."
+    },
+    {
+      "camera": "right",
+      "pixel_uv": [
+        1129,
+        538
+      ],
+      "surface": "Approximate solid socket-like upper rim beneath the gold edge: rough socket reference, not gap centerline."
+    }
+  ],
+  "assumptions": [
+    "World +Z is upward, reversing the reported pure downward approach; 30mm is a bounded withdrawal proposal, not measured clearance.",
+    "Preserve CURRENT measured lateral position, attitude and aperture 0.3; keep grasp assistance unchanged.",
+    "Use at most 64 actions and unchanged 10mm/0.10rad tracking stops. Do not reset or bypass the existing guard to initiate motion."
+  ],
+  "expected_effect": "Increase vertical separation without lateral rubbing or another insertion attempt. The likely failure is that the plane-contact hypothesis did not establish a traversable mating path: rim contact, lateral/key misregistration or interference elsewhere could explain the stalled tracking. Neither the contacted object nor hidden collision truth is known.",
+  "stop_conditions": [
+    "Existing guard blocks initiation, or position/attitude tracking reaches the unchanged stop limits: hold, with no automatic retry.",
+    "Visible snagging, card slip, unexpected rotation or motherboard/chassis motion: stop; these falsify independent upward withdrawal.",
+    "Stop after 30mm withdrawal or 64 actions, whichever occurs first; no extra push, release or corrective rubbing."
+  ],
+  "remaining_stages": [
+    "Record this condition as negative after withdrawal, or record a blocked retreat if held.",
+    "Change the experimental condition rather than continue tuning this attempt."
+  ],
+  "uncertainty": "Historical samples are not current correspondence or clearance. The apparent rim may be misassociated with a neighboring structure/socket; target identity is not revalidated. No opposing rails, recess centerline, seating depth or clear hidden withdrawal corridor is established. Visible entanglement does not currently rule out retreat, but safety remains unproven."
+}

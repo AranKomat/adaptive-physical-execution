@@ -853,9 +853,12 @@ has actual renderer evidence in `docs/evidence/native_grasp_lift_20260930`.
 Elevated carry reached1059 and guarded10cm standoff reached1157; current
 endpoint correspondence is depth-qualified. Same-socket native RGB suggests
 rails/key, but sampled dark-gap depth is essentially rim-height, not a measured
-recess/collision channel. A labeled6cm near-standoff completed at1241 with
-strict1.223mm final arrival; fresh contact-proposal assessment is next. No contact,
-installation/release/recovery or matched policy success.415 CPU tests pass;
+recess/collision channel. After near-standoff1241, one reviewed plane-contact
+attempt stopped at the unchanged tracking guard1283 (10.174mm error). Reviewed
+3cm withdrawal passed at1347; retained card, no installation. Posthoc success=false,
+score0.3333 (grasp credit). Close this condition as negative; next a separately
+labeled qualitative instruction-assisted condition, not another camera sweep.
+No installation/release/task recovery or matched policy success.423 CPU tests pass;
 see HIGH_RESOLUTION_GRASP report for raw nonarrival receipts and limitations.
 
 Native-resolution grasp continuation reached open-hand preclosure at331 and

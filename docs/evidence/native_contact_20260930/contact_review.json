@@ -1,0 +1,27 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1241",
+  "decision": "approve_contact_hypothesis",
+  "evidence": [
+    "Approval is limited to the exploratory plane-contact hypothesis, not keyed insertion or installation.",
+    "The right-camera views show the held gold contact edge above the selected socket region with broadly parallel longitudinal alignment. No definite intervening obstruction or target mismatch is resolved.",
+    "The sampled surface axes differ by approximately 1.19 degrees, and their longitudinal spans substantially overlap.",
+    "The proposed descent is 61.132 mm: the lowest sampled gold height, 98.699 mm, minus the highest sampled rim height, 37.567 mm. This is within the 80 mm bound.",
+    "Both stages preserve measured lateral position, attitude and aperture 0.3, with a continuous intermediate waypoint and final settling only."
+  ],
+  "uncertainty": [
+    "Corresponding gold samples are approximately 6.38\u20136.95 mm lower in world Y than the rim samples. These are surface references, so this difference neither verifies gap alignment nor establishes a mating-centerline error.",
+    "The previous gap-depth observations did not establish a recess. A physical keyed cavity, key compatibility and seating depth remain unverified.",
+    "The sampled rim height defines a reference plane, not a demonstrated contact surface beneath the descending gold edge. Contact or arrival is not guaranteed.",
+    "External swept clearance, unsampled protrusions, bracket clearance and collision truth remain unknown.",
+    "A single current observation cannot establish absence of slip. Native grasp assistance does not certify grasp stability or collision safety.",
+    "Depth neighborhood spreads are not calibrated uncertainty bounds. Tracking guards are not force sensing."
+  ],
+  "expected_effect": "Assuming rigid retention and successful tracking, the hand descends to world Z 0.238425627 m. The lowest sampled gold point reaches the sampled rim-plane height, while the other sampled gold point remains approximately 1.644 mm above it. Earlier contact, tracking stoppage or no actual socket contact are possible. Do not add lateral correction, grip closure, seating push, retry or release; review the outcome independently without counting it as installation.",
+  "stop_conditions": [
+    "Stop on any per-action position tracking error exceeding 10 mm or attitude tracking error exceeding 0.10 rad.",
+    "Stop for observed slip, unexpected card rotation, visible misalignment, target mismatch, interference or deformation.",
+    "If observable contact or blocked progress occurs before the endpoint, stop rather than attempting to overcome it; do not assume the tracking guard detects every contact.",
+    "Do not exceed either 64-action segment at 15 Hz or continue after a guard stop.",
+    "End at the specified final waypoint and settling phase, or earlier on a stop condition; retain the grasp and request independent review."
+  ]
+}

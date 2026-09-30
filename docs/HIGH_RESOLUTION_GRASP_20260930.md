@@ -1,10 +1,13 @@
 # Native-Resolution Integrated Grasp Continuation
 
-**Latest physical result:** fresh image-targeted, depth-supported assisted closure
-and lift retained the card clear of its support at667. Installation/release,
-recovery and matched-method comparisons remain incomplete. This is meaningful
-grasp/lift progress, not completion of the project or proof of autonomous grasp
-planning, unassisted physics, or strict clearance.
+**Latest physical result:** grasp/lift/carry and both standoffs passed, but the
+one bounded plane-contact attempt stopped at the unchanged tracking guard1283.
+Separate reviewed3cm withdrawal passed at1347; card remains visibly held.
+Posthoc native success=false, score0.3333 (grasp credit, not seating). This
+condition is CLOSED as negative, not pending another nearby camera/endpoint
+sweep. Next is a separately labeled qualitative instruction-assisted condition.
+Installation/release, task recovery and matched methods remain incomplete.
+See `NATIVE_CONTACT_NEGATIVE_20260930.md` for exact receipts and limitations.
 
 ## Condition
 

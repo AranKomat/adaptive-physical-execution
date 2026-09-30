@@ -31,6 +31,8 @@ def main():
                         help='With exploratory-standoff: <=6cm down, >=6cm nominal gap, matched endpoint required')
     parser.add_argument('--contact-hypothesis',action='store_true',
                         help='Explicit simulator contact test to measured plane; <=8cm, no extra push/release')
+    parser.add_argument('--contact-review', type=Path,
+                        help='Fresh approval required for the explicit plane-contact hypothesis')
     parser.add_argument('--contact-tracking-guard', action='store_true',
                         help='Require and attach the per-action tracking guard')
     parser.add_argument('--lift-diagnostic-completion', action='store_true',
@@ -50,6 +52,10 @@ def main():
         parser.error('--near-standoff requires --exploratory-standoff')
     if args.contact_hypothesis and (not args.exploratory_standoff or args.near_standoff):
         parser.error('--contact-hypothesis requires exploratory-standoff and excludes near-standoff')
+    if args.contact_hypothesis != bool(args.contact_review):
+        parser.error('--contact-hypothesis and --contact-review must be supplied together')
+    if args.contact_hypothesis and not args.contact_tracking_guard:
+        parser.error('--contact-hypothesis requires --contact-tracking-guard for every segment')
     plan = json.loads(args.plan.read_text())
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
@@ -63,6 +69,12 @@ def main():
                 or not meta.get('continuous_transit_enabled')):
             raise ValueError('Requires simulator continuous local stages')
         obs = decode_observation(client.call('/observe'))
+        if args.contact_review:
+            review = json.loads(args.contact_review.read_text())
+            if (review.get('observation_id') != obs.key
+                    or review.get('decision') != 'approve_contact_hypothesis'):
+                raise ValueError('Plane contact requires fresh explicit approval; no motion')
+            write_json(args.output/'review.json', review)
         if args.coarse_approach_review:
             review = json.loads(args.coarse_approach_review.read_text())
             stages = [coarse_approach_stage(plan, review, obs.key, obs.eef_pose,

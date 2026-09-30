@@ -1,0 +1,10 @@
+{
+  "observation_id": "28eee6eaefa546529c9118f2aff58e25:1347",
+  "source": "read-only /evaluate after closing the failed contact attempt and withdrawal",
+  "native": true,
+  "note": "upstream native grader",
+  "score": 0.3333333432674408,
+  "success": false,
+  "policy_input": false,
+  "limitation": "Latched grasp credit, not seating or evidence of current retention. Excluded from action-generation requests."
+}
