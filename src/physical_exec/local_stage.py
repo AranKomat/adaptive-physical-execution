@@ -17,6 +17,8 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
         optional.add('contact_tracking_guard')
     if 'motion_profile' in fields:
         optional.add('motion_profile')
+    if 'trajectory_feedforward' in fields:
+        optional.add('trajectory_feedforward')
     if camera and 'camera_gaze_world' in fields:
         optional.add('camera_gaze_world')
     if not isinstance(value, dict) or fields != required | optional:
@@ -24,6 +26,9 @@ def validate_local_stage(value, observation, *, allow_inspection_camera=False,
     profile = value.get('motion_profile', 'conservative')
     if profile not in ('conservative', 'elevated_open_2x', 'elevated_open_5x', 'elevated_open_10x'):
         raise InputRejected('unknown motion profile')
+    if 'trajectory_feedforward' in fields:
+        if type(value['trajectory_feedforward']) is not bool or profile not in ('elevated_open_5x','elevated_open_10x'):
+            raise InputRejected('feedforward requires smooth fast qualification profile and boolean flag')
     if 'settle_at_end' in value and type(value['settle_at_end']) is not bool:
         raise InputRejected('settle_at_end must be boolean')
     if 'contact_tracking_guard' in value and type(value['contact_tracking_guard']) is not bool:

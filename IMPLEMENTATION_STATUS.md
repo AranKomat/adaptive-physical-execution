@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+5x diagnosis: command increments max0.018153rad<0.06rad/tick, so observed stop
+was not per-tick joint-command rate saturation. Optional one-step trajectory
+feedforward added for fast smooth qualification only, unchanged tracking/caps.
+Not physically tested or loaded into held85321. Next separate fresh fast trial;
+no retry of stopped episode. See GPU_FAST_EXECUTION_PLAN.
+
 5x smooth-transit native trial stopped at11actions:11.093mm moving-target lag
 exceeded10mm guard.20.302mm upward progress; no return/retry/10x. Worker85321/8774
 holds episode76c94f90d92e476f827641d75829d382:11. Prior unloaded conservative

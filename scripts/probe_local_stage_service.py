@@ -23,9 +23,12 @@ def main():
                         help='Fresh worker only: guarded 12cm upward excursion and return; 256 actions maximum')
     parser.add_argument('--motion-profile', choices=['conservative', 'elevated_open_2x',
                         'elevated_open_5x', 'elevated_open_10x'], default='conservative')
+    parser.add_argument('--trajectory-feedforward', action='store_true')
     args = parser.parse_args()
     if args.motion_profile != 'conservative' and not args.ramp_return_qualification:
         raise ValueError('experimental speed requires explicit ramp-return qualification')
+    if args.trajectory_feedforward and args.motion_profile not in ('elevated_open_5x','elevated_open_10x'):
+        raise ValueError('feedforward requires smooth fast profile')
     args.output.mkdir(parents=True, exist_ok=False)
     client = LocalClient(args.url, os.environ['PHYSICAL_EXEC_SIM_TOKEN'], timeout=180)
     try:
@@ -40,6 +43,8 @@ def main():
         if args.motion_profile != 'conservative' and args.motion_profile not in metadata.get('local_motion_profiles', {}):
             raise ValueError('worker does not advertise requested speed profile')
         write_json(args.output/'metadata.json', metadata)
+        if args.trajectory_feedforward and metadata.get('trajectory_feedforward') != 'one_step_world_increment_optional':
+            raise ValueError('worker lacks requested feedforward; no reset')
         obs = decode_observation(client.call('/reset', {'seed': 0}, mutating=True))
         write_json(args.output/'initial.json', obs.public_state())
         phases = [('hold',30,0.), ('upward_1cm',60,.01)]
@@ -77,6 +82,8 @@ def main():
             if args.ramp_return_qualification:
                 request['settle_at_end'] = name.endswith('arrive')
                 request['motion_profile'] = args.motion_profile
+                if args.trajectory_feedforward:
+                    request['trajectory_feedforward'] = True
             if args.contact_tracking_guard:
                 request['contact_tracking_guard'] = True
             envelope = dict(command_id=uuid4().hex, action=request)

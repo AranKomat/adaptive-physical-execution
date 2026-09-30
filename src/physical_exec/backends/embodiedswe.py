@@ -274,7 +274,11 @@ class EmbodiedSWEEnvironment:
                             ramped_pose_target(ramp_start, target, index+1,
                                               (.045 if value.get('motion_profile') == 'elevated_open_2x' else .0225)*state.control_dt,
                                               (.12 if value.get('motion_profile') == 'elevated_open_2x' else .06)*state.control_dt))
-                raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'])
+                feedback_args = {}
+                if value.get('trajectory_feedforward'):
+                    following = smooth_path[min(index+2,len(smooth_path)-1)]
+                    feedback_args['trajectory_increment'] = pose_error(waypoint, following)
+                raw = feedback.command(state.eef_pose, waypoint, .04*value['gripper_open'], **feedback_args)
                 q = self._numpy(solver.compute(torch.as_tensor(raw[:6][None], dtype=torch.float32,
                                                                device=self.sim.env.device)))[0]
                 action = ActionChunk('joint_absolute', [np.r_[q, value['gripper_open']]],
@@ -383,6 +387,7 @@ class EmbodiedSWEEnvironment:
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "continuous_transit_enabled": True,
                 "position_integral_antiwindup": "opposing_axis_reset_above_1mm",
+                "trajectory_feedforward": "one_step_world_increment_optional",
                 "local_motion_profiles": {"conservative": {"linear_m_s": .0225, "angular_rad_s": .06},
                     "elevated_open_2x": {"linear_m_s": .045, "angular_rad_s": .12,
                                          "qualification": "experimental; not contact or payload qualified"},

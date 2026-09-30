@@ -90,7 +90,10 @@ def test_smooth_stage_requires_whole_move_and_settling_budget(observation,profil
     value = {**request(obs),'motion_profile':profile,'contact_tracking_guard':True,
              'max_steps':64,'hand_pose_world':[0,0,.52,1,0,0,0]}
     validate_local_stage(value,obs)
-    for change in ({'settle_at_end':False},{'max_steps':4}):
+    validate_local_stage({**value,'trajectory_feedforward':True},obs)
+    for change in ({'settle_at_end':False},{'max_steps':4},
+                   {'trajectory_feedforward':1},
+                   {'trajectory_feedforward':True,'motion_profile':'conservative'}):
         with pytest.raises(InputRejected):
             validate_local_stage({**value,**change},obs)
 

@@ -39,9 +39,15 @@ class NativeDiffIKFeedback:
         self.rotation_integral_feedback = rotation_integral_feedback
         self.rotation_integral = np.zeros(3)
 
-    def command(self, measured_pose, target_pose, finger_position_m):
+    def command(self, measured_pose, target_pose, finger_position_m, *, trajectory_increment=None):
         if not np.isfinite(finger_position_m) or not 0 <= finger_position_m <= .04:
             raise ValueError('invalid per-finger command')
+        increment = None
+        if trajectory_increment is not None:
+            increment = finite_vector(trajectory_increment, 6)
+            if (np.linalg.norm(increment[:3]) > .225*self.control_dt+1e-10
+                    or np.linalg.norm(increment[3:]) > .60*self.control_dt+1e-10):
+                raise ValueError('trajectory feedforward exceeds 10x speed envelope')
         error = pose_error(measured_pose, target_pose)
         if self.rotation_integral_feedback:
             self.rotation_integral = np.clip(self.rotation_integral + .525*self.control_dt*error[3:],-.03,.03)
@@ -56,6 +62,10 @@ class NativeDiffIKFeedback:
             # bounded to 3 cm; no mass, COM or hidden grasp-state feedforward.
             self.position_integral = np.clip(self.position_integral + .525*self.control_dt*error[:3],-.03,.03)
             error[:3] += self.position_integral
+        if increment is not None:
+            # One control interval of desired world-frame motion. Never integrate
+            # feedforward or replace the actual tracking target with a future one.
+            error += increment
         translation_cap = .03 if self.integral_feedback else .01
         error[:3] *= min(1., translation_cap/max(np.linalg.norm(error[:3]),1e-12))
         error[3:] *= min(1., .05/max(np.linalg.norm(error[3:]),1e-12))

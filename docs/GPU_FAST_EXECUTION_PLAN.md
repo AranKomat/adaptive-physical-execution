@@ -16,6 +16,20 @@ Preserve historical trials as historical evidence, not matched comparisons.
 
 ## Immediate sequence
 
+5x follow-up diagnosis: largest recorded joint-command increment0.018153rad,
+below upstream0.06rad/tick clamp. Terminal command-minus-measured differences
+include+0.03338rad joint4/-0.03142rad joint6. This rules against the per-tick
+command-rate clamp as the observed limiter, not against actuator dynamics or
+all possible internal constraints. Full measured joint history was not logged.
+
+Prepared optional `--trajectory-feedforward` for5x/10x smooth qualification:
+one world-frame planned increment from current to next trajectory sample is
+added to outer feedback, never accumulated in the integral. Existing command
+caps and tracking target/guard remain unchanged; feedforward becomes zero at
+the trajectory endpoint. Capability checked before reset. Not loaded in85321
+or physically tested yet; no claim it cures tracking lag. Test on a separate
+fresh qualification episode, not an automatic continuation of the guard stop.
+
 5x LIVE TEST NEGATIVE: integrated whole-move quintic profiles5x/10x with
 four-sample stable arrival termination;276tests pass. Fresh worker85321/8774,
 episode76c94f90d92e476f827641d75829d382:11. First12cm upward move stopped by
