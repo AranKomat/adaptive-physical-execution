@@ -5,6 +5,29 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+CONTACT CONTINUATION RESULT (supersedes current120 below): same episode now533,
+worker88111/8774, STOPPED by contact tracking guard. Do not automatically retry,
+reset or lift. Across four bounded segments:10GPT calls,533actions,35.533sim
+seconds,342.085total segment wall seconds,$0.71696875. No verified grasp or native
+success(score0). First continuation120->312:7cm descent,closure,3.5cm lift test;
+card stayed supported while fingers rose (failed capture). Recovery312->504:
+reopen/lower5.5cm,close,then reopen/lower another2.5cm after model recognized weak
+engagement. At504 model chose stationary closure;29actions later guard stopped
+at10.991mm hand deviation and0.02713rad rotation error. Do not infer collision
+cause or secure grasp from this alone. Terminal image/result in
+docs/evidence/gpu_enhanced_contact; full traces in runs/gpu_enhanced_direct_a_
+{next3,recovery3,contact3}_20260930. Contact trace/image hashes verified.
+
+Next: inspect current legal RGB-D/pad geometry to establish contact alignment
+and a distinct supported recovery; not repeated blind vertical closure or wider
+guard. RGB-only Direct has now exercised actual contact and failed capture,
+while local tracking/free-space execution worked. This is not a final model
+ranking. Depth was recorded but absent from Direct inputs. Conservative local
+stages always consume64actions even at a stationary closure: code inspection
+shows stable early-exit applies only to smooth paths. Fix that separately with
+gripper-state settling semantics, not by blindly shortening contact dwell.
+Shared reserved count now4422; all10reported costs settled by private launcher.
+
 FIRST INTEGRATED LIVE RESULT: enhanced Direct-A, Astra Flex medium,3decisions,
 all3fast EEF destinations arrived without guard stop/rejection.46+41+33=120actions,
 8.0sim seconds,88.099total wall seconds; summed execution51.030s and model25.533s.

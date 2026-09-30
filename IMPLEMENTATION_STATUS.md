@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+Latest physical state: enhanced Direct-A episode8838a36a428c40c38aa6270f759398e4:533
+held after stationary closure hit contact tracking guard (10.991mm error).
+10calls total,$0.71696875,533actions; no verified grasp/native success. Earlier
+lift test failed capture; model tried deeper alignment, final closure guard-stop.
+No retry/lift/reset. Next legal depth/pad alignment diagnosis and distinct recovery;
+not more speed sweeps. Full progression in GPU_FAST_EXECUTION_PLAN.
+
 LIVE enhanced Direct-A first3calls: all3fast destinations arrived,120actions,
 8sim/88.099wall seconds,$0.09263375. Endpoint errors0.298/0.338/0.385mm. Open
 gripper now above GPU; no grasp/contact/installation, native score0. Includes
