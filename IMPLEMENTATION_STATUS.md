@@ -2,6 +2,13 @@
 
 ## Current experiment status (September 30 JST)
 
+User approved$85 shared ceiling (holds retained) and RAM8772 retirement.
+All6,494 RAM recording files were copied locally and SHA-256 verified before
+exact PID79506 retirement. Remote files retained; GPU1 now had9295MiB free.
+Separate GPU aperture-reference worker provisioning on8772. GPU92546/8774
+scene196 preserved; no new grasp outcome or paid request. See grasp comparison
+document for backup and verification paths.
+
 Assistance source audit: Panda weld gating uses measured aperture, low finger
 velocity, band proximity and debounce, not measured opposing contact force.
 An aperture effect could change simulator assistance eligibility rather than

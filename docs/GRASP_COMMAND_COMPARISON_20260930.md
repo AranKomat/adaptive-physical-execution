@@ -55,6 +55,20 @@ workers retain scenes. Do not launch a seventh simulator on these margins.
 A user choice on retiring backed-up suspended RAM8772 has been requested.
 Current GPU92546/8774 scene196 and other retained scenes remain untouched.
 
+User subsequently approved RAM8772 retirement after backup and an increase of
+the shared API ceiling to$85. The private launcher/ledger now accept$85 with
+all unresolved holds retained. RAM backup is in progress; retirement requires
+checksum verification first. This authorization is not a new experiment result.
+
+Backup/retirement completed: all6,494 files in RAM8772's2.3GB recording tree
+passed SHA-256 verification against the source manifest. Local backup:
+`runs/ram_aimed_20260930_full_backup`; verification:
+`runs/ram_aimed_20260930_backup_verification.txt`. Exact PID79506 was retired
+after command-line identity validation. Original remote files retained; live
+RAM physics state lost as approved. GPU1 free memory increased to9295MiB.
+The independent reference-aperture worker is now being provisioned on8772;
+GPU scene196 on8774 is unchanged. No aperture outcome yet.
+
 Stop prompt-only centering sweeps. Run a simulator-only, no-paid-call matched
 aperture comparison, separately labeled as an operator-defined diagnostic:
 
