@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST offline2813 geometry screen supersedes lowering the workspace floor:
+nominal gripper bodies extend below the measured tabletop plane and several
+poses overlap measured surfaces (not certified native collision checks).
+Expanded planar cloud rejected pending semantic review. No new motion/call or
+phase completion. See `docs/GRASPGENX_RECOVERY_PROPOSALS.md` for rejection evidence.
+
 NEW2813 GraspGen-X:8 proposals/0.688s, zero actions or paid calls. All violate
 120mm hand-height floor;3/8 endpoint IK converged. Canonical/Panda frame offset
 handled. No candidate admitted. FLUX restored PID75277; all simulator episodes

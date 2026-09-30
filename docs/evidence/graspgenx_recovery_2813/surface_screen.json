@@ -1,0 +1,348 @@
+{
+  "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+  "observed_points": 148811,
+  "mesh_components": 9,
+  "rows": [
+    {
+      "candidate": 0,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 139,
+      "nominal_gripper_min_world_z_m": -0.036365580597859964,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            506,
+            0
+          ],
+          "surface_world_m": [
+            0.38703951982982515,
+            0.09635358811637387,
+            0.06301176736433661
+          ],
+          "proxy_penetration_m": 0.016481501504778156,
+          "count": 139
+        }
+      ]
+    },
+    {
+      "candidate": 0,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 244,
+      "nominal_gripper_min_world_z_m": 0.023634421786325827,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            508,
+            0
+          ],
+          "surface_world_m": [
+            0.3860590058134926,
+            0.09724948232507159,
+            0.0630063694266047
+          ],
+          "proxy_penetration_m": 0.01601826769676008,
+          "count": 244
+        }
+      ]
+    },
+    {
+      "candidate": 1,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 84,
+      "nominal_gripper_min_world_z_m": -0.03322894648719174,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            500,
+            0
+          ],
+          "surface_world_m": [
+            0.3899806290443886,
+            0.09366602117242943,
+            0.06302772648682908
+          ],
+          "proxy_penetration_m": 0.010438764192942243,
+          "count": 84
+        }
+      ]
+    },
+    {
+      "candidate": 1,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 63,
+      "nominal_gripper_min_world_z_m": 0.02677105589699405,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            502,
+            0
+          ],
+          "surface_world_m": [
+            0.3890003097017928,
+            0.09456184928441311,
+            0.06302242242537959
+          ],
+          "proxy_penetration_m": 0.009128364503928696,
+          "count": 63
+        }
+      ]
+    },
+    {
+      "candidate": 2,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 75,
+      "nominal_gripper_min_world_z_m": -0.03248257978245288,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            506,
+            0
+          ],
+          "surface_world_m": [
+            0.38703951982982515,
+            0.09635358811637387,
+            0.06301176736433661
+          ],
+          "proxy_penetration_m": 0.010159431547308686,
+          "count": 75
+        }
+      ]
+    },
+    {
+      "candidate": 2,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 55,
+      "nominal_gripper_min_world_z_m": 0.027517422601732913,
+      "examples": [
+        {
+          "camera": "right",
+          "pixel_uv": [
+            504,
+            0
+          ],
+          "surface_world_m": [
+            0.38801991145096365,
+            0.09545769348434482,
+            0.06301707142578988
+          ],
+          "proxy_penetration_m": 0.00859083232245724,
+          "count": 55
+        }
+      ]
+    },
+    {
+      "candidate": 3,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 0,
+      "nominal_gripper_min_world_z_m": -0.03692486726918698,
+      "examples": []
+    },
+    {
+      "candidate": 3,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 701,
+      "nominal_gripper_min_world_z_m": 0.023075135114998813,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            396,
+            114
+          ],
+          "surface_world_m": [
+            0.5164953519238898,
+            0.24361726551964336,
+            0.21704111740779541
+          ],
+          "proxy_penetration_m": 0.010034046982617596,
+          "count": 25
+        },
+        {
+          "camera": "right",
+          "pixel_uv": [
+            638,
+            106
+          ],
+          "surface_world_m": [
+            0.5292368424439378,
+            0.20130057220698588,
+            0.21594035079959348
+          ],
+          "proxy_penetration_m": 0.008052259260798583,
+          "count": 676
+        }
+      ]
+    },
+    {
+      "candidate": 4,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 1,
+      "nominal_gripper_min_world_z_m": -0.042545589889401825,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            360,
+            154
+          ],
+          "surface_world_m": [
+            0.46499710902155766,
+            0.15572618338876065,
+            0.11598029147594247
+          ],
+          "proxy_penetration_m": 0.002385505783799974,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "candidate": 4,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 0,
+      "nominal_gripper_min_world_z_m": 0.017454408769493668,
+      "examples": []
+    },
+    {
+      "candidate": 5,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 3,
+      "nominal_gripper_min_world_z_m": -0.03590135587804906,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            358,
+            156
+          ],
+          "surface_world_m": [
+            0.45875400446326764,
+            0.1557247262149415,
+            0.10786402799883388
+          ],
+          "proxy_penetration_m": 0.0052778050458117225,
+          "count": 3
+        }
+      ]
+    },
+    {
+      "candidate": 5,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 1,
+      "nominal_gripper_min_world_z_m": 0.02409864650613673,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            358,
+            166
+          ],
+          "surface_world_m": [
+            0.4600414264699081,
+            0.1557217898979879,
+            0.07733333602926706
+          ],
+          "proxy_penetration_m": 0.005169357221838191,
+          "count": 1
+        }
+      ]
+    },
+    {
+      "candidate": 6,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 0,
+      "nominal_gripper_min_world_z_m": -0.036340554276326265,
+      "examples": []
+    },
+    {
+      "candidate": 6,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 1341,
+      "nominal_gripper_min_world_z_m": 0.023659448107859526,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            400,
+            116
+          ],
+          "surface_world_m": [
+            0.531839378528369,
+            0.23872381753601513,
+            0.21703206641091188
+          ],
+          "proxy_penetration_m": 0.010877174282479004,
+          "count": 32
+        },
+        {
+          "camera": "right",
+          "pixel_uv": [
+            638,
+            180
+          ],
+          "surface_world_m": [
+            0.548495142864019,
+            0.21450304769571665,
+            0.2159370538507177
+          ],
+          "proxy_penetration_m": 0.009179482792687313,
+          "count": 1309
+        }
+      ]
+    },
+    {
+      "candidate": 7,
+      "phase": "contact_hypothesis",
+      "observed_points_inside_proxy_over_2mm": 0,
+      "nominal_gripper_min_world_z_m": -0.03700271067748308,
+      "examples": []
+    },
+    {
+      "candidate": 7,
+      "phase": "raised_standoff",
+      "observed_points_inside_proxy_over_2mm": 4245,
+      "nominal_gripper_min_world_z_m": 0.022997291706702713,
+      "examples": [
+        {
+          "camera": "left",
+          "pixel_uv": [
+            410,
+            120
+          ],
+          "surface_world_m": [
+            0.5659133575731713,
+            0.23240011553776463,
+            0.2170142458235208
+          ],
+          "proxy_penetration_m": 0.009899880986460982,
+          "count": 31
+        },
+        {
+          "camera": "right",
+          "pixel_uv": [
+            638,
+            260
+          ],
+          "surface_world_m": [
+            0.5669395062739517,
+            0.22714753216723124,
+            0.21593389419275968
+          ],
+          "proxy_penetration_m": 0.010586523857328865,
+          "count": 4214
+        }
+      ]
+    }
+  ],
+  "motion_authorized": false,
+  "limitations": [
+    "Nominal public gripper proxy, not verified native collider geometry.",
+    "Observed surface points can include the current robot, intended object, or background. Inspect named pixels before attributing conflict.",
+    "No hits is not free-space or swept-volume certification; occluded space is unknown.",
+    "Endpoint tests only; no arm geometry or approach trajectory checked."
+  ]
+}

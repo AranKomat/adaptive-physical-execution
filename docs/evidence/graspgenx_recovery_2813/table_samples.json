@@ -1,0 +1,66 @@
+[
+  {
+    "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+    "pixel_uv": [
+      100,
+      300
+    ],
+    "surface_point_world_m": [
+      0.2925179242494844,
+      -0.5492325376244291,
+      0.0005474362237577468
+    ],
+    "optical_depth_m": 1.1593064069747925,
+    "local_depth_spread_m": 0.005288600921630859,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  },
+  {
+    "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+    "pixel_uv": [
+      550,
+      300
+    ],
+    "surface_point_world_m": [
+      1.0373369203462568,
+      0.038782519212129385,
+      0.0005474114008819919
+    ],
+    "optical_depth_m": 1.159306526184082,
+    "local_depth_spread_m": 0.005288481712341309,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  },
+  {
+    "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+    "pixel_uv": [
+      100,
+      200
+    ],
+    "surface_point_world_m": [
+      -0.06036723534306154,
+      -0.32346884635777295,
+      0.0008172543024069778
+    ],
+    "optical_depth_m": 1.5018510818481445,
+    "local_depth_spread_m": 0.008875370025634766,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  },
+  {
+    "observation_id": "9fbd76d8e57641c79983eed82adbc2bc:2813",
+    "pixel_uv": [
+      550,
+      200
+    ],
+    "surface_point_world_m": [
+      0.9045260739274632,
+      0.43829011657987227,
+      0.0008167577255333569
+    ],
+    "optical_depth_m": 1.5018521547317505,
+    "local_depth_spread_m": 0.008875370025634766,
+    "neighborhood_radius_pixels": 1,
+    "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."
+  }
+]

@@ -64,8 +64,48 @@ Script: `scripts/probe_graspgenx_recovery.py`. Public retained
 [robot screen](evidence/graspgenx_recovery_2813/robot_screen.json).
 Three frame-contract tests added;243tests pass. These are not task-phase success.
 
-Next: assess whether a separately qualified lower-hand workspace is appropriate,
-using robot geometry and legal scene sensing, while preserving the held episode.
-Do not bypass the live floor, treat planar-cloud scores as opposing-contact
-evidence, or replay the failed inclined standoff. Collision/access qualification
-is still required even if the software workspace restriction changes.
+## Observed-surface screen: do not lower the floor to admit these proposals
+
+The follow-up screen changes the next action: the software floor is not the
+only obstacle. A nominal public Panda collision proxy at these poses extends
+32--43mm below world z=0. Four legal tabletop depth samples lie at z=0.55--0.82mm.
+Continuing that plane under the occluded case is an assumption, not observed
+occupied volume at the grasp. Nevertheless, these poses are not justified by
+simply reducing the hand-origin limit.
+
+| Candidate | Contact surface hits | Raised-standoff hits | Minimum proxy z (mm) |
+| --- | ---: | ---: | ---: |
+| 0 | 139 | 244 | -36.4 |
+| 1 | 84 | 63 | -33.2 |
+| 2 | 75 | 55 | -32.5 |
+| 3 | 0 | 701 | -36.9 |
+| 4 | 1 | 0 | -42.5 |
+| 5 | 3 | 1 | -35.9 |
+| 6 | 0 | 1341 | -36.3 |
+| 7 | 0 | 4245 | -37.0 |
+
+Hits are measured current RGB-D points more than2mm inside the union of proxy
+components, sampled every second pixel. They are NOT collision probabilities
+or independent measurements. The raised standoff translates each pose60mm up.
+No arm or swept path was screened. Current robot points and intended contact
+surfaces are not excluded; zero hits never establishes free space.
+
+`scripts/screen_graspgenx_observed_surfaces.py` checks the pinned nominal mesh
+hash and attached depth calibration, and records representative pixels for
+review. The mesh is from the same pinned gripper dataset above, SHA-256
+`6feba508f92c6c6609d6639c4c2883200aaacd31f507370d479b25be1ea0e3b8`.
+It has nine watertight components; it is not a verified native simulator collider.
+See [screen](evidence/graspgenx_recovery_2813/surface_screen.json) and
+[table samples](evidence/graspgenx_recovery_2813/table_samples.json).
+
+The initial rectangular input crop omitted visible PCB surface near some
+proposed palms (current right-camera upper edge, x about0.387m). Removing the
+historical crop indiscriminately is also invalid: the connected planar component
+extends to y=-0.079m and x=0.625m, without verified object membership. The expanded
+cloud is **rejected pending semantic review**, not an improved model input.
+Coplanarity and connectedness do not establish object identity.
+
+Next requires a materially different accessible grasp/contact strategy grounded
+in the current scene, not another batch on the same partial plane. Preserve2813;
+do not replay the failed inclined standoff or relax the workspace limit. No new
+motion, model inference, or task-phase completion came from this offline screen.

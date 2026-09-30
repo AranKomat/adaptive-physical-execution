@@ -1,5 +1,16 @@
 # Guarded lift and carry: current continuation
 
+## Offline2813 screen supersedes the lower-workspace suggestion
+
+Nominal gripper bodies at all eight proposals extend32--43mm below z=0;
+legal visible tabletop samples are near z=0. Several endpoints also overlap
+observed surfaces. This is not certified collision truth, but lowering the
+hand-origin floor alone is unjustified. Expanded uncropped planar input has
+unverified object membership and is rejected for further inference. See
+[screen and limitations](GRASPGENX_RECOVERY_PROPOSALS.md). No motion or paid call;
+recovery remains incomplete. Next needs a different accessible contact strategy,
+not more batches or nearby view guesses.
+
 ## Current2813: GraspGen-X proposal-only batch, no admitted grasp
 
 One released-model batch returned8 proposals in0.688s on the retained partial
