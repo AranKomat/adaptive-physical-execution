@@ -5,6 +5,36 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+LATEST: centering continuation ended at a5a0a6370e3c4b9b93ff8262dda32479:196
+on worker92546/8774. Four completed calls added4mm lateral and4mm downward
+open-hand adjustments, both arrived. The next request was blocked by the shared
+$75 monetary reservation ceiling BEFORE submission. No closure, lift or task
+success; do not treat this as a model failure or completion. Total fresh episode:
+16 calls,196 actions. No further paid calls until budget is reconciled or
+explicitly extended. Preserve this live state; runtime_error continuation is not
+currently supported, so do not bypass the runner by using an older trace.
+
+Read-only verification passed event hashes and image checks for the five prior
+contact runs. Public retained receipts: docs/evidence/depth_contact_20260930.
+No new phase completed. Prompt centering changed approach behavior, but capture
+benefit remains untested. Next unpaid work: compare existing successful recipe
+and failed runs using retained legal observations, not another prompt sweep.
+
+INTERPRETATION CORRECTION: preceding trials do not isolate grasp geometry from
+loaded controller dynamics or native grasp assistance. A short-lift arrival is
+not proof of capture, and stopping8.5mm short is not proof that more duration
+would solve it. The one-valid-query rule is an experimental call-budget choice:
+a measured pixel may be irrelevant to the grasp. It saves repeated queries but
+does not establish sufficient geometric evidence. No forced motion is allowed.
+
+Current centering trial: worker92546/8774, episode
+a5a0a6370e3c4b9b93ff8262dda32479, twelve calls and179 actions reached final
+approach, including8mm lateral adjustment. No contact yet; bounded continuation
+pending. Do not start another wording sweep if this fails. Compare against the
+existing successful sensor-grounded fixed-fixture recipe before blaming either
+perception or loaded control. Keep autonomous and operator-directed outcomes
+separate. Older90072/91658 workers have been retired; recordings remain on host.
+
 DEPTH CONTACT CONTINUATION: worker90072/8774, same episode
 c6a13a2ac0f6489a858b059df0d79d99. Continuation from step195 used6 Astra Flex
 medium calls and139 simulator actions. The gripper closed with tracking error

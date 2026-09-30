@@ -2,6 +2,15 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: worker92546/8774 at a5a0a6370e3c4b9b93ff8262dda32479:196.
+Centering prompt trial used16 completed calls/196 actions, with lateral and
+vertical open-hand corrections but NO closure. Further API request blocked
+before submission by shared $75 reservation ceiling. Preserve scene; no paid
+retry or ceiling increase. Full results: gpu_depth_centered14_20260930 and
+gpu_depth_centered15_20260930. No new phase complete. Prior claims that loaded
+tracking failures are definitively grasp geometry are too strong: contact
+dynamics and native grasp assistance remain confounds.315 tests last passed.
+
 Latest physical continuation: same episode c6a13a2ac0f6489a858b059df0d79d99
 from step195 through334. Six Astra Flex medium calls closed the gripper and
 completed a25mm lift trajectory with sub-mm tracking, but the GPU remained on
