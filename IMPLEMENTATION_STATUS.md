@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+User approved retiring RAM baseline78152 at726. Full recordings checksum-verified
+again, then SIGTERM issued; cleanup retained5.1GB, so exact PID force-stopped.
+Other five GPU processes remained present. Baseline live physics state is gone;
+local/remote evidence retained. One simulator slot is now free for GPU-first
+qualification. This supersedes pending-capacity notes below; no new motion yet.
+
 Prepared explicit elevated/open-hand2x speed profile (45mm/s,0.12rad/s), with
 default/contact rates unchanged. Qualification runner checks worker capability.
 267tests pass; NOT deployed or physically qualified. GPU-first plan contains
