@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+NEXT independent task: RAM configuration/source compatibility preflight passed;
+no RAM simulator launch or physical result. See `docs/RAM_FIRST_TRIAL.md` for
+bounded protocol and resource requirement. Both GPUs are nearly full; temporary
+verified-idle FLUX unload is needed without disturbing held GPU episodes.
+GPU recovery remains incomplete and is not replaced by this separate task.
+
 LATEST strategy review: live observation remains2813. One Astra Flex medium
 review returned stop: local-edge pinch is only a hypothesis without opposing
 contact/gap evidence; no justified push/pivot either. No motion/reset. Record in
