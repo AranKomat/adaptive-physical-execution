@@ -1,0 +1,60 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1498",
+  "connector": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          294,
+          116
+        ],
+        "surface": "Interior of the exposed gold PCIe contact strip along the card's lower edge."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          344,
+          91
+        ],
+        "surface": "Separated interior sample on the same gold contact strip."
+      }
+    ],
+    "key_visible": true,
+    "evidence": "The right image exposes the gold contact edge below the black PCB. A small interruption separating the short and long contact sections is visible near pixel [270, 125].",
+    "uncertainty": "The contact strip and notch occupy few pixels. Samples estimate the contact-edge axis only; they are not endpoints or precise notch boundaries."
+  },
+  "socket": {
+    "status": "axis_visible",
+    "samples": [
+      {
+        "camera": "right",
+        "pixel_uv": [
+          294,
+          249
+        ],
+        "surface": "Solid light-colored reinforcement rim of the foreground motherboard PCIe socket nearest the CPU area."
+      },
+      {
+        "camera": "right",
+        "pixel_uv": [
+          343,
+          219
+        ],
+        "surface": "Separated solid reinforcement-rim sample on that same PCIe socket."
+      }
+    ],
+    "key_visible": false,
+    "evidence": "The right image shows a long reinforced socket running diagonally above the CPU area, distinct from the farther parallel slot, cyan RAM, and broad striped heatsink. Samples target its solid rim rather than its dark opening.",
+    "uncertainty": "The narrow rim limits pixel precision. The internal key is not reliably resolved. These samples do not identify the gap centerline, exact mating endpoints, insertion alignment, or clearance."
+  },
+  "target_identity_assessment": {
+    "status": "probable_same_selected_socket",
+    "evidence": "The historical selection is on the PCIe socket immediately beside the CPU area. The foreground diagonal socket in the current right image has the corresponding relationship to the CPU, RAM, and neighboring parallel slot.",
+    "anchor_contradiction": "The projected right anchor at [320, 249] lies off the selected socket rim, over the adjacent striped surface, and is depth-inconsistent. It is not used as a current socket sample. The left and wrist projections are also depth-inconsistent and do not establish visible socket surfaces.",
+    "uncertainty": "Identity is supported by visual motherboard layout rather than agreement with the projected anchor; exact historical surface correspondence remains uncertain."
+  },
+  "next_view": {
+    "description": "A closer, more top-down view into the same CPU-adjacent PCIe socket is needed to resolve its internal key. Both rough feature axes are already visible in the right image."
+  }
+}

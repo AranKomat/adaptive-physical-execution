@@ -6,6 +6,26 @@ import sys
 import pytest
 
 
+@pytest.mark.parametrize('stage,accepted', [('socket_gap', True), ('grasp', False)])
+def test_single_pixel_rails_are_explicit_and_observation_only(tmp_path, stage, accepted):
+    (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
+    for role in ('left', 'right', 'wrist'):
+        (tmp_path/f'{role}.png').write_bytes(b'fixture-only')
+    output = tmp_path/'messages.json'
+    script = Path(__file__).resolve().parents[1]/'scripts/prepare_sensor_target_request.py'
+    result = subprocess.run([sys.executable, str(script), '--stage', stage,
+        '--capture', str(tmp_path), '--output', str(output), '--single-pixel-rails'],
+        capture_output=True, text=True)
+    assert (result.returncode == 0) == accepted
+    if accepted:
+        prompt = json.loads(output.read_text())[0]['content'][0]['text']
+        assert 'CENTER PIXEL (1x1)' in prompt
+        assert 'NOT evidence of accuracy' in prompt
+        assert 'does NOT authorize movement' in prompt
+    else:
+        assert not output.exists()
+
+
 def test_inspection_camera_does_not_assert_a_fixed_occluder(tmp_path):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id': 'e:12'}))
     for role in ('left', 'right', 'wrist'):
@@ -40,7 +60,7 @@ def test_inspection_translation_budget_is_explicit_and_bounded(tmp_path, limit, 
 
 
 @pytest.mark.parametrize('measurement_id,accepted',[('e:12',True),('e:11',False)])
-@pytest.mark.parametrize('stage', ['feature_inventory', 'grasp'])
+@pytest.mark.parametrize('stage', ['feature_inventory', 'grasp', 'socket_gap'])
 def test_feature_feedback_requires_current_measurements(tmp_path,measurement_id,accepted,stage):
     (tmp_path/'state.json').write_text(json.dumps({'observation_id':'e:12'}))
     for role in ('left','right','wrist'):

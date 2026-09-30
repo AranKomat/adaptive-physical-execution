@@ -5,7 +5,14 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
-LATEST: held1370 on103000/8772. Camera rate issue resolved by retiming, not
+LATEST: held1562 on103000/8772. Lower view exposed connector; paired rough
+axes measured at1498 (2.338deg difference,132.801mm sampled vertical gap).
+Insertion centerline/end correspondence still unverified. Closer rail reviews
+declined3x3 and center-ray variants; no movement followed. Stop this wording
+sweep. See LOW_VIEW_GEOMETRY_20260930.md.355tests, five calls$0.18956875,
+shared count4506; full installation/recovery/matched methods remain unfinished.
+
+PREVIOUS: held1370 on103000/8772. Camera rate issue resolved by retiming, not
 relaxation. Reviewed8cm standoff passed91actions/1.543mm error. New view yields
 two partial socket-housing depth samples, but no visible connector and no
 verified target identity/centerline. No insertion. Next address mating-edge

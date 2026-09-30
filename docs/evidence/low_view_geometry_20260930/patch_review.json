@@ -1,0 +1,9 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1562",
+  "decision": "inspect",
+  "camera": "right",
+  "samples": [],
+  "evidence": "The right image best exposes the CPU-adjacent diagonal socket. A dark opening and narrow bright boundaries are visible, but I cannot reliably identify interior solid pixels on two distinct opposing rails of that same opening. The left and wrist images do not resolve this ambiguity.",
+  "uncertainty": "The apparent rail boundaries are only a few pixels wide; independent 3x3 depth neighborhoods could include the gap or adjacent surfaces. No reliable paired rail samples or centerline are established.",
+  "key_visible": false
+}

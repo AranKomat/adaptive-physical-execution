@@ -2,6 +2,15 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST: lower camera resolved gold-strip visibility. Fresh1498 depth samples
+give connector/socket-rim axes2.338deg apart and132.801mm sampled vertical gap.
+These are NOT corresponding endpoints or a socket centerline. Closer1562
+rail reviews declined both3x3 and center-ray sampling; no further descent or
+insertion. Current held103000/8772:5fc1330e1fb9410e9cc56d5c948ee0af:1562.
+355tests pass; five calls$0.18956875, shared count4506. See
+docs/LOW_VIEW_GEOMETRY_20260930.md. Stop rail-prompt/aperture sweeps; next resolve
+mating placement for a bounded physical attempt. No new task phase complete.
+
 LATEST: same worker103000/8772 now at1370. Retiming the rejected camera path
 passed unchanged rate limits. Reviewed8cm closer standoff completed91actions,
 1.543mm error. Opposite-side camera exposes PCB and partial socket housing,

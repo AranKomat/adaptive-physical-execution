@@ -1,0 +1,9 @@
+{
+  "observation_id": "5fc1330e1fb9410e9cc56d5c948ee0af:1562",
+  "decision": "inspect",
+  "camera": "right",
+  "samples": [],
+  "evidence": "The right image shows an elongated socket-like housing beside the CPU area. Its longitudinal highlights are visible, but I cannot reliably distinguish two separate solid rail surfaces bordering the same insertion gap from multiple edges of one housing rail. The left and wrist views do not resolve this ambiguity.",
+  "uncertainty": "Thin boundaries, oblique viewing, and adjacent striped surfaces make center-pixel selection ambiguous. No rail midpoint, seating depth, or clearance is established.",
+  "key_visible": false
+}

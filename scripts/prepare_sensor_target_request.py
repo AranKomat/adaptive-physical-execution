@@ -60,7 +60,11 @@ def main():
                    help='Explicit retained paired visual evidence; adds proposed closure aperture to grasp response')
     p.add_argument('--inspection-motion-limit-m', type=float, default=.05,
                    help='Prospective inspection translation budget, at most0.20m; default0.05m')
+    p.add_argument('--single-pixel-rails', action='store_true',
+                   help='Socket-gap localization diagnostic using center rays; not motion approval')
     args = p.parse_args()
+    if args.single_pixel_rails and args.stage != 'socket_gap':
+        raise ValueError('Single-pixel rail sampling applies only to socket_gap')
     if not np.isfinite(args.inspection_motion_limit_m) or not .01 <= args.inspection_motion_limit_m <= .20:
         raise ValueError('Inspection translation budget must be0.01..0.20m')
     if args.inspection_motion_limit_m != .05 and args.stage != 'inspection_motion':
@@ -179,7 +183,9 @@ def main():
             '\nRobot-only state: ' + json.dumps(state))
     if args.stage == 'socket_gap':
         prompt = (
-            'Inspect the upper long PCIe socket below the CPU area in these CURRENT images. '
+            'Inspect the CPU-adjacent PCIe socket in these CURRENT images. When current '
+            'feature measurements are supplied, use their socket samples to identify the '
+            'same target; do not silently switch to another parallel socket. '
             'We previously localized a housing rail, but a single rail is not the insertion centerline. '
             'Determine whether TWO distinct solid rails on opposite sides of the SAME insertion gap '
             'can actually be identified. Do not select two lines on one rail, decorations, a heatsink, '
@@ -190,8 +196,16 @@ def main():
             'rail_a_uv and rail_b_uv: ORIGINAL 640x360 integer [u,v], upper-left origin. '
             'Within each pair use the same longitudinal station. Select interior SOLID surface '
             'pixels, not the dark gap itself. Keep rail_a on the same physical side in all pairs. '
-            'Depth will be sampled independently with a 3x3 neighborhood; report if the rails '
-            'are too narrow to support that. Choose inspect if you cannot distinguish the two '
+            + ('Depth will be sampled at each selected CENTER PIXEL (1x1), not a required '
+               '3x3 solid patch. Surrounding depths will be retained only as contamination '
+               'diagnostics. Thin rails may be sampled when the center pixel is visually '
+               'identifiable; do not reject solely because a 3x3 patch would cross the gap. '
+               'Subpixel ambiguity and mixed pixels remain uncertainties, and zero single-pixel '
+               'spread is NOT evidence of accuracy. This is observation-only. '
+               if args.single_pixel_rails else
+               'Depth will be sampled independently with a 3x3 neighborhood; report if the rails '
+               'are too narrow to support that. ')
+            + 'Choose inspect if you cannot distinguish the two '
             'rails reliably. This observation-only test does NOT authorize movement, provide '
             'seating depth, or certify clearance. A midpoint between measured rail surfaces would '
             'only be an inferred centerline, not a directly observed gap surface. '
@@ -310,7 +324,7 @@ def main():
             'Unknown contact/clearance stays unknown. No task object poses or evaluator are supplied. '
             '\nRobot-only state: '+json.dumps(state))}]
     if args.feature_measurements:
-        if args.stage not in ('feature_inventory','correspondence','grasp'):
+        if args.stage not in ('feature_inventory','correspondence','grasp','socket_gap'):
             raise ValueError('Measurement feedback requires feature localization')
         measurements = json.loads(args.feature_measurements.read_text())
         if measurements['observation_id'] != state['observation_id']:
