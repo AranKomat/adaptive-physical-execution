@@ -48,3 +48,38 @@ an explicit resource choice: back up/retire a selected older simulator episode
 (losing its live physics state), or use another instance. The held8772 episode
 must remain protected. Do not silently retire an unrelated episode to fit the
 new test. The proposed candidate is the old baseline on8765, not the held card.
+
+## Authorized baseline retirement and failed Isaac startup
+
+User selected backup/retirement of8765, preserving8772. Fresh baseline observation
+was `3cff69ee0d184428a33eb0af51fd1937:280`. Full recording tree copied to local
+`runs/baseline8765_full_backup_20260930`:2531regular files,916199598bytes.
+Checksum-only rsync then exited0 with no itemized differences. Terminal public
+observation/images copied to `runs/retire_baseline8765_observe_20260930`.
+Remote recording files remain untouched.
+
+After verifying its exact command, sent SIGTERM to PID13434. Cleanup released
+some memory but the same worker remained alive; finished its authorized retirement
+with SIGKILL to that exact PID. Subsequent process inspection showed it absent
+and held PID103000 present. GPU0 then had8203MiB free; GPU1 had1918MiB free.
+
+The isolated compute library also passed a NEW PyTorch CUDA allocation and
+synchronization (one scalar tensor). However, the separately launched1920x1080
+Isaac worker on8780, PID336278, failed renderer initialization:
+
+- NVML mismatch inside Kit (`return code18`).
+- Vulkan `ERROR_INCOMPATIBLE_DRIVER`; no GPU Foundation device.
+- PhysX GPU pipeline unavailable, attempted software fallback.
+
+Stopped only this newly failed worker immediately to prevent invalid CPU-mode
+experimentation and unnecessary CPU load. PID336278 is confirmed absent;
+held103000 remains present. No model call, reset request, control command,
+qualified high-resolution capture or task phase completion resulted. Do not
+interpret startup failure as a manipulation or resolution result.
+Local log: `runs/gpu_sensor1920_startup_failure_20260930.log`.
+
+No host reboot/system package installation occurred. Next infrastructure work
+must qualify the full Isaac/Vulkan driver stack, not infer it from a PyTorch
+check. A reboot would lose remaining live simulator states and could interrupt
+the separate CPU workload; it must not happen silently. A process-local matching
+graphics-library condition or a coordinated restart are distinct options.

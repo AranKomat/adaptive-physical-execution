@@ -8,6 +8,13 @@ notes; older worker references are historical.
 
 ## Current experiment status (September 30 JST)
 
+BASELINE8765 RETIRED after authorized full backup/checksum verification:
+2531files/916199598bytes, remote files retained. Held8772 preserved. GPU0 freed
+to8203MiB. Separate1920 Isaac launch FAILED NVML/Vulkan/GPU initialization and
+attempted CPU fallback; only new PID336278 stopped. No qualified capture/motion
+or phase complete. PyTorch-only isolated-driver success does not qualify Isaac.
+See docs/GPU_CAPACITY_CHECK_20260930.md, final section. No reboot/system install.
+
 RESOURCE CHECK: held8772 freshly observes1754; critical RGB-D checksum matches.
 Default NVML driver/library mismatch; isolated extracted580.95.05 library restores
 diagnostic only, no system install/reboot. Free GPU memory848/1918MiB with six
