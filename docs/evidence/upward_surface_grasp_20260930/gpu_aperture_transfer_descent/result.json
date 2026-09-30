@@ -1,0 +1,1 @@
+{"actions": 84, "final_observation_id": "e086f25bf69249db8d3f0a366cddf36d:810", "grasp_verified": false, "limitation": "No closure or lift authorized by target selection alone", "stages": 2, "terminal_reason": "awaiting_preclosure_review"}

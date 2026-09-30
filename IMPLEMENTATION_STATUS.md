@@ -2,6 +2,16 @@
 
 ## Current experiment status (September 30 JST)
 
+LATEST PHYSICAL SUCCESS: fresh Astra region/aperture + measured upward-face
+refinement + operator local sequence retained/lifted card clear of support.
+Worker98214/8772 now e086f25bf69249db8d3f0a366cddf36d:1055, card held, aperture0.3.
+Final4.557mm error passes declared10mm lift bound; no retry. Sampler bug found:
+nearest smooth patch could be a vertical side face; opt-in local plane check
+fixes top-down face selection within the same2px radius.347tests pass.
+Report: docs/UPWARD_SURFACE_GRASP_RESULT_20260930.md. Four paid calls since575,
+$0.13304125 total; count4494, ceiling$85. Next carry/alignment, not more grasp
+microdiagnostics. Assistance ON, operator-mediated, not autonomous or FLUX Hybrid.
+
 LATEST: experience-conditioned Astra chose0.3 explicitly, but fresh pixel
 selection did not establish a top surface. One depth-feedback call declined
 the ambiguous target. Operator wrist inspection (67actions) and open-hand

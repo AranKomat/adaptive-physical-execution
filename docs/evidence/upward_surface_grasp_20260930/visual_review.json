@@ -1,0 +1,13 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:1055",
+  "reviewer": "assistant visual review of final left and right RGB frames",
+  "card_retained": true,
+  "card_clear_of_support": true,
+  "motion_within_predeclared_lift_bounds": true,
+  "strict_controller_arrival": false,
+  "position_error_m": 0.004556589483028823,
+  "evidence": ["gpu_aperture_transfer_lift/03_left.png", "gpu_aperture_transfer_lift/03_right.png"],
+  "scope": "Experience-conditioned GPT targeting plus operator-defined local grasp/lift; native assistance ON",
+  "installation_verified": false,
+  "autonomous_recovery_claimed": false
+}

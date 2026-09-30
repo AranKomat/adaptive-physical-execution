@@ -1,0 +1,13 @@
+{
+  "observation_id": "e086f25bf69249db8d3f0a366cddf36d:726",
+  "decision": "target",
+  "camera": "right",
+  "pixel_uv": [
+    373,
+    260
+  ],
+  "evidence": "Interior of the loose card's visible black top surface, near mid-length and midway across its thickness; excludes the PCB front face, stand, and end bracket. Wrist view corroborates the top surface.",
+  "uncertainty": "Centering is estimated from RGB; verify measured depth and opposing-face alignment during inspection before closure.",
+  "gripper_open": 0.3,
+  "aperture_reason": "Proposed simulator aperture based on the retained 0.3 trial; transfer is uncertain, and full closure did not retain the card in the other trial."
+}

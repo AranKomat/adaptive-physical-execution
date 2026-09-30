@@ -39,6 +39,28 @@ def surface_point(depth, calibration, pixel, *, radius=2, max_spread_m=.02):
             "limitation": "Visible surface only; spread is not calibrated uncertainty, identity or grasp pose."}
 
 
+def surface_patch(depth, calibration, pixel, *, radius=1, max_spread_m=.01):
+    """Fit a visible local plane; its normal does not establish object identity."""
+    if type(radius) is not int or not 1 <= radius <= 3:
+        raise ValueError('Plane fit requires radius1..3')
+    measurement = surface_point(depth, calibration, pixel, radius=radius, max_spread_m=max_spread_m)
+    u, v = measurement['pixel_uv']
+    points = np.array([surface_point(depth, calibration, [x, y], radius=0)['surface_point_world_m']
+                       for y in range(v-radius, v+radius+1)
+                       for x in range(u-radius, u+radius+1)])
+    centered = points-points.mean(axis=0)
+    _, singular, vectors = np.linalg.svd(centered, full_matrices=False)
+    if singular[1] < 1e-5:
+        raise ValueError('Insufficient two-dimensional patch extent')
+    normal = vectors[-1]
+    if normal[2] < 0:
+        normal = -normal
+    return dict(measurement, plane_normal_world_up_hemisphere=normal.tolist(),
+                plane_rms_m=float(np.sqrt(np.mean((centered@normal)**2))),
+                normal_up_cosine=float(normal[2]), plane_sample_count=len(points),
+                normal_limitation='Observed local plane, sign chosen toward world up; not object identity, outward normal, contact or clearance')
+
+
 def project_surface_memory(measurement, calibration, depth):
     """Project an earlier sensor sample; a depth match is not semantic identity."""
     old_episode, old_seq = measurement['observation_id'].rsplit(':',1)

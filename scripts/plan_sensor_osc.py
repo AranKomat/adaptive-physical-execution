@@ -7,7 +7,7 @@ import sys
 import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
-from physical_exec.depth import surface_point
+from physical_exec.depth import surface_point, surface_patch
 from physical_exec.osc_reference import validate_plan
 from physical_exec.trace import write_json
 
@@ -23,6 +23,8 @@ def main():
     parser.add_argument('--operator-selected', action='store_true',
                         help='Label a current operator pixel selection, not a model decision')
     parser.add_argument('--pause-after-grasp', action='store_true',help='leave the episode paused for visual review and a separate command')
+    parser.add_argument('--require-upward-surface', action='store_true',
+                        help='Top-down recipe: require a locally planar surface within45deg of world up')
     args = parser.parse_args()
     if args.operator_selected and args.reuse_pixel_template:
         raise ValueError('Operator selection and cached model replay are distinct conditions')
@@ -47,12 +49,17 @@ def main():
     point = None
     for delta in candidates:
         try:
-            point = surface_point(depth, calibration, pixel+delta, radius=1, max_spread_m=.01)
+            candidate = (surface_patch if args.require_upward_surface else surface_point)(
+                depth, calibration, pixel+delta, radius=1, max_spread_m=.01)
+            if args.require_upward_surface and (candidate['normal_up_cosine'] < np.cos(np.pi/4)
+                                               or candidate['plane_rms_m'] > .001):
+                continue
+            point = candidate
             break
         except ValueError:
             continue
     if point is None:
-        raise ValueError('No locally continuous depth patch near selected pixel; inspect again')
+        raise ValueError('No supported local surface patch near selected pixel; inspect again')
     surface = np.asarray(point['surface_point_world_m'])
     top_down = [0,0,1,0]
     def phase(name, xyz, finger, steps):
@@ -73,6 +80,7 @@ def main():
                                 else 'fresh Astra image pixel plus legal measured depth; operator-defined phase sequence'),
                  selector_observation_id=response['observation_id'],
                  requested_pixel=pixel.tolist(), measured_surface=point, camera=camera,
+                 surface_orientation_check=('local plane within45deg of up and1mm RMS' if args.require_upward_surface else 'not requested'),
                  limitations='Not a full object pose, certified clearance, or autonomous grasp planner. '
                  'At most 2px refinement; top-down attitude and bite depth are declared pilot assumptions.')
     validate_plan(value,state['observation_id'],700)

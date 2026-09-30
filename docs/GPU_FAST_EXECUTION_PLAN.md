@@ -5,6 +5,14 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+CURRENT: card visibly held clear of support at1055 on98214/8772. Fresh Astra
+target and0.3 aperture, observed upward-face refinement, operator sequence.
+Use current retained grip for feature-relative carry/alignment next. No more
+aperture sweeps or4.557mm endpoint tuning. Upward-plane sampling is opt-in and
+does not certify semantic identity or clearance. See UPWARD_SURFACE_GRASP_RESULT_20260930.md.
+Four calls/$0.13304125 for experience transfer through this lift;347tests pass.
+Full installation, autonomous recovery, and matched policy comparisons unfinished.
+
 CURRENT INTEGRATED ATTEMPT: same failed-capture episode now at726 after a
 guarded wrist inspection and open-hand standoff. Astra adopted0.3 from labeled
 experience but top-face localization remained uncertain; no closure authorized.
