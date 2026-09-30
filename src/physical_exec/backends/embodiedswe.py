@@ -362,6 +362,7 @@ class EmbodiedSWEEnvironment:
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "continuous_transit_enabled": True,
+                "position_integral_antiwindup": "opposing_axis_reset_above_1mm",
                 "local_stage_rotation_integral": bool(getattr(self, 'local_stage_rotation_integral', False)),
                 "inspection_camera_enabled": bool(getattr(self, 'allow_inspection_camera', False)),
                 "inspection_camera_gaze_enabled": bool(getattr(self, 'allow_inspection_camera', False)),

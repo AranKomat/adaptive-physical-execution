@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+Noncontact anti-windup qualification runner prepared (max256actions), not run.
+265tests. All six workers still occupy nearly both GPUs. Baseline726 full2.3GB
+recordings backed up locally, checksum dry-run matches. Awaiting scene-retention
+decision before closing only baseline78152; no worker reset/stopped. Current753
+and GPU recovery2813 preserved. See RAM_FIRST_TRIAL.md for exact runner/options.
+
 753 diagnosis: actual hand OVERSHOT downward4.320mm; it did not stop above
 the goal. Wrist-calibration reconstruction and commanded FK support position
 integral windup (-6.364mm near target crossing). Local anti-windup change clears

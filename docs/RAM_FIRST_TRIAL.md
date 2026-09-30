@@ -1,5 +1,27 @@
 # RAM: next independent assembly experiment
 
+## Controller qualification ready; GPU capacity/scene retention decision pending
+
+Prepared `probe_local_stage_service.py --ramp-return-qualification
+--contact-tracking-guard`: fresh worker only, open hand, fixed orientation,
+12cm upward excursion and return in four bounded segments, max256actions.
+Robot-only endpoint IK preflight precedes motion; unchanged tracking guards,
+continuous intermediate transit and strict phase-end arrival. No object contact
+intended or model calls. Requires worker metadata advertising the new anti-windup
+implementation; old workers are rejected before reset.265tests pass. This is
+prepared, NOT a completed physical qualification or task result.
+
+All six workers still run. GPU process allocations are7314,7352,8380MiB on GPU0
+and7393,7233,7233MiB on GPU1. No room for another simulator. Asked whether the
+oldest RAM baseline78152/8771 at726 may be closed after archival; no response or
+shutdown yet. Keep current RAM81115/8773 at753 and GPU recovery66502 untouched.
+
+The oldest baseline's full2.3GB recordings were copied locally to
+`runs/ram_baseline_full_backup/recordings/`. A checksum-mode rsync dry run
+(`rsync -aznci`) completed with exit0 and no differences. Remote data remains.
+This is an evidence backup, NOT a resumable physics snapshot: terminating the
+worker loses its live state. No worker was reset/stopped to make room.
+
 ## Descent753 diagnosis: downward overshoot and integral windup
 
 Correction to earlier wording: target z166.933mm, measured z162.612mm.
