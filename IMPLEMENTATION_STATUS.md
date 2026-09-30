@@ -2,6 +2,22 @@
 
 ## Current experiment status (September 30 JST)
 
+Latest physical continuation: same episode c6a13a2ac0f6489a858b059df0d79d99
+from step195 through334. Six Astra Flex medium calls closed the gripper and
+completed a25mm lift trajectory with sub-mm tracking, but the GPU remained on
+its support; the reopen was successful. A follow-up regrasp continuation used3
+valid-depth calls, issued no motion, and stopped because pad/object straddling
+was not established. Native score0. This separates grasp-pose failure from
+controller tracking failure. Runs: `gpu_depth_direct_a_continue7_20260930`
+and `gpu_depth_direct_a_regrasp8_20260930`.
+
+Control-loop fix: once a depth query returns at least one measured sample, the
+next decision at that observation can only act or stop. A second query is
+allowed only after an entirely unusable first result. This prevents repeated
+paid measurements without action. Targeted and full tests pass (`315 passed`).
+Do not interpret this guard as a grasp-success improvement until a new physical
+trial demonstrates it.
+
 Latest: depth-led staged recovery arrived155 after5cm descent39actions,0.689mm
 error; model used measured height gap rather than blind full descent. No grasp.
 Fixed repeated-query prompt (first6calls had no motion); now2queries/observation

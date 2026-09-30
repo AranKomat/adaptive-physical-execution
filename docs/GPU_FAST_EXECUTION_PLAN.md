@@ -5,6 +5,25 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+DEPTH CONTACT CONTINUATION: worker90072/8774, same episode
+c6a13a2ac0f6489a858b059df0d79d99. Continuation from step195 used6 Astra Flex
+medium calls and139 simulator actions. The gripper closed with tracking error
+below1mm, then lifted25mm and arrived, but the card stayed on its support; the
+gripper reopened. This is a failed grasp, not a local-DiffIK tracking failure.
+At step334 the model made a second bounded regrasp attempt, consumed3 calls on
+valid depth queries, and stopped without motion because it could not establish
+pad/object straddling. Native score0, no guard/rejection, no privileged policy
+input. Evidence: runs/gpu_depth_direct_a_continue7_20260930 and
+runs/gpu_depth_direct_a_regrasp8_20260930. Shared calls4456.
+
+DEPTH QUERY LOOP FIX: a valid first depth query now disables a second query at
+the same observation; a second query remains available only when the first has
+no usable measured sample. The next decision must act or stop, preventing a
+query-only paid-call loop. Tests:315 passed. This is a control-loop guard, not
+a claim that the grasp geometry is solved. Next physical trial should use a
+fresh episode or an explicitly bounded continuation with a real reposition
+proposal, then measure grasp/lift outcome.
+
 DEPTH-LED STAGING RECOVERY: current90072/8774 episode
 c6a13a2ac0f6489a858b059df0d79d99:155. Explicit ramp-budget recovery checks prior
 receipt reason, full budget consumption, open conservative profile, nominal ramp

@@ -217,8 +217,16 @@ class ControllerPort:
                 raise ValueError('depth queries currently require Direct mode')
             schema['properties']['actions']['minItems'] = 0
             query_count = getattr(self,'depth_query_counts',{}).get(observation.key,0)
+            feedback = getattr(self,'depth_feedback',None)
+            usable_feedback = bool(
+                feedback is not None
+                and feedback.get('observation_id') == observation.key
+                and any(sample.get('status') == 'measured'
+                        for sample in feedback.get('samples', []))
+            )
             schema['properties']['decision_type'] = {'type':'string',
-                'enum':['act','measure_depth','stop'] if query_count < 2 else ['act','stop']}
+                'enum':(['act','stop'] if usable_feedback or query_count >= 2
+                         else ['act','measure_depth','stop'])}
             schema['properties']['samples'] = {'type':'array','minItems':0,'maxItems':6,
                 'items':obj({'camera':{'type':'string','enum':list(observation.images)},
                              'pixel_uv':{'type':'array','minItems':2,'maxItems':2,'items':{'type':'integer'}}})}
@@ -231,12 +239,14 @@ class ControllerPort:
                 'Use measured offsets before uncertain contact positioning; never copy a face offset '
                 'as a grasp-center correction. Query results are valid only for the current observation.')
             prompt += (f' Already used {query_count}/2 queries at this observation. '
-                'For decision_type=stop use actions=[] and samples=[] when evidence is insufficient. '
-                'After two queries, act only if supported or stop; no forced motion.')
+                + ('A usable measurement is already available: the next decision MUST act or stop; '
+                   'do not spend another query without motion.' if usable_feedback else
+                   'A second query is available only if the first query returned no usable measurement.')
+                + ' For decision_type=stop use actions=[] and samples=[] when evidence is insufficient. '
+                'Do not spend the entire decision budget on repeated measurements.')
             prompt += '\nCamera-local image sizes (width,height): '+dumps({
                 role:[int(im.shape[1]),int(im.shape[0])] for role,im in observation.images.items()})
             prompt += ' Use per-camera pixels, NEVER coordinates across a multi-camera panel.'
-            feedback = getattr(self,'depth_feedback',None)
             if feedback is not None and feedback['observation_id'] == observation.key:
                 messages.append(user_text('CURRENT SENSOR DEPTH MEASUREMENTS: '+dumps(feedback)))
         enforce_context_budget(messages, self.memory.config)
