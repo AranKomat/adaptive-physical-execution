@@ -182,6 +182,12 @@ class ControllerPort:
                 'vertical test of at most0.005m, then inspect whether the object follows. '
                 'Do not request a20mm or larger loaded lift as the first verification; '
                 'larger transport belongs only after a verified grasp.')
+            prompt += (' Near contact, use the external view to verify that the thin card '
+                'is between both finger-pad sides before closing; the wrist view alone '
+                'can make a one-sided contact look centered. The nominal closing direction '
+                'is hand-local Y, so use a small lateral correction and reobserve if the '
+                'card is not visibly straddled. Do not substitute another blind vertical '
+                'descent for missing lateral centering evidence.')
             if getattr(self,'fast_open_transit',False):
                 prompt += (' Elevated open-hand destinations use experimental smooth5x transit when both '
                     'hand endpoint heights are at least0.30m; other destinations use conservative motion. '
