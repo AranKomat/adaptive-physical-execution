@@ -5,6 +5,28 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+FIRST LIVE DEPTH DIRECT TRIAL: worker90072/8774, fresh episode
+c6a13a2ac0f6489a858b059df0d79d99 now116.5calls (3queries/2actions),$0.0721255,
+116actions,7.733sim/80.065wall seconds. First query incorrectly used collage
+coordinates (all3rejected); next queries supplied current measurements and model
+selected motion. Fast~19.5cm approach arrived52actions,0.416mm error. Next18cm
+descent selected conservative profile because endpoint below.30m;64actions could
+not complete its ramp, stopped with83.17mm endpoint error (no tracking guard,
+no retry/contact/grasp). This is a harness duration mismatch, not a demonstrated
+depth-reasoning failure. Trace/image verified; evidence gpu_depth_direct_a_first6.
+
+FIXES after this evidence: depth-enabled Direct now renders separate camera views
+and supplies each camera's pixel dimensions, explicitly forbidding collage pixel
+coordinates. Policy-stage preflight rejects conservative ramps whose nominal
+duration+4settling actions exceeds current budget BEFORE execution; model prompt
+states conservative64-action limits~9cm/.24rad and need for staging.313tests pass.
+These are Mac-side fixes; no worker restart needed for future policy runs, but
+current stopped116 must not automatically retry. Old88111/563 retired after
+full1.8GB checksum-verified backup at runs/gpu_enhanced_direct_a_full_backup;
+live physics no longer recoverable. Other older workers untouched. Current90072
+loads open-stage settling and depth RPC; next supported distinct continuation
+or fresh comparison must be explicitly labeled. Shared reserved calls4432.
+
 DIRECT DEPTH LOOP IMPLEMENTED (not live-deployed): --depth-queries enables
 measure_depth decisions with1..6pixels and no actions. Each consumes the usual
 decision/API budget; /depth-points returns current recorded sensor measurements

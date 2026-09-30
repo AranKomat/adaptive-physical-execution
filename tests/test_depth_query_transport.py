@@ -89,4 +89,5 @@ def test_direct_query_then_action_budget_and_freshness(tmp_path):
     assert result['decision_count']==3 and result['executed_control_steps']==6
     assert env.queries==1
     assert result['terminal_reason']=='decision_budget'
+    assert ctrl.memory.config.image_layout=='separate'
     assert verify_trace(out)['images_checked']

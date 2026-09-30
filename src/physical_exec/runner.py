@@ -1,6 +1,6 @@
 """Single-episode runner. Never reset, reroll, or retry ambiguous execution."""
 from __future__ import annotations
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 import time
 from uuid import uuid4
@@ -33,6 +33,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
         raise ValueError('depth queries require capable worker and Direct mode')
     controller.depth_queries = depth_queries
     controller.depth_feedback = None
+    if depth_queries:
+        controller.memory.config = replace(controller.memory.config, image_layout='separate')
     if fast_open_transit and (not local_eef_execution
             or 'elevated_open_5x' not in metadata.get('local_motion_profiles',{})
             or metadata.get('trajectory_feedforward') != 'one_step_world_increment_optional'):
@@ -152,6 +154,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                         else:
                             request['motion_profile']='conservative'
                         validate_local_stage(request,obs)
+                        from .local_stage import validate_policy_stage_duration
+                        validate_policy_stage_duration(request,obs)
                         trace.event('local_stage_requested',dict(command_id=command_id,request=request,
                             proposal_id=action.proposal_id,policy_source=action.source))
                         result = env.local_stage(request,command_id)

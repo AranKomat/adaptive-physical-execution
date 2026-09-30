@@ -2,6 +2,14 @@
 
 ## Current experiment status (September 30 JST)
 
+LIVE depth-enabled Direct:5calls/116actions,$0.0721255, first fast approach
+arrived, next conservative18cm descent exceeded64-action ramp capacity and ended
+short. No contact/grasp/retry.90072/8774 holds c6a13a2ac0f6489a858b059df0d79d99:116.
+Fixed query-image coordinate mismatch (separate views) and pre-motion conservative
+duration rejection;313tests. Old563fully backed up then retired. Detailed report
+GPU_FAST_EXECUTION_PLAN; shared calls4432. Current scene needs distinct reviewed
+continuation, not automatic retry.
+
 New --depth-queries integration connects Direct-A/B to read-only bounded current
 pixel depth RPC. Queries consume decisions, return sensor-only hand/world offsets,
 and expire after motion; manifest/trace label depth access. Hybrid excluded for

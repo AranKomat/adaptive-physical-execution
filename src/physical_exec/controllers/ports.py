@@ -162,6 +162,11 @@ class ControllerPort:
                 'may execute up to64 actions before returning a fresh observation/receipt. '
                 'Do not send a multi-target EEF sequence. Native joint proposals retain their '
                 'original timing. A local tracking stop or nonarrival ends this run without retry.')
+            prompt += (' Conservative motion is limited to0.0225m/s and0.06rad/s. '
+                'With64actions at15Hz and settling allowance, plan at most0.09m or0.24rad '
+                'per conservative destination; remaining run budget may reduce this. '
+                'A farther destination is rejected before motion. Fast eligibility is not '
+                'permission to skip slower near-contact staging.')
             if getattr(self,'fast_open_transit',False):
                 prompt += (' Elevated open-hand destinations use experimental smooth5x transit when both '
                     'hand endpoint heights are at least0.30m; other destinations use conservative motion. '
@@ -212,6 +217,9 @@ class ControllerPort:
                 'nonempty actions. A surface sample is not object center, hidden thickness or clearance. '
                 'Use measured offsets before uncertain contact positioning; never copy a face offset '
                 'as a grasp-center correction. Query results are valid only for the current observation.')
+            prompt += '\nCamera-local image sizes (width,height): '+dumps({
+                role:[int(im.shape[1]),int(im.shape[0])] for role,im in observation.images.items()})
+            prompt += ' Use per-camera pixels, NEVER coordinates across a multi-camera panel.'
             feedback = getattr(self,'depth_feedback',None)
             if feedback is not None and feedback['observation_id'] == observation.key:
                 messages.append(user_text('CURRENT SENSOR DEPTH MEASUREMENTS: '+dumps(feedback)))

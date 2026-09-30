@@ -5,6 +5,21 @@ import pytest
 
 from physical_exec.local_stage import validate_local_stage
 from physical_exec.errors import InputRejected
+
+
+def test_policy_stage_ramp_budget(observation):
+    from physical_exec.local_stage import validate_policy_stage_duration
+    target=observation.eef_pose.copy()
+    target[2]+=.18
+    value=dict(hand_pose_world=target.tolist(),max_steps=64,motion_profile='conservative')
+    with pytest.raises(InputRejected,match='no motion executed'):
+        validate_policy_stage_duration(value,observation)
+    target[2]=observation.eef_pose[2]+.08
+    value['hand_pose_world']=target.tolist()
+    validate_policy_stage_duration(value,observation)
+    value['max_steps']=10
+    with pytest.raises(InputRejected):
+        validate_policy_stage_duration(value,observation)
 from physical_exec.backends.fixture import FixtureEnvironment
 from physical_exec.transport import EnvironmentService
 from physical_exec.contracts import ActionChunk

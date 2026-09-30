@@ -5,6 +5,22 @@ from .errors import InputRejected
 from .geometry import finite_vector, pose_error, unit_quaternion
 
 
+def validate_policy_stage_duration(value, observation):
+    """Reject impossible policy ramps before motion; not a tracking guarantee."""
+    profile = value.get('motion_profile', 'conservative')
+    if profile not in ('conservative','elevated_open_2x'):
+        return  # Smooth-path duration is checked by validate_local_stage.
+    delta = pose_error(observation.eef_pose, value['hand_pose_world'])
+    scale = 2 if profile == 'elevated_open_2x' else 1
+    duration = max(np.linalg.norm(delta[:3])/(.0225*scale),
+                   np.linalg.norm(delta[3:])/(.06*scale))
+    required = int(np.ceil(duration/observation.control_dt-1e-9))+4
+    if required > value['max_steps']:
+        raise InputRejected(f'Local {profile} ramp needs at least {required} actions including '
+            f'settling; only {value["max_steps"]} available. Select a nearer endpoint or an '
+            'elevated open-hand staging target first; no motion executed.')
+
+
 def validate_local_stage(value, observation, *, allow_inspection_camera=False,
                          last_gripper_command=None):
     required = {'observation_id', 'hand_pose_world', 'gripper_open', 'max_steps', 'target_source'}
