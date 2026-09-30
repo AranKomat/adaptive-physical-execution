@@ -27,6 +27,16 @@ unfinished target must not be replayed; next work is a shorter loaded-lift
 qualification or a separately bounded contact-aware profile. Evidence:
 `runs/gpu_depth_direct_a_regrasp_guard9_20260930`.
 
+Fresh short-lift episode: eight staging calls arrived through four
+depth-guided open-hand destinations. A continuation then closed the gripper,
+completed a4mm lift check, and hit the contact guard during a second4mm
+retention check (28 actions,10.7mm remaining target error). The card remained
+visually supported; native score0 and no verified grasp/lift. The short-lift
+prompt fixed budget exhaustion but did not solve contact alignment. Guard-stop
+episodes remain non-replayable. Evidence:
+`runs/gpu_depth_direct_a_fresh_grasp12_20260930` and
+`runs/gpu_depth_direct_a_fresh_grasp12_continue13_20260930`.
+
 Latest: depth-led staged recovery arrived155 after5cm descent39actions,0.689mm
 error; model used measured height gap rather than blind full descent. No grasp.
 Fixed repeated-query prompt (first6calls had no motion); now2queries/observation

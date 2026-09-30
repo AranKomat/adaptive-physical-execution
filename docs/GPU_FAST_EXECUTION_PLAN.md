@@ -35,6 +35,18 @@ tracking limitation. Evidence: runs/gpu_depth_direct_a_regrasp_guard9_20260930.
 Do not resume the unfinished target; qualify a shorter loaded lift or a
 separate contact-aware profile in a fresh bounded trial.
 
+SHORT-LIFT FRESH EPISODE: worker91658/8774, episode
+0717d764f2644998aeaffc19a93cbdee. Eight calls staged the open gripper through
+four depth-guided destinations, arriving with sub-mm tracking; a six-call
+continuation then obtained fresh depth, closed, completed a4mm lift check, and
+requested a second4mm retention check. The second check hit the contact guard
+after28 actions at10.7mm target error. The card remained visually supported;
+no verified grasp/lift and native score0. This confirms the short-lift prompt
+avoids the prior loaded-stage budget exhaustion, but contact alignment still
+fails. The guard stop is not eligible for automatic continuation. Evidence:
+runs/gpu_depth_direct_a_fresh_grasp12_20260930 and
+runs/gpu_depth_direct_a_fresh_grasp12_continue13_20260930.
+
 DEPTH-LED STAGING RECOVERY: current90072/8774 episode
 c6a13a2ac0f6489a858b059df0d79d99:155. Explicit ramp-budget recovery checks prior
 receipt reason, full budget consumption, open conservative profile, nominal ramp
