@@ -2,6 +2,11 @@
 
 ## Current experiment status (September 30 JST)
 
+Prepared open-stage dwell fix: conservative open-hand motion can end after4
+stable pose/aperture samples at completed ramp; closure/camera timing unchanged.
+307tests pass. NOT loaded into current88111/563, no new physical qualification.
+Next task work remains better-observed grasp alignment, not additional speed sweeps.
+
 Latest recovery: model-reviewed open-in-place at533 completed30guarded actions,
 now563,2.427mm endpoint error, measured aperture99.59%. Card appears supported;
 no grasp/lift. Distinct operator-scoped recovery, not Direct success. Current

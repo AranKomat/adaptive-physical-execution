@@ -258,6 +258,8 @@ class EmbodiedSWEEnvironment:
                 and context['opening'] == value['gripper_open'] and eye_path is None and smooth_path is None):
             ramp_start, feedback, solver = context['target'], context['feedback'], context['solver']
         pass_through = value.get('settle_at_end') is False
+        open_arrival = (eye_path is None and not pass_through
+                        and value['gripper_open'] == 1.)
         waypoint_passed = False
         contact_stopped = False
         started = time.monotonic()
@@ -304,13 +306,17 @@ class EmbodiedSWEEnvironment:
                 reason = motion_stop_reason(self.current.eef_pose, target, self.current.joints, self.kin.limits)
                 if reason:
                     raise RuntimeError(reason)
-                if smooth_path is not None and index+1 >= len(smooth_path)-1:
+                ramp_finished = np.linalg.norm(pose_error(waypoint, target)) < 1e-9
+                if (eye_path is None and not pass_through and ramp_finished
+                        and (smooth_path is not None or open_arrival)):
                     endpoint_error = pose_error(self.current.eef_pose, target)
                     motion = pose_error(state.eef_pose, self.current.eef_pose)
                     stable = (np.linalg.norm(endpoint_error[:3]) <= .003
                               and np.linalg.norm(endpoint_error[3:]) <= .03
                               and np.linalg.norm(motion[:3]) <= .0005
-                              and np.linalg.norm(motion[3:]) <= .002)
+                              and np.linalg.norm(motion[3:]) <= .002
+                              and self.current.gripper_open >= .99
+                              and abs(self.current.gripper_open-state.gripper_open) <= .001)
                     stable_steps = stable_steps+1 if stable else 0
                     if stable_steps >= 4:
                         break
@@ -337,7 +343,7 @@ class EmbodiedSWEEnvironment:
                         raise RuntimeError('inspection camera aim readback failed; no retry')
                 self._inspection_gaze = gaze_path[-1].copy()
             arrived = (np.linalg.norm(error[:3]) <= .003 and np.linalg.norm(error[3:]) <= .03
-                       and (smooth_path is None or stable_steps >= 4))
+                       and (not (smooth_path is not None or open_arrival) or stable_steps >= 4))
             receipt = ExecutionReceipt(command_id, before.key, self.current.key, value['max_steps'], completed,
                 'executed', ('contact tracking guard stopped motion' if contact_stopped else
                              'transit waypoint passed' if waypoint_passed else
@@ -386,6 +392,7 @@ class EmbodiedSWEEnvironment:
                 "wrist_target_hand": self.task_config.get('wrist_target_hand'),
                 "local_stages_enabled": bool(getattr(self, 'allow_local_stages', False)),
                 "continuous_transit_enabled": True,
+                "open_stage_settling": "four_stable_pose_and_aperture_samples; closure_dwell_unchanged",
                 "position_integral_antiwindup": "opposing_axis_reset_above_1mm",
                 "trajectory_feedforward": "one_step_world_increment_optional",
                 "local_motion_profiles": {"conservative": {"linear_m_s": .0225, "angular_rad_s": .06},

@@ -5,6 +5,17 @@
 This section is authoritative; the chronological notes below retain earlier
 states and must not be read as current instructions.
 
+OPEN-STAGE DWELL FIX PREPARED: conservative open-hand stages now terminate after
+the ramp reaches its endpoint and4consecutive stable samples meet existing pose
+tolerances, <=0.5mm/0.002rad per-step motion, aperture>=.99 and aperture change
+<=.001. No camera/pass-through early exit; closure/loaded dwell unchanged.
+An aperture that remains half-open cannot qualify an open-stage arrival.
+Metadata labels this revision.307tests pass: fixture open hold4vs64actions,
+fixture ramp42vs64; NOT new physical timing evidence. Current live worker88111
+has NOT been reloaded, so563still uses the old controller. Preserve that scene;
+load this change on the next fresh worker, not by unsafe in-process replacement.
+This addresses observed unnecessary open-stage dwell, not grasp alignment.
+
 RECOVERY UPDATE:533 legal-depth centerline audit found left9depth-edge/8occluded,
 right17occluded, wrist4edge/10occluded/3surface-consistent samples (17per view).
 These nominal centerline samples do not identify pad contact or object identity.

@@ -112,6 +112,7 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         def tracking_step(action,cid):
             env.current = replace(env.current,seq=env.current.seq+1,eef_pose=points[-1].copy())
         env.step = tracking_step
+        env.current = replace(env.current, gripper_open=1.)
         receipts = []
         for index in range(3):
             target = env.current.eef_pose.copy()
@@ -120,7 +121,7 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
                            gripper_open=1.,max_steps=64,target_source='TEST CONTINUOUS TRANSIT',
                            settle_at_end=index == 2)
             receipts.append(env.local_stage(command,f'transit{index}').receipt)
-        assert [r.executed_steps for r in receipts] == [39,39,64]
+        assert [r.executed_steps for r in receipts] == [39,39,42]
         assert [r.reason for r in receipts] == ['transit waypoint passed']*2+['local stage arrived']
         assert len(set(controller_ids)) == 1
         # No duplicate target / hold at either intermediate boundary.
@@ -140,6 +141,20 @@ def test_integrated_camera_hold_and_failed_readback(monkeypatch,observation,came
         assert result.receipt.reason == 'local stage arrived'
         assert result.receipt.executed_steps < 64
         assert env._transit_context is None
+        # Open holds exit after stable aperture/pose, but closure retains its dwell.
+        hold = dict(observation_id=env.current.key,hand_pose_world=env.current.eef_pose.tolist(),
+                    gripper_open=1.,max_steps=64,target_source='TEST OPEN HOLD',
+                    contact_tracking_guard=True)
+        assert env.local_stage(hold,'open-hold').receipt.executed_steps == 4
+        hold.update(observation_id=env.current.key,gripper_open=0.)
+        assert env.local_stage(hold,'close-hold').receipt.executed_steps == 64
+        # A stuck aperture must not be reported as an arrived open stage.
+        env.current = replace(env.current,gripper_open=.5)
+        hold.update(observation_id=env.current.key,gripper_open=1.)
+        stuck = env.local_stage(hold,'stuck-aperture').receipt
+        assert stuck.executed_steps == 64
+        assert stuck.reason == 'local stage budget ended without arrival'
+        env.current = replace(env.current,gripper_open=1.)
         target = env.current.eef_pose.copy()
         target[2] += .0575
         stalled_actions = []
