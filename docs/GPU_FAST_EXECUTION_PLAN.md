@@ -16,6 +16,19 @@ Preserve historical trials as historical evidence, not matched comparisons.
 
 ## Immediate sequence
 
+Policy integration added: `physical-exec run --local-eef-execution` uses guarded
+local feedback for exactly one EEF destination; Direct-A deltas become absolute
+targets through existing validation, Direct-B retains absolute targets. Hybrid
+joint accepts still use native execution; EEF alternatives use local targets.
+Requests/receipts retain source and proposal IDs, actual control actions consume
+budget, nonarrival/guard stop terminates without retry, memory explicitly labels
+destination versus low-level action count. Multi-target EEF decisions rejected
+before budget truncation. CLI defaults direct horizon to1 in this enhanced mode.
+This changes execution semantics and is NOT original upstream reproduction.
+Current integrated mode uses CONSERVATIVE local motion and existing task limits;
+fast-profile policy selection and larger admitted destination limits remain to
+be explicitly configured/qualified. No live-model enhanced trial yet.
+
 FEEDFORWARD PHYSICAL RESULT:5x passed12cm up/return in33+35=68actions,
 4.533sim/29.313execution wall seconds. Endpoint errors0.336/0.216mm, no guard
 stop. Compared with conservative209actions/13.933sim seconds:3.07x faster

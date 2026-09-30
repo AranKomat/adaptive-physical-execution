@@ -86,7 +86,7 @@ class ExecutionMemory:
         return deepcopy(self.messages[seq])
 
     def commit(self, before: Observation, after: Observation, action: ActionChunk,
-               receipt: ExecutionReceipt, public_decision: dict):
+               receipt: ExecutionReceipt, public_decision: dict, *, local_destination=False):
         if receipt.observation_id != before.key or receipt.resulting_observation_id != after.key:
             raise ValueError("receipt does not match observations")
         if receipt.executed_steps <= 0:
@@ -94,13 +94,15 @@ class ExecutionMemory:
         if after.seq - before.seq != receipt.executed_steps:
             raise ValueError("receipt step count mismatch")
         self.observe(before); self.observe(after)
-        executed = action.prefix(receipt.executed_steps).to_dict()
+        executed = (action.to_dict() if local_destination else action.prefix(receipt.executed_steps).to_dict())
         # Save exact commands/receipts, not a fabricated observation of object success.
         call_id = "exec_" + receipt.command_id
         items = [{"type": "function_call", "call_id": call_id, "name": "Act",
                   "arguments": dumps(public_decision)},
                  {"type": "function_call_output", "call_id": call_id,
                   "output": dumps({"receipt": receipt.to_dict(), "executed_command": executed,
+                                   "execution_semantics": ('One requested EEF destination; receipt counts local control actions, not policy rows.'
+                                                           if local_destination else 'Policy control-action prefix'),
                                    "notice": "Controller feedback, not object/grasp/task verification."})}]
         summary = {"executor": action.source, "requested_steps": receipt.requested_steps,
                    "executed_steps": receipt.executed_steps,

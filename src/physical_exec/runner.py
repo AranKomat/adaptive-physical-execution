@@ -25,8 +25,13 @@ class RunBudget:
 
 def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 budget: RunBudget, manifest_extra: dict | None = None, reference_run: str | Path | None = None,
-                allow_related_reference: bool = False, resume_observation_id: str | None = None) -> Path:
+                allow_related_reference: bool = False, resume_observation_id: str | None = None,
+                local_eef_execution: bool = False) -> Path:
     metadata = env.metadata()
+    if local_eef_execution:
+        if not metadata.get('local_stages_enabled') or not metadata.get('contact_tracking_guard_enabled'):
+            raise ValueError('enhanced EEF execution requires guarded local stages')
+    controller.local_eef_execution = local_eef_execution
     if metadata.get("backend") not in ("fixture", "embodiedswe") or metadata.get("real_hardware_supported") is not False:
         raise ValueError("this runner accepts only the audited simulation/fixture backends, never real hardware")
     manifest = {"software": "physical-exec/0.1.0", **(manifest_extra or {}), **metadata,
@@ -35,7 +40,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 "budget": asdict(budget), "policy_input_allowlist": ["RGB", "robot joints", "robot EEF pose",
                 "measured gripper aperture", "task text", "execution receipts", "robot-only FK"],
                 "privileged_policy_inputs": False, "model_tools": ["Act"],
-                "scope": "SIMULATION ONLY; no certified safety or real-robot execution"}
+                "scope": "SIMULATION ONLY; no certified safety or real-robot execution",
+                "local_eef_execution":local_eef_execution}
     trace = TraceWriter(output, manifest)
     start = time.monotonic(); decisions = 0; rejections = 0; consecutive = 0; steps = 0
     evaluation = Evaluation(); terminal = "not_started"; error = None; source_steps = {}
@@ -98,6 +104,8 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                     if decision.action is None:
                         terminal = "model_stopped_incomplete"; break
                     action = validate_chunk(decision.action, obs, controller.limits)
+                    if local_eef_execution and action.kind == 'eef_absolute_world' and len(action.values) != 1:
+                        raise InputRejected('enhanced EEF execution requires exactly one destination')
                     remaining = budget.max_control_steps-steps
                     if len(action.values) > remaining:
                         # Explicit HOST budget truncation, recorded; not an unlogged policy edit.
@@ -107,7 +115,18 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                         terminal = "wall_budget_before_execution"; break
                     command_id = uuid4().hex
                     trace.event("execution_requested", {"command_id": command_id, "action": action.to_dict()})
-                    result = env.step(action, command_id)
+                    if local_eef_execution and action.kind == 'eef_absolute_world':
+                        from .local_stage import validate_local_stage
+                        request = dict(observation_id=obs.key, hand_pose_world=action.values[0,:7].tolist(),
+                            gripper_open=float(action.values[0,7]),max_steps=min(64,remaining),
+                            contact_tracking_guard=True,
+                            target_source='Enhanced policy EEF destination; '+action.source)
+                        validate_local_stage(request,obs)
+                        trace.event('local_stage_requested',dict(command_id=command_id,request=request,
+                            proposal_id=action.proposal_id,policy_source=action.source))
+                        result = env.local_stage(request,command_id)
+                    else:
+                        result = env.step(action, command_id)
                 except InputRejected as e:
                     rejections += 1; consecutive += 1
                     reply = controller.last_reply
@@ -121,11 +140,16 @@ def run_episode(env, controller: ControllerPort, output: str | Path, seed: int,
                 if result.receipt.observation_id != obs.key or result.receipt.executed_steps < 1:
                     raise AmbiguousExecution("invalid execution acknowledgement; stop without retry")
                 trace.execution(result)
-                controller.memory.commit(obs, result.observation, action, result.receipt, decision.raw)
+                controller.memory.commit(obs, result.observation, action, result.receipt, decision.raw,
+                    local_destination=local_eef_execution and action.kind == 'eef_absolute_world')
                 obs = result.observation
                 steps += result.receipt.executed_steps
                 source_steps[action.source] = source_steps.get(action.source, 0)+result.receipt.executed_steps
                 evaluation = result.evaluation; consecutive = 0
+                if (local_eef_execution and action.kind == 'eef_absolute_world'
+                        and result.receipt.reason != 'local stage arrived'):
+                    terminal = 'local_stage_stopped_without_retry'
+                    break
                 if evaluation.success:
                     terminal = "native_success" if evaluation.native else "fixture_complete_not_robot_success"
                     break

@@ -55,6 +55,7 @@ def parser():
     r.add_argument("--provider-only",help="OpenRouter provider tag; disables fallback")
     r.add_argument("--reasoning",choices=("low","medium","high","xhigh"),default="medium")
     r.add_argument("--horizon",type=int);r.add_argument("--memory",choices=("anchored","full"))
+    r.add_argument('--local-eef-execution',action='store_true',help='Enhanced single EEF destination via guarded local feedback; joint proposals unchanged')
     r.add_argument("--max-images",type=int,default=50);r.add_argument("--image-edge",type=int,default=640)
     r.add_argument("--max-decisions",type=int,default=100);r.add_argument("--max-control-steps",type=int,default=1800)
     r.add_argument("--max-wall-seconds",type=float,default=1800);r.add_argument("--max-total-tokens",type=int,default=20_000_000)
@@ -152,7 +153,8 @@ def main(argv=None):
             provider=ResponsesProvider(cfg,allow_paid=True)
             memory=ExecutionMemory(MemoryConfig(mode=args.memory or ("full" if args.mode=="direct_reference" else "anchored"),
                                                   max_images=args.max_images,image_edge=args.image_edge),args.max_control_steps)
-            horizon=args.horizon or task["default_horizons"][args.mode]
+            horizon=args.horizon or (1 if args.local_eef_execution and args.mode != 'hybrid'
+                                    else task["default_horizons"][args.mode])
             controller=ControllerPort(args.mode,provider,memory,limits,horizon,proposer)
             out=run_episode(env,controller,args.output,args.seed,
                             RunBudget(args.max_decisions,args.max_control_steps,args.max_wall_seconds),
@@ -162,7 +164,8 @@ def main(argv=None):
                              "task_config_path":str(Path(args.task).resolve()),
                              "model_output_token_cap":args.max_output_tokens},
                             reference_run=args.reference_run,allow_related_reference=args.allow_related_reference,
-                            resume_observation_id=args.resume_observation_id)
+                            resume_observation_id=args.resume_observation_id,
+                            local_eef_execution=args.local_eef_execution)
             render_html(out)
             result=json.loads((out/"result.json").read_text())
             print(json.dumps(result,indent=2))

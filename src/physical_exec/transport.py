@@ -192,6 +192,11 @@ class RemoteEnvironment:
         self._evaluation = result.evaluation
         return result
     def evaluate(self): return Evaluation(**self.client.call("/evaluate"))
+    def local_stage(self, value, command_id):
+        result = decode_result(self.client.call('/local-stage',
+            {'command_id':command_id,'action':value}, mutating=True))
+        self._evaluation = result.evaluation
+        return result
     def metadata(self): return self._metadata.copy()
     def fk_preview(self, obs: Observation, joints):
         return np.asarray(self.client.call("/fk", {"observation_id": obs.key, "joints": np.asarray(joints).tolist(),

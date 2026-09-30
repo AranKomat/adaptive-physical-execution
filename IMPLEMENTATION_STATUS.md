@@ -2,6 +2,12 @@
 
 ## Current experiment status (September 30 JST)
 
+Enhanced shared policy EEF execution now connected via --local-eef-execution:
+one destination/local feedback, actual budget accounting and memory receipts,
+stop-without-retry, native FLUX joints unchanged. Conservative profile only in
+this integrated mode; fast selection/task limits still pending. CPU contract tests,
+not live-model manipulation evidence. See GPU_FAST_EXECUTION_PLAN.
+
 PHYSICAL SPEED RESULT:5x+feedforward passed12cm up/return68actions,4.533sim
 seconds, endpoint0.336/0.216mm.3.07x faster elapsed sim time than conservative.
 Subsequent10x attempt guard-stopped8actions; no return/retry. Retained worker86507

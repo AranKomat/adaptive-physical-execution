@@ -155,6 +155,12 @@ class ControllerPort:
         self.last_reply = None; self.last_proposal = None
         messages = self.memory.render(observation)
         prompt = BASE_PROMPT + ("\n" + HYBRID_GATE if self.mode == "hybrid" else "")
+        if getattr(self, 'local_eef_execution', False):
+            prompt += ('\nENHANCED EEF EXECUTION: supply exactly one EEF target per decision. '
+                'It is a bounded destination, not a single control-tick command: local feedback '
+                'may execute up to64 actions before returning a fresh observation/receipt. '
+                'Do not send a multi-target EEF sequence. Native joint proposals retain their '
+                'original timing. A local tracking stop or nonarrival ends this run without retry.')
         if observation.robot == 'franka' and observation.eef_frame == 'panda_hand':
             # Pinned EmbodiedSWE robot pad-center convention, also used by its RL tasks.
             pinch = (pose_matrix(observation.eef_pose) @ np.array([0., 0., .1034, 1.]))[:3]
